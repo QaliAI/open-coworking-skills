@@ -50,3 +50,6 @@ Thumbs.db
 
 # Generated platform packages (reproducible from canonical skills)
 packages/generated/
+
+# Local Claude Code session settings
+.claude/settings.local.json
