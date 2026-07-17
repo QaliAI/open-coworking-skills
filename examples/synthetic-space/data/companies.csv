@@ -1,0 +1,27 @@
+company_id,name,industry,size,created_at
+C-ACME,Acme Robotics Demo,hardware,9,2025-08-12
+C-BRIGHT,BrightBooks Demo,accounting,5,2025-12-20
+C-DELTA,Delta Legal Demo,legal,7,2026-01-10
+C-EAST,Eastlake Studio Demo,design,11,2025-05-02
+C-FERN,Fern Analytics Demo,software,2,2026-03-18
+C-GALE,Gale Marketing Demo,marketing,1,2026-04-25
+C-NORTH,Northstar Internal,operator,4,2023-04-01
+C-HYDRA,Hydra Freelance Demo,consulting,1,2026-02-14
+C-JUNO,Juno Therapy Demo,health,3,2025-10-05
+C-KITE,Kite Films Demo,media,2,2026-05-20
+C-LUMA,Luma Coaching Demo,coaching,1,2026-01-28
+C-MILO,Milo Trading Demo,finance,1,2026-04-02
+C-EXIT,Exitworthy Demo,software,3,2025-07-15
+C-GHOSTWON,Ghostwon Logistics Demo,logistics,6,2026-05-30
+C-NEWCO,Newco Ventures Demo,vc,4,2026-05-12
+C-BRAVO,Bravo Insurance Demo,insurance,8,2026-06-01
+C-CHARLIE,Charlie Content Demo,media,1,2026-06-05
+C-DORA,Dora Architecture Demo,architecture,5,2026-06-20
+C-ECHO,Echo Recruiters Demo,recruiting,3,2026-05-05
+C-VOX,Vox Notary Demo,legal,1,2026-06-10
+C-FOX,Foxglove Labs Demo,biotech,4,2026-06-12
+C-PARTA,PartnerClient Alpha Demo,services,1,2026-02-01
+C-PARTB,PartnerClient Beta Demo,services,1,2026-03-01
+C-PARTC,PartnerClient Gamma Demo,services,1,2026-03-15
+C-DIRECTVO,DirectVO Solo Demo,consulting,1,2026-04-10
+C-DIRECTOK,DirectVO Fine Demo,consulting,1,2026-01-05

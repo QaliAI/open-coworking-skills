@@ -1,0 +1,13 @@
+deal_id,lead_id,company_id,location_id,product,stage,created_at,updated_at,expected_value,expected_move_in,owner,next_action,next_action_date,lost_reason
+D-2001,L-1001,C-NEWCO,LOC-NOR,private-office,proposal,2026-06-01,2026-06-25,1400,2026-08-01,casey,send revised proposal,2026-07-06,
+D-2002,,C-NEWCO,LOC-NOR,private-office,qualified,2026-05-12,2026-05-10,1400,,,,,
+D-2003,L-1006,C-FOX,LOC-NOR,team-suite,tour,2026-06-12,2026-06-28,3500,2026-09-01,casey,host tour,2026-07-03,
+D-2004,L-1008,C-KITE,LOC-RIV,private-office,won,2026-05-20,2026-05-28,700,2026-06-01,casey,,,
+D-2005,L-1009,C-GHOSTWON,LOC-NOR,private-office,won,2026-05-30,2026-06-10,1400,2026-07-01,casey,,,
+D-2006,,C-EXIT,LOC-NOR,private-office,lost,2026-05-01,2026-06-10,800,,riley,,,downsizing to home office
+D-2007,L-1002,C-BRAVO,LOC-NOR,private-office,proposal,2026-06-02,2026-06-25,2100,2026-09-01,casey,call re proposal,2026-06-20,
+D-2008,L-1003,C-CHARLIE,LOC-NOR,dedicated-desk,negotiation,2026-06-03,2026-06-29,350,2026-07-15,riley,confirm start date,2026-07-02,
+D-2009,L-1022,C-DORA,LOC-RIV,private-office,new,2026-06-27,2026-06-27,1300,2026-08-15,casey,discovery call,2026-07-07,
+D-2010,,C-ECHO,LOC-NOR,private-office,lost,2026-05-05,2026-06-02,1400,,riley,,,price
+D-2011,L-1007,C-VOX,LOC-NOR,virtual-office,qualified,2026-05-18,2026-05-20,99,,riley,,,
+D-2012,,C-NEWCO,LOC-NOR,private-office,tour,2026-06-15,2026-06-28,1400,,casey,align with D-2001 owner,2026-07-04,

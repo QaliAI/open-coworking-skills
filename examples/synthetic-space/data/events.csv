@@ -1,0 +1,4 @@
+event_id,location_id,name,date,attendees,revenue,cost
+EVT-01,LOC-NOR,Open House June,2026-06-18,38,0,450
+EVT-02,LOC-NOR,Founders Breakfast,2026-06-25,22,0,180
+EVT-03,LOC-NOR,Paid Workshop: Pitch Night,2026-06-27,30,600,250

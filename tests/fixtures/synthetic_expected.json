@@ -1,0 +1,67 @@
+{
+  "_comment": "Hand-computed expected answers for the Northstar Coworking Demo dataset as of 2026-07-01. If generate_synthetic_data.py changes, recompute these BY HAND from the literal rows - never by running the code under test.",
+  "as_of": "2026-07-01",
+  "occupancy": {
+    "office_occupancy": { "numerator": "5", "denominator": "7", "value": "0.7143" },
+    "workstation_occupancy": { "numerator": "38", "denominator": "66", "value": "0.5758" },
+    "financial_occupancy": { "numerator": "11785", "denominator": "18500", "value": "0.6370" },
+    "flags": {
+      "out_of_service_units": ["OF-104"],
+      "complimentary_occupancy": ["DD-08"],
+      "missing_list_price": ["DD-07", "HD-POOL"],
+      "discount_over_25pct_units": ["OF-105"]
+    },
+    "active_memberships_without_unit_count": 6
+  },
+  "leakage": {
+    "unfollowed_leads": ["L-1013", "L-1017", "L-1021"],
+    "stale_open_deals_30d": ["D-2002", "D-2011"],
+    "completed_tours_without_next_action": ["T-3002", "T-3003"],
+    "won_deals_without_membership": ["C-GHOSTWON"],
+    "active_memberships_without_recent_invoice": ["M-011", "M-016", "M-017"],
+    "unbilled_monthly_amount_at_risk": "2088",
+    "failed_or_overdue_invoices": ["INV-1004", "INV-1006"],
+    "failed_overdue_amount": "2350",
+    "out_of_service_inventory": ["OF-104"],
+    "blocked_monthly_list_value": "1400",
+    "active_status_past_end_date": ["M-011"]
+  },
+  "vo_reconciliation": {
+    "active_vo_memberships": 4,
+    "active_partner_clients": 3,
+    "findings": {
+      "partner_client_without_membership": ["C-PARTB"],
+      "possible_double_billing": ["C-PARTC"],
+      "direct_vo_client_never_invoiced": ["C-DIRECTVO"]
+    }
+  },
+  "sources": {
+    "google-ads": 4,
+    "referral": 3,
+    "website": 3,
+    "unknown": 3,
+    "walk-in": 2,
+    "yelp": 2,
+    "google-business-profile": 1,
+    "meta": 1,
+    "event": 1,
+    "broker-marketplace": 1,
+    "linkedin": 1
+  },
+  "funnel": {
+    "leads": 22,
+    "contacted": 19,
+    "leads_with_tour": 9,
+    "tours_completed": 5,
+    "tour_no_shows": 2,
+    "deals_won": 2,
+    "tour_show_rate": "0.7143"
+  },
+  "speed_to_lead": {
+    "responded_leads": 19,
+    "leads_without_response": ["L-1013", "L-1017", "L-1021"]
+  },
+  "quality": {
+    "duplicate_contact_email_rows": [1, 14]
+  }
+}

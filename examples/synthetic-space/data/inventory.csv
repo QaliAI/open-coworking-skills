@@ -1,0 +1,27 @@
+unit_id,location_id,unit_type,name,capacity,sellable,out_of_service,list_price,floor,amenities,available_from,notes
+OF-101,LOC-NOR,office,Office 101,4,true,false,1400,1,window,,
+OF-102,LOC-NOR,office,Office 102,6,true,false,2100,1,window;corner,,
+OF-103,LOC-NOR,office,Office 103,2,true,false,800,1,interior,,vacated 2026-06-15
+OF-104,LOC-NOR,office,Office 104,4,true,true,1400,1,window,,water damage repair since May
+OF-105,LOC-NOR,office,Office 105,8,true,false,2800,2,corner;window,,
+ST-201,LOC-NOR,suite,Suite 201,10,true,false,3500,2,private kitchen,,
+DD-01,LOC-NOR,desk,Dedicated Desk 1,1,true,false,350,1,,,
+DD-02,LOC-NOR,desk,Dedicated Desk 2,1,true,false,350,1,,,
+DD-03,LOC-NOR,desk,Dedicated Desk 3,1,true,false,350,1,,,
+DD-04,LOC-NOR,desk,Dedicated Desk 4,1,true,false,350,1,,,
+DD-05,LOC-NOR,desk,Dedicated Desk 5,1,true,false,350,1,,,
+DD-06,LOC-NOR,desk,Dedicated Desk 6,1,true,false,350,1,,,
+DD-07,LOC-NOR,desk,Dedicated Desk 7,1,true,false,,1,,,price never set in system
+DD-08,LOC-NOR,desk,Dedicated Desk 8,1,true,false,350,1,,,
+HD-POOL,LOC-NOR,hot-desk,Hot Desk Pool,12,true,false,,1,,,sold as floating memberships
+MR-1,LOC-NOR,meeting-room,Meeting Room Aurora,8,false,false,,1,tv;whiteboard,,bookable
+MR-2,LOC-NOR,meeting-room,Boardroom Borealis,12,false,false,,2,vc;tv,,bookable
+EV-1,LOC-NOR,event-space,Event Loft,60,false,false,,3,stage;av,,bookable
+OF-201,LOC-RIV,office,Office 201,4,true,false,1300,1,window,,
+OF-202,LOC-RIV,office,Office 202,6,true,false,2000,1,window,,
+OF-203,LOC-RIV,office,Office 203,2,true,false,750,1,interior,,
+DD-101,LOC-RIV,desk,Riverside Desk 1,1,true,false,350,1,,,
+DD-102,LOC-RIV,desk,Riverside Desk 2,1,true,false,350,1,,,
+DD-103,LOC-RIV,desk,Riverside Desk 3,1,true,false,350,1,,,
+DD-104,LOC-RIV,desk,Riverside Desk 4,1,true,false,350,1,,,
+MR-3,LOC-RIV,meeting-room,Meeting Room Delta,6,false,false,,1,tv,,bookable
