@@ -1,0 +1,52 @@
+# Credentials and environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*.json
+secrets*
+
+# Real customer data must never enter this repo.
+# Any file matching these patterns is treated as a real export.
+*-real-export.*
+real-data/
+customer-data/
+private/
+
+# Temporary exports and working files
+*.tmp
+*.bak
+~$*
+output/
+out/
+
+# Research clones (inspect only, never commit)
+.research/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node (only if tooling is added later)
+node_modules/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Generated platform packages (reproducible from canonical skills)
+packages/generated/

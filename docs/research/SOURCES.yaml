@@ -1,0 +1,206 @@
+# Source and licensing ledger.
+# Every outside source considered during development is recorded here BEFORE
+# any adaptation. usage values: studied | adapted | copied.
+# "studied" means concepts/interfaces only; no text or code was reproduced.
+
+sources:
+  - name: Agent Skills specification
+    location: https://agentskills.io/specification
+    maintainer: Anthropic (published as an open standard)
+    date_accessed: "2026-07-17"
+    license: Open specification; site content terms apply. Following the format
+      is interface use, not copying.
+    knowledge_used: SKILL.md frontmatter contract (name/description required;
+      license/compatibility/metadata/allowed-tools optional), name constraints
+      (<=64 chars, lowercase alnum + hyphens, no leading/trailing/double hyphen,
+      must match folder), description <=1024 chars, compatibility <=500 chars,
+      progressive disclosure tiers, keep SKILL.md under 500 lines, references
+      one level deep.
+    usage: studied
+    attribution_required: no
+    restrictions: none identified
+
+  - name: Agent Skills client showcase
+    location: https://agentskills.io/clients.md
+    maintainer: Anthropic
+    date_accessed: "2026-07-17"
+    license: same as above
+    knowledge_used: Which hosts officially support the format (Claude Code,
+      Claude, OpenAI Codex, GitHub Copilot, VS Code, Cursor, Gemini CLI,
+      OpenCode, Kiro, Goose, Roo Code, Amp, Factory, others) and pointers to
+      each host's setup instructions.
+    usage: studied
+    attribution_required: no
+    restrictions: none identified
+
+  - name: Agent Skills authoring guides (quickstart, best practices,
+      evaluating skills, optimizing descriptions, using scripts)
+    location: https://agentskills.io/skill-creation/best-practices
+    maintainer: Anthropic
+    date_accessed: "2026-07-17"
+    license: same as above
+    knowledge_used: Authoring conventions; evaluation approach of
+      trigger/task/output cases; description optimization guidance.
+    usage: studied
+    attribution_required: no
+    restrictions: none identified
+
+  - name: OpenAI Codex skills documentation
+    location: https://developers.openai.com/codex/skills
+    maintainer: OpenAI
+    date_accessed: "2026-07-17"
+    license: OpenAI documentation terms
+    knowledge_used: Codex discovers skills from .agents/skills (repo),
+      $HOME/.agents/skills (user), /etc/codex/skills (admin); $skill-creator
+      and $skill-installer commands; /skills and $-mention invocation;
+      optional agents/openai.yaml metadata.
+    usage: studied
+    attribution_required: no
+    restrictions: none identified
+
+  - name: Claude Code skills documentation
+    location: https://code.claude.com/docs/en/skills
+    maintainer: Anthropic
+    date_accessed: "2026-07-17"
+    license: Anthropic documentation terms
+    knowledge_used: Claude Code follows the Agent Skills standard; skills in
+      .claude/skills (project) and ~/.claude/skills (personal) plus plugin
+      skills; /skill-name invocation; commands merged into skills; Claude Code
+      extensions (invocation control, subagent execution) are host-specific.
+    usage: studied
+    attribution_required: no
+    restrictions: none identified
+
+  - name: GitHub CLI gh skill install manual
+    location: https://cli.github.com/manual/gh_skill_install
+    maintainer: GitHub
+    date_accessed: "2026-07-17"
+    license: GitHub documentation terms
+    knowledge_used: "gh skill install OWNER/REPO [skill[@version]]" installs to
+      .agents/skills/ at project scope by default; --agent, --scope, --pin,
+      --all, --from-local, --force flags; discovery of any .../SKILL.md path.
+    usage: studied
+    attribution_required: no
+    restrictions: none identified
+
+  - name: Windsurf Cascade skills documentation
+    location: https://docs.windsurf.com/windsurf/cascade/skills
+    maintainer: Windsurf (Cognition)
+    date_accessed: "2026-07-17"
+    license: Windsurf documentation terms
+    knowledge_used: Windsurf reads SKILL.md skills from .windsurf/skills/ in
+      the project directory (surfaced via search results; noted as requiring
+      re-verification against the live page before claiming exact behavior).
+    usage: studied
+    attribution_required: no
+    restrictions: none identified
+
+  - name: Community skill catalogs and multi-host installers (lobehub.com,
+      skillport, agent-skills-cli, tech-leads-club/agent-skills)
+    location: https://github.com/gotalab/skillport and search results
+    maintainer: various community maintainers
+    date_accessed: "2026-07-17"
+    license: various (MIT and others); not copied
+    knowledge_used: Evidence that Cline, Antigravity, and other hosts consume
+      the shared .agents/skills project directory via community tooling.
+      Treated as community-documented, not official vendor support.
+    usage: studied
+    attribution_required: no
+    restrictions: none; nothing copied
+
+# --- Studied-but-not-fetched pattern sources -------------------------------
+# These well-known public repositories informed general expectations about
+# skill repo structure (README conventions, eval folders, script interfaces).
+# They were NOT fetched or cloned during this build; no content was taken.
+
+  - name: anthropics/skills (public skills + skill-creator)
+    location: https://github.com/anthropics/skills
+    maintainer: Anthropic
+    date_accessed: "2026-07-17 (not fetched this build; known public repo)"
+    license: per-repo (permissive); verify before any copying
+    knowledge_used: General pattern awareness only (skills as folders with
+      SKILL.md, scripts/, references/). Nothing copied or adapted.
+    usage: studied
+    attribution_required: no
+    restrictions: do not copy without re-checking license
+
+  - name: obra/superpowers
+    location: https://github.com/obra/superpowers
+    maintainer: Jesse Vincent (obra)
+    date_accessed: "2026-07-17 (not fetched this build; known public repo)"
+    license: verify before any copying
+    knowledge_used: General pattern awareness (process-skill discipline,
+      skill descriptions that state when to trigger). Nothing copied.
+    usage: studied
+    attribution_required: no
+    restrictions: do not copy without re-checking license
+
+# --- Coworking systems -----------------------------------------------------
+# Vendor API documentation was NOT fetched during this build. Entries below
+# record publicly known documentation locations for future adapter work.
+# No support claims are made beyond what adapters/ files state, and all
+# vendor adapter statuses are limited to export/mapping documentation until
+# a connector is actually built and tested against live docs.
+
+  - name: OfficeRnD developer documentation
+    location: https://developers.officernd.com/
+    maintainer: OfficeRnD
+    date_accessed: not fetched this build
+    license: vendor documentation terms
+    knowledge_used: none yet; recorded for future connector research
+    usage: studied
+    attribution_required: no
+    restrictions: verify current API version before building a connector
+
+  - name: Nexudus developer documentation
+    location: https://developers.nexudus.com/
+    maintainer: Nexudus
+    date_accessed: not fetched this build
+    license: vendor documentation terms
+    knowledge_used: none yet; recorded for future connector research
+    usage: studied
+    attribution_required: no
+    restrictions: verify current API version before building a connector
+
+  - name: Optix developer documentation
+    location: https://developer.optixapp.com/
+    maintainer: Optix
+    date_accessed: not fetched this build
+    license: vendor documentation terms
+    knowledge_used: none yet; recorded for future connector research
+    usage: studied
+    attribution_required: no
+    restrictions: verify current API version before building a connector
+
+  - name: Archie documentation
+    location: https://archieapp.co/
+    maintainer: Archie
+    date_accessed: not fetched this build
+    license: vendor documentation terms
+    knowledge_used: none yet; recorded for future connector research
+    usage: studied
+    attribution_required: no
+    restrictions: verify current API version before building a connector
+
+  - name: HubSpot developer documentation
+    location: https://developers.hubspot.com/docs
+    maintainer: HubSpot
+    date_accessed: not fetched this build
+    license: vendor documentation terms
+    knowledge_used: none yet; recorded for future connector research. The
+      generic export mapping in adapters/hubspot/ is based on the shape of
+      standard HubSpot CRM CSV exports, which operators can verify against
+      their own exports.
+    usage: studied
+    attribution_required: no
+    restrictions: verify current API version before building a connector
+
+  - name: Apache License 2.0 canonical text
+    location: https://www.apache.org/licenses/LICENSE-2.0.txt
+    maintainer: Apache Software Foundation
+    date_accessed: "2026-07-17"
+    license: the license text itself is freely reproducible
+    knowledge_used: copied verbatim into LICENSE (required verbatim use)
+    usage: copied
+    attribution_required: built into the text
+    restrictions: none
