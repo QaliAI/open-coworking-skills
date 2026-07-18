@@ -1,0 +1,51 @@
+name: Skill proposal
+description: Propose a new coworking skill or promote a planned one
+labels: [skill-proposal]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Proposed skill name
+      description: lowercase-hyphen form, coworking-* prefix
+      placeholder: coworking-meeting-room-utilization
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Operator problem
+      description: >
+        The real operating problem in operator language. Who has it (owner, CM,
+        sales, billing)? What goes wrong today without the skill? Skills that
+        are "analyze the data" or "create a strategy" won't be accepted -
+        see docs/skill-authoring/quality-standard.md.
+    validations:
+      required: true
+  - type: textarea
+    id: io
+    attributes:
+      label: Inputs and outputs
+      description: Required inputs, and the concrete artifact/decision-support the operator receives.
+    validations:
+      required: true
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk tier
+      options: [r0 (read-only analysis), r1 (draft generation), r2+ (explain why - rarely accepted)]
+    validations:
+      required: true
+  - type: textarea
+    id: edge
+    attributes:
+      label: Coworking-specific edge cases
+      description: What breaks the naive version? (comped units, partner billing, notice-vs-end dates, ...)
+    validations:
+      required: true
+  - type: textarea
+    id: evals
+    attributes:
+      label: How would we test it?
+      description: Known-answer cases where computable; the checklist observations otherwise.
+    validations:
+      required: true

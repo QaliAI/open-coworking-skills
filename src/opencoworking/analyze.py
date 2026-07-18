@@ -15,8 +15,8 @@ from decimal import Decimal
 
 from .ingest import Table
 from .metrics import (
-    Unit,
     ZERO,
+    Unit,
     financial_occupancy,
     office_occupancy,
     workstation_occupancy,
@@ -82,8 +82,9 @@ def inspect_table(table: Table) -> dict[str, object]:
 
 # --- Occupancy --------------------------------------------------------------
 
-def build_units(inventory: Table, memberships: Table,
-                as_of: date, location_id: str | None = None) -> tuple[list[Unit], list[dict[str, object]]]:
+def build_units(
+    inventory: Table, memberships: Table, as_of: date, location_id: str | None = None
+) -> tuple[list[Unit], list[dict[str, object]]]:
     """Join inventory and memberships into metric-ready Units.
 
     A membership is active on as_of when status == 'active' and
@@ -530,15 +531,18 @@ def vo_reconciliation(partners: Table, memberships: Table, invoices: Table,
 
     for cid, p in partner_clients.items():
         if cid and cid not in vo_memberships:
-            findings.append({"check": "partner_client_without_membership", "company_id": cid,
-                             "partner": p.get("partner_name", "?"),
-                             "detail": "Partner bills for this client but no active virtual-office "
-                                       "membership exists; fulfillment obligation may be untracked."})
-        if p.get("billing_model", "").strip().lower() == "partner_billed" and cid in invoiced_companies:
-            findings.append({"check": "possible_double_billing", "company_id": cid,
-                             "partner": p.get("partner_name", "?"),
-                             "detail": "Partner-billed client also has operator invoices; verify "
-                                       "the operator invoices are for add-ons, not the base service."})
+            findings.append({
+                "check": "partner_client_without_membership", "company_id": cid,
+                "partner": p.get("partner_name", "?"),
+                "detail": "Partner bills for this client but no active virtual-office "
+                          "membership exists; fulfillment obligation may be untracked."})
+        partner_billed = p.get("billing_model", "").strip().lower() == "partner_billed"
+        if partner_billed and cid in invoiced_companies:
+            findings.append({
+                "check": "possible_double_billing", "company_id": cid,
+                "partner": p.get("partner_name", "?"),
+                "detail": "Partner-billed client also has operator invoices; verify "
+                          "the operator invoices are for add-ons, not the base service."})
 
     for cid, m in vo_memberships.items():
         if cid in partner_clients:

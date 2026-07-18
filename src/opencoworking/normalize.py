@@ -121,13 +121,15 @@ def detect_currency(value: str) -> str | None:
 # Canonical lead-source buckets. Operators can extend via extra_rules.
 _SOURCE_RULES: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"google\s*(ads|adwords|ppc|paid|cpc)|adwords", re.I), "google-ads"),
-    (re.compile(r"\bgbp\b|google\s*(business|maps|my\s*business)|\bgmb\b", re.I), "google-business-profile"),
+    (re.compile(r"\bgbp\b|google\s*(business|maps|my\s*business)|\bgmb\b", re.I),
+     "google-business-profile"),
     (re.compile(r"google|organic|seo|search(?!\s*console)", re.I), "organic-search"),
     (re.compile(r"\b(meta|facebook|instagram|fb|ig)\b\s*(ads?)?", re.I), "meta"),
     (re.compile(r"linked\s*in", re.I), "linkedin"),
     (re.compile(r"walk\s*[- ]?in|drop\s*[- ]?in|street", re.I), "walk-in"),
     (re.compile(r"referr?al|word\s*of\s*mouth|\bwom\b|member\s*referr?", re.I), "referral"),
-    (re.compile(r"broker|agent|liquid\s*space|liquidspace|upsuite|coworker\.com|deskpass|instant\s*offices?", re.I), "broker-marketplace"),
+    (re.compile(r"broker|agent|liquid\s*space|liquidspace|upsuite|coworker\.com"
+                r"|deskpass|instant\s*offices?", re.I), "broker-marketplace"),
     (re.compile(r"event|open\s*house|meetup|tour\s*day", re.I), "event"),
     (re.compile(r"web\s*site|website|web\s*form|contact\s*form|landing", re.I), "website"),
     (re.compile(r"e-?mail|newsletter|mailchimp|brevo", re.I), "email-marketing"),
@@ -148,11 +150,11 @@ def normalize_source(
     if not v:
         return ("unknown", "unknown")
     if extra_rules:
-        for pattern, target in extra_rules:
-            if re.search(pattern, v, re.I):
+        for raw_pattern, target in extra_rules:
+            if re.search(raw_pattern, v, re.I):
                 return (target, "exact")
-    for pattern, target in _SOURCE_RULES:
-        if pattern.search(v):
+    for compiled, target in _SOURCE_RULES:
+        if compiled.search(v):
             return (target, "exact")
     return (v.lower().strip().replace(" ", "-"), "unmapped")
 

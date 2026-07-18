@@ -25,6 +25,8 @@ def main(argv: list[str] | None = None) -> int:
         if any(part in SKIP_DIRS for part in md.parts):
             continue
         text = md.read_text(encoding="utf-8", errors="replace")
+        # Skip fenced code blocks - links there are illustrative templates.
+        text = re.sub(r"^(`{3,}|~{3,}).*?^\1\s*$", "", text, flags=re.S | re.M)
         for raw in LINK_RE.findall(text):
             link = raw.split("#")[0]
             if not link or link.startswith(("http://", "https://", "mailto:", "{")):

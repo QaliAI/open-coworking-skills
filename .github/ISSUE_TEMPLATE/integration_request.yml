@@ -1,0 +1,44 @@
+name: Integration request
+description: Request or offer support for a workspace-management system, CRM, or other platform
+labels: [integration]
+body:
+  - type: input
+    id: system
+    attributes:
+      label: System
+      placeholder: Cobot / Spacebring / Pipedrive / ...
+    validations:
+      required: true
+  - type: dropdown
+    id: level
+    attributes:
+      label: Support level requested
+      description: See adapters/README.md for what each requires
+      options:
+        - mapping-documented (field-mapping guide)
+        - converter (export reshaping script)
+        - connector-prototype (read-only API)
+    validations:
+      required: true
+  - type: textarea
+    id: exports
+    attributes:
+      label: What can you export?
+      description: >
+        Which lists/reports the system exports (memberships, invoices, leads...).
+        A PII-scrubbed sample header row per export accelerates everything -
+        redact first (docs/guides/protect-member-data.md).
+    validations:
+      required: true
+  - type: checkboxes
+    id: verify
+    attributes:
+      label: Verification
+      options:
+        - label: I can verify mappings against a real account (makes 'mapping-documented' achievable)
+        - label: I can test a read-only connector against a sandbox/demo account
+  - type: textarea
+    id: docs
+    attributes:
+      label: Developer documentation link
+      description: The system's public API/export docs, if any.

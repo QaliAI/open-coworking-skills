@@ -89,10 +89,11 @@ def check_date_parseability(rows: list[Row], column: str) -> list[Finding]:
                                 f"{len(bad)} value(s) in '{column}' could not be parsed as dates.",
                                 bad))
     if len(formats_seen) > 1:
-        findings.append(Finding("mixed_date_formats", "warning",
-                                f"Column '{column}' mixes date formats ({', '.join(sorted(formats_seen))}). "
-                                "Slash dates were interpreted month-first; verify this matches the "
-                                "source system's locale."))
+        findings.append(Finding(
+            "mixed_date_formats", "warning",
+            f"Column '{column}' mixes date formats ({', '.join(sorted(formats_seen))}). "
+            "Slash dates were interpreted month-first; verify this matches the "
+            "source system's locale."))
     return findings
 
 

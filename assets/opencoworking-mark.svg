@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" role="img" aria-labelledby="ocs-title ocs-desc">
+  <title id="ocs-title">OpenCoworking Skills</title>
+  <desc id="ocs-desc">Wordmark with an abstract floor-plan mark: a rounded square divided into four rooms, one highlighted.</desc>
+  <!-- Mark: a floor plan; three neutral rooms, one occupied (accent). Original artwork. -->
+  <g transform="translate(20,20)">
+    <rect x="0" y="0" width="120" height="120" rx="18" fill="none" stroke="#1F2937" stroke-width="8"/>
+    <line x1="60" y1="8" x2="60" y2="112" stroke="#1F2937" stroke-width="8" stroke-linecap="round"/>
+    <line x1="8" y1="60" x2="112" y2="60" stroke="#1F2937" stroke-width="8" stroke-linecap="round"/>
+    <rect x="68" y="14" width="38" height="38" rx="8" fill="#0D9488"/>
+    <circle cx="33" cy="87" r="7" fill="#1F2937"/>
+  </g>
+  <g font-family="Segoe UI, Arial, Helvetica, sans-serif">
+    <text x="164" y="78" font-size="44" font-weight="700" fill="#1F2937">OpenCoworking</text>
+    <text x="164" y="122" font-size="34" font-weight="400" fill="#0D9488" letter-spacing="6">SKILLS</text>
+  </g>
+</svg>

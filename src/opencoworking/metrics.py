@@ -126,7 +126,7 @@ def financial_occupancy(units: list[Unit]) -> MetricResult:
     priced = [u for u in pool if u.list_price is not None]
     unpriced = [u for u in pool if u.list_price is None]
     num = sum((u.contracted_revenue for u in priced if u.occupied), ZERO)
-    den = sum((u.list_price for u in priced), ZERO)  # type: ignore[misc]
+    den = sum((u.list_price or ZERO for u in priced), ZERO)
     warnings = []
     if unpriced:
         warnings.append(
@@ -162,8 +162,9 @@ def logo_churn(canceled_members: int, members_at_start: int, period: str) -> Met
     return _ratio(
         "logo_churn", Decimal(canceled_members), Decimal(members_at_start),
         f"memberships canceled in {period} / active memberships at start of {period}",
-        exclusions=["members who both joined and canceled inside the period "
-                    "(not in the start-of-period denominator)"],
+        exclusions=[
+            "members who both joined and canceled inside the period "
+            "(not in the start-of-period denominator)"],
     )
 
 
@@ -200,7 +201,8 @@ def business_minutes_between(
     while cursor.date() <= end.date():
         if cursor.weekday() in workdays:
             day_open = datetime.combine(cursor.date(), datetime.min.time()).replace(hour=open_hour)
-            day_close = datetime.combine(cursor.date(), datetime.min.time()).replace(hour=close_hour)
+            day_close = datetime.combine(cursor.date(),
+                                         datetime.min.time()).replace(hour=close_hour)
             lo = max(cursor if cursor.date() == start.date() else day_open, day_open)
             hi = min(end if cursor.date() == end.date() else day_close, day_close)
             if hi > lo:

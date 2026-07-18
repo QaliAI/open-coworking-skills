@@ -77,7 +77,8 @@ def main(argv: list[str] | None = None) -> int:
             elif kind == "checklist":
                 checklist_cases += 1
                 if not task.get("prompt") or not task.get("expected"):
-                    failures.append(f"{skill_dir.name}/task{i}: checklist case missing prompt/expected")
+                    failures.append(
+                        f"{skill_dir.name}/task{i}: checklist case missing prompt/expected")
             else:
                 failures.append(f"{skill_dir.name}/task{i}: unknown kind '{kind}'")
 

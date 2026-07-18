@@ -81,7 +81,7 @@ def load_csv(path: str | Path, encoding: str | None = None) -> Table:
 def load_xlsx(path: str | Path, sheet: str | None = None) -> Table:
     """Load the first (or named) sheet of an XLSX export. Needs openpyxl."""
     try:
-        import openpyxl  # type: ignore[import-not-found]
+        import openpyxl
     except ImportError as e:
         raise IngestError(
             "XLSX support requires the optional dependency openpyxl. "

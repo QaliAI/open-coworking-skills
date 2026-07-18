@@ -1,0 +1,36 @@
+name: Data model issue
+description: The vendor-neutral schema doesn't fit a real coworking situation
+labels: [data-model]
+body:
+  - type: input
+    id: entity
+    attributes:
+      label: Entity / field
+      placeholder: memberships.notice_date / inventory.capacity / new entity
+    validations:
+      required: true
+  - type: textarea
+    id: situation
+    attributes:
+      label: The real-world situation that doesn't fit
+      description: >
+        Describe the operating reality (synthetic example, no real member
+        data). E.g. "one agreement covers offices at two locations",
+        "our licenses have break clauses distinct from notice dates".
+    validations:
+      required: true
+  - type: textarea
+    id: today
+    attributes:
+      label: What happens today
+      description: How the current schema/analyses mishandle or can't express it.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change (optional)
+      description: >
+        Schema changes ripple into skills, fixtures, and hand-computed
+        expected answers - breaking changes need the versioning policy
+        (docs/skill-authoring/versioning-policy.md).

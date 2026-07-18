@@ -111,7 +111,8 @@ def validate_skill(skill_dir: Path, problems: list[str], descriptions: dict[str,
         if len(desc) > 1024:
             problems.append(f"{rel}: description exceeds 1024 chars ({len(desc)})")
         if len(desc) < 80:
-            problems.append(f"{rel}: description too short to be a useful trigger ({len(desc)} chars)")
+            problems.append(
+                f"{rel}: description too short to be a useful trigger ({len(desc)} chars)")
         if not re.search(r"\bUse when\b|\bUse (this |it )?(before|right after|for)\b", desc, re.I):
             problems.append(f"{rel}: description lacks an explicit 'Use when...' trigger clause")
         low = desc.lower().strip()
