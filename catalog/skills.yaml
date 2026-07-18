@@ -1,0 +1,620 @@
+# Canonical skill catalog. The README table is GENERATED from this file
+# (scripts/generate_readme_catalog.py); scripts/check_catalog.py verifies
+# consistency with .agents/skills/. Statuses: stable skills exist in
+# .agents/skills/; planned skills exist only here and in ROADMAP.md.
+
+skills:
+  # ---------------------------------------------------------------- stable
+  - name: coworking-context-builder
+    category: foundation
+    status: stable
+    version: "0.1.0"
+    risk: r1
+    modes: [manual, export]
+    primary_user: owner / GM
+    problem: Skills re-ask basics and silently assume wrong defaults without a saved operator profile.
+    inputs: Operator interview answers; optional inventory/membership exports.
+    outputs: operator-profile.md with facts, assumptions, and missing fields separated.
+    dependencies: []
+
+  - name: coworking-data-dictionary
+    category: foundation
+    status: stable
+    version: "0.1.0"
+    risk: r0
+    modes: [manual, export]
+    primary_user: operator / analyst
+    problem: Silent column mis-mapping (people vs memberships, term vs monthly money) corrupts every downstream analysis.
+    inputs: Export headers, sample rows, vendor guides.
+    outputs: Saved validated mapping YAML; list of unsupported analyses.
+    dependencies: [coworking-wms-export-analyzer]
+
+  - name: coworking-source-verifier
+    category: foundation
+    status: stable
+    version: "0.1.0"
+    risk: r0
+    modes: [manual, export]
+    primary_user: owner / GM
+    problem: Reports full of unsourced claims and manufactured causes drive bad pricing and expansion decisions.
+    inputs: Document or claim; underlying data files for recomputation.
+    outputs: Verification table separating facts, calculations, assumptions, hypotheses, unsourced claims.
+    dependencies: []
+
+  - name: coworking-pii-redactor
+    category: foundation
+    status: stable
+    version: "0.1.0"
+    risk: r0
+    modes: [manual, export]
+    primary_user: operator / analyst
+    problem: Sharing raw exports leaks member personal data.
+    inputs: File or text; name columns; private salt.
+    outputs: Redacted copy with stable pseudonyms, replacement counts, residual-risk list.
+    dependencies: []
+
+  - name: coworking-wms-export-analyzer
+    category: business-intelligence
+    status: stable
+    version: "0.1.0"
+    risk: r0
+    modes: [manual, export]
+    primary_user: operator / analyst
+    problem: Metrics run on misidentified or dirty exports produce polished nonsense.
+    inputs: Any CSV/XLSX export.
+    outputs: Entity identification with confidence, quality findings with rows, supported-analyses verdicts.
+    dependencies: []
+
+  - name: coworking-occupancy-revenue-dashboard
+    category: business-intelligence
+    status: stable
+    version: "0.1.0"
+    risk: r0
+    modes: [manual, export]
+    primary_user: owner / GM
+    problem: Operators feel 90% full while the bank disagrees - occupancy variants and their distortions are conflated.
+    inputs: Inventory and membership exports; as-of date.
+    outputs: Office/workstation/financial occupancy with formulas, distortion flags, decision summary.
+    dependencies: [coworking-data-dictionary]
+
+  - name: coworking-monthly-owner-report
+    category: business-intelligence
+    status: stable
+    version: "0.1.0"
+    risk: r1
+    modes: [manual, export]
+    primary_user: owner / GM
+    problem: Owners get raw screenshots or vague prose instead of decision-ready reporting.
+    inputs: Month; available canonical exports.
+    outputs: 12-section executive report with methodology appendix and prioritized actions.
+    dependencies: [coworking-occupancy-revenue-dashboard, coworking-revenue-leakage-audit, coworking-source-verifier]
+
+  - name: coworking-revenue-leakage-audit
+    category: business-intelligence
+    status: stable
+    version: "0.1.0"
+    risk: r0
+    modes: [manual, export]
+    primary_user: owner / billing
+    problem: Revenue evaporates in gaps between systems - unbilled members, unconverted won deals, idle inventory.
+    inputs: Any subset of canonical exports; as-of date.
+    outputs: Findings grouped into billing/pipeline/inventory classes with never-summed totals.
+    dependencies: []
+
+  - name: coworking-pipeline-health
+    category: sales
+    status: stable
+    version: "0.1.0"
+    risk: r0
+    modes: [manual, export]
+    primary_user: sales manager
+    problem: Pipelines die of neglect - stale deals, missing next actions, duplicates, unowned records.
+    inputs: Deals export; optional leads and tours.
+    outputs: Row-level hygiene findings, funnel conversion, workload, prioritized fixes.
+    dependencies: []
+
+  - name: coworking-speed-to-lead-auditor
+    category: sales
+    status: stable
+    version: "0.1.0"
+    risk: r0
+    modes: [manual, export]
+    primary_user: sales manager
+    problem: Teams believe they respond fast; business-hours reality and untouched leads say otherwise.
+    inputs: Leads export with response timestamps; business hours.
+    outputs: Business-minute response stats, never-contacted list, segment patterns.
+    dependencies: []
+
+  - name: coworking-lead-source-normalizer
+    category: sales
+    status: stable
+    version: "0.1.0"
+    risk: r0
+    modes: [manual, export]
+    primary_user: marketer / sales manager
+    problem: Channel ROI decisions made on five spellings of the same source are decisions made on typos.
+    inputs: Leads export with source labels.
+    outputs: Canonical source distribution, unmapped labels with proposals, upstream picklist fix.
+    dependencies: []
+
+  - name: coworking-lead-to-tour-diagnostic
+    category: sales
+    status: stable
+    version: "0.1.0"
+    risk: r0
+    modes: [manual, export]
+    primary_user: owner / sales manager
+    problem: Every conversion problem gets misdiagnosed as a marketing-volume problem.
+    inputs: Leads and tours; deals if available; booking-flow description.
+    outputs: Nine-checkpoint funnel localization with targeted fixes.
+    dependencies: [coworking-speed-to-lead-auditor, coworking-lead-source-normalizer]
+
+  - name: coworking-tour-preparation
+    category: sales
+    status: stable
+    version: "0.1.0"
+    risk: r1
+    modes: [manual, export]
+    primary_user: tour host
+    problem: Cold-hosted tours re-ask known questions, show unavailable units, and end without a next step.
+    inputs: Prospect record, tour time, availability.
+    outputs: One-page brief - facts, unknowns, good/better/best options, route, commitment to secure.
+    dependencies: []
+
+  - name: coworking-tour-follow-up
+    category: sales
+    status: stable
+    version: "0.1.0"
+    risk: r1
+    modes: [manual, export]
+    primary_user: tour host
+    problem: Generic "checking in" follow-ups transfer all work to the prospect and close poorly.
+    inputs: Five-question tour debrief.
+    outputs: Specific follow-up draft, CRM log line, promised-items list. Drafts only.
+    dependencies: [coworking-tour-preparation]
+
+  - name: coworking-post-tour-ghost-recovery
+    category: sales
+    status: stable
+    version: "0.1.0"
+    risk: r1
+    modes: [manual, export]
+    primary_user: sales manager
+    problem: Ghosted prospects get either abandoned or harassed; both lose the deal and the relationship.
+    inputs: Tour history, prior attempts, consent constraints.
+    outputs: Value-per-touch sequence with real-urgency checks, stop rule, graceful close.
+    dependencies: [coworking-tour-follow-up]
+
+  - name: coworking-member-onboarding
+    category: community-retention
+    status: stable
+    version: "0.1.0"
+    risk: r1
+    modes: [manual, export]
+    primary_user: community manager
+    problem: First-60-day churn traces to broken basics nobody owned - access, billing, introductions.
+    inputs: Member, product, start date, responsible staff.
+    outputs: Dated owner-assigned checklist with verifications; onboarding gap audits.
+    dependencies: []
+
+  - name: coworking-churn-risk-review
+    category: community-retention
+    status: stable
+    version: "0.1.0"
+    risk: r0
+    modes: [manual, export]
+    primary_user: community manager / owner
+    problem: Cancellation signals are visible weeks early but opaque scores don't tell a CM who to talk to about what.
+    inputs: Memberships; optional invoices, usage, support data.
+    outputs: Evidence-tiered member list with cited indicators and conversation openers.
+    dependencies: []
+
+  - name: coworking-renewal-preparation
+    category: community-retention
+    status: stable
+    version: "0.1.0"
+    risk: r1
+    modes: [manual, export]
+    primary_user: owner / GM
+    problem: Auto-invoice renewals lose expansions and trigger price-shock churn.
+    inputs: Membership record, list pricing, histories.
+    outputs: One-page renewal brief with options and explicit human-judgment list.
+    dependencies: [coworking-churn-risk-review]
+
+  - name: coworking-local-seo-audit
+    category: marketing
+    status: stable
+    version: "0.1.0"
+    risk: r0
+    modes: [manual, export]
+    primary_user: marketer / owner
+    problem: One community homepage cannot match product-by-product local search intent.
+    inputs: Page list, products, locations; optional Search Console data.
+    outputs: Product-by-location coverage matrix, per-page findings, prioritized build/fix list.
+    dependencies: []
+
+  - name: coworking-google-business-profile-audit
+    category: marketing
+    status: stable
+    version: "0.1.0"
+    risk: r0
+    modes: [manual, export]
+    primary_user: marketer / owner
+    problem: The Maps listing is the front door and it rots - wrong categories, stale photos, unanswered reviews.
+    inputs: Listing state as reported; review export.
+    outputs: Policy-safe checklist results ordered policy-risk -> facts -> revenue -> enrichment.
+    dependencies: [coworking-local-seo-audit]
+
+  - name: coworking-virtual-office-reconciliation
+    category: virtual-office
+    status: stable
+    version: "0.1.0"
+    risk: r0
+    modes: [manual, export]
+    primary_user: owner / billing
+    problem: Partner-billed VO clients leak silently - unknown clients, unbilled directs, double billing, payout mismatches.
+    inputs: Partner records, memberships, invoices; partner statements.
+    outputs: Grouped findings with escalations first; payout delta arithmetic.
+    dependencies: []
+
+  - name: coworking-cancellation-to-virtual-office
+    category: virtual-office
+    status: stable
+    version: "0.1.0"
+    risk: r1
+    modes: [manual, export]
+    primary_user: community manager / owner
+    problem: Canceling office members with continuing address/mail needs are lost entirely instead of down-sold respectfully.
+    inputs: Canceling member, reason, VO product menu.
+    outputs: Fit verdict with cited signals, single pressure-free offer draft, wind-down facts.
+    dependencies: [coworking-virtual-office-reconciliation]
+
+  - name: coworking-mcp-builder
+    category: integration-development
+    status: stable
+    version: "0.1.0"
+    risk: r1
+    modes: [manual]
+    primary_user: developer
+    problem: Naive MCP servers over member data are PII leaks and billing incidents waiting to happen.
+    inputs: Target system, current API docs, use cases.
+    outputs: Read-only-first tool design, scaffolding checklist, fixture-test plan, operator README.
+    dependencies: [coworking-system-adapter-builder]
+
+  - name: coworking-system-adapter-builder
+    category: integration-development
+    status: stable
+    version: "0.1.0"
+    risk: r1
+    modes: [manual]
+    primary_user: contributor
+    problem: Without a disciplined adapter path every new platform request becomes "edit all skills".
+    inputs: Target system, real export samples or current API docs.
+    outputs: Mapping guide, optional converter with tests, honest compatibility label.
+    dependencies: []
+
+  # --------------------------------------------------------------- planned
+  - name: coworking-meeting-room-utilization
+    category: business-intelligence
+    status: planned
+    priority: p1
+    risk: r0
+    modes: [export]
+    primary_user: GM
+    problem: Room pricing and calendar policy set blind without booked-vs-bookable-hours analysis.
+    inputs: Room bookings, room inventory, opening hours.
+    outputs: Utilization by room/daypart, member vs nonmember mix, pricing observations.
+    evidence_needed: Booking fixtures with opening-hours edge cases; utilization formula tests.
+    planned_evals: Known-answer booked-hours cases incl. overnight and multi-day bookings.
+
+  - name: coworking-cohort-retention
+    category: business-intelligence
+    status: planned
+    priority: p2
+    risk: r0
+    modes: [export]
+    primary_user: owner
+    problem: Blended churn hides whether newer cohorts stick better or worse than older ones.
+    inputs: Membership history with start/end dates.
+    outputs: Cohort survival table with minimum-cohort-size guards.
+    evidence_needed: Multi-year synthetic membership history; small-cohort suppression rules.
+    planned_evals: Known-answer cohort tables; tiny-cohort refusal cases.
+
+  - name: coworking-collections-prioritizer
+    category: finance-pricing
+    status: planned
+    priority: p1
+    risk: r0
+    modes: [export]
+    primary_user: billing
+    problem: Failed and overdue invoices chased in random order instead of by amount, age, and relationship risk.
+    inputs: Invoices, payments, memberships.
+    outputs: Ordered collection worklist with suggested (human-sent) approach per aging band.
+    evidence_needed: Aging-band rules; dunning-tone review for respectfulness.
+    planned_evals: Ordering known-answers; refusal to auto-send.
+
+  - name: coworking-pricing-review
+    category: finance-pricing
+    status: planned
+    priority: p2
+    risk: r0
+    modes: [manual, export]
+    primary_user: owner
+    problem: List prices drift from reality - discount dependence and unit-mix performance go unexamined.
+    inputs: Inventory, memberships, discount history.
+    outputs: Discount-dependence report, unit-type yield comparison, repricing questions for a human.
+    evidence_needed: Yield formula definitions; guardrails against naive price advice.
+    planned_evals: Discount-dependence known answers; no-recommendation-without-market-data cases.
+
+  - name: coworking-deposit-reconciliation
+    category: finance-pricing
+    status: planned
+    priority: p3
+    risk: r0
+    modes: [export]
+    primary_user: billing
+    problem: Deposits held vs owed vs returned rarely reconcile after years of member turnover.
+    inputs: Memberships with deposits, payments, refunds.
+    outputs: Per-member deposit ledger with mismatches.
+    evidence_needed: Deposit lifecycle fixtures; jurisdiction-neutral language review.
+    planned_evals: Ledger known answers.
+
+  - name: coworking-event-planner
+    category: community-retention
+    status: planned
+    priority: p2
+    risk: r1
+    modes: [manual]
+    primary_user: community manager
+    problem: Events run on vibes - no goal, budget, or follow-through checklist per event.
+    inputs: Event goal, audience, budget, space constraints.
+    outputs: Event plan with cost sheet, task owners, and post-event review template.
+    evidence_needed: Realistic cost templates; goal taxonomy (community vs lead-gen vs revenue).
+    planned_evals: Plan completeness checklists.
+
+  - name: coworking-feedback-loop
+    category: community-retention
+    status: planned
+    priority: p2
+    risk: r1
+    modes: [manual, export]
+    primary_user: community manager
+    problem: Member feedback scatters across channels and dies unanswered.
+    inputs: Feedback items from any channel.
+    outputs: Triaged register with owners, close-the-loop drafts, theme trends.
+    evidence_needed: Triage taxonomy; injection-resistant handling of feedback text.
+    planned_evals: Triage known answers; injection cases.
+
+  - name: coworking-win-back-campaign
+    category: community-retention
+    status: planned
+    priority: p3
+    risk: r1
+    modes: [export]
+    primary_user: owner
+    problem: Former members are never revisited even when their cancellation reason expired.
+    inputs: Former-member list with cancellation reasons and dates.
+    outputs: Segmented, consent-aware win-back drafts with stop rules.
+    evidence_needed: Consent handling rules; reason-based segmentation.
+    planned_evals: Consent refusal cases; segment known answers.
+
+  - name: coworking-proposal-builder
+    category: sales
+    status: planned
+    priority: p1
+    risk: r1
+    modes: [manual, export]
+    primary_user: sales
+    problem: Proposals are rebuilt from scratch per deal and omit terms that later cause disputes.
+    inputs: Deal record, unit, pricing, term policy.
+    outputs: Proposal draft with complete commercial terms checklist; human review gates.
+    evidence_needed: Terms checklist vetted against common dispute causes; no legal-advice boundary.
+    planned_evals: Completeness checklists; legal-boundary cases.
+
+  - name: coworking-broker-channel-manager
+    category: sales
+    status: planned
+    priority: p2
+    risk: r1
+    modes: [manual, export]
+    primary_user: sales manager
+    problem: Broker/aggregator leads have fees and rules that make their ROI and etiquette different from direct leads.
+    inputs: Broker agreements as stated, lead sources, deal outcomes.
+    outputs: Per-channel net-of-fee performance and relationship playbook.
+    evidence_needed: Fee-model taxonomy; confidentiality handling for agreement terms.
+    planned_evals: Net-of-fee known answers.
+
+  - name: coworking-waitlist-manager
+    category: sales
+    status: planned
+    priority: p3
+    risk: r1
+    modes: [manual, export]
+    primary_user: sales
+    problem: Full locations turn demand away instead of banking it against churn.
+    inputs: Waitlist entries, inventory pipeline (notices given).
+    outputs: Matched waitlist-to-upcoming-vacancy plan with honest-wait communications.
+    evidence_needed: Matching rules; no-overpromise language review.
+    planned_evals: Matching known answers.
+
+  - name: coworking-shift-handover
+    category: operations
+    status: planned
+    priority: p2
+    risk: r1
+    modes: [manual]
+    primary_user: community manager
+    problem: Front-desk knowledge evaporates between shifts and locations.
+    inputs: Shift events as reported.
+    outputs: Structured handover note with open-issue continuity.
+    evidence_needed: Field taxonomy from real operator workflows.
+    planned_evals: Completeness checklists.
+
+  - name: coworking-maintenance-tracker
+    category: operations
+    status: planned
+    priority: p2
+    risk: r1
+    modes: [manual, export]
+    primary_user: operations
+    problem: Out-of-service inventory stays out of service because nobody tracks the repair pipeline against its revenue cost.
+    inputs: Inventory OOS flags, issue reports.
+    outputs: Repair queue ordered by idle list value, aging alerts.
+    evidence_needed: Integration with occupancy flags; aging thresholds.
+    planned_evals: Ordering known answers using OOS fixtures.
+
+  - name: coworking-access-audit
+    category: operations
+    status: planned
+    priority: p3
+    risk: r0
+    modes: [export]
+    primary_user: operations
+    problem: Access credentials outlive memberships - former members can still badge in.
+    inputs: Access-system user export, memberships.
+    outputs: Credential-vs-membership mismatch list.
+    evidence_needed: High-sensitivity data handling rules for access logs; aggregation-only reporting.
+    planned_evals: Mismatch known answers; privacy refusal cases.
+
+  - name: coworking-listing-syndication-audit
+    category: marketing
+    status: planned
+    priority: p2
+    risk: r0
+    modes: [manual]
+    primary_user: marketer
+    problem: Marketplace and directory listings drift out of sync with real pricing and inventory.
+    inputs: Listing inventory as reported per platform.
+    outputs: Consistency matrix and correction worklist.
+    evidence_needed: Platform-neutral checklist; no scraping requirement.
+    planned_evals: Consistency known answers.
+
+  - name: coworking-review-response-drafter
+    category: marketing
+    status: planned
+    priority: p2
+    risk: r1
+    modes: [manual, export]
+    primary_user: community manager
+    problem: Reviews sit unanswered or get defensive replies that read worse than the complaint.
+    inputs: Review text and context.
+    outputs: Factual, non-defensive response drafts for human posting.
+    evidence_needed: Tone rules; injection-resistant review handling (see demo REV-04).
+    planned_evals: Tone checklists; injection cases.
+
+  - name: coworking-content-calendar
+    category: marketing
+    status: planned
+    priority: p3
+    risk: r1
+    modes: [manual]
+    primary_user: marketer
+    problem: Location marketing swings between silence and spam without a sustainable cadence.
+    inputs: Channels, capacity, local calendar.
+    outputs: Realistic monthly calendar tied to actual space happenings.
+    evidence_needed: Cadence realism rules; no engagement-bait patterns.
+    planned_evals: Plan realism checklists.
+
+  - name: coworking-mail-operations
+    category: virtual-office
+    status: planned
+    priority: p1
+    risk: r1
+    modes: [manual, export]
+    primary_user: front desk
+    problem: Mail handling for VO clients is an SLA business run on sticky notes.
+    inputs: Mail log, client service levels.
+    outputs: Daily worklist, SLA breach flags, unclaimed-mail aging.
+    evidence_needed: Mail-event schema addition; compliance-neutral language (no CMRA legal advice).
+    planned_evals: Worklist known answers.
+
+  - name: coworking-vo-compliance-checklist
+    category: virtual-office
+    status: planned
+    priority: p2
+    risk: r0
+    modes: [manual]
+    primary_user: owner
+    problem: Address-service obligations (ID verification, mail authorization forms) vary by jurisdiction and get missed.
+    inputs: Jurisdiction as stated by operator, service types.
+    outputs: Question checklist for the operator's own compliance advisor - explicitly not legal advice.
+    evidence_needed: Jurisdiction-neutral framing review; refusal boundaries.
+    planned_evals: No-legal-advice boundary cases.
+
+  - name: coworking-cm-training-builder
+    category: people-training
+    status: planned
+    priority: p3
+    risk: r1
+    modes: [manual]
+    primary_user: owner
+    problem: New community managers learn by osmosis; nothing is written down.
+    inputs: Operator profile, existing procedures.
+    outputs: Role-specific training curriculum with practice scenarios.
+    evidence_needed: Curriculum structure vetted by operators.
+    planned_evals: Coverage checklists.
+
+  - name: coworking-sales-script-coach
+    category: people-training
+    status: planned
+    priority: p3
+    risk: r1
+    modes: [manual]
+    primary_user: sales
+    problem: Tour and phone technique varies wildly across staff with no feedback loop.
+    inputs: Recorded-call notes or transcripts as provided.
+    outputs: Specific technique feedback against a coworking-specific rubric.
+    evidence_needed: Rubric grounded in the tour-prep/follow-up skills; consent rules for transcripts.
+    planned_evals: Rubric application cases; consent refusals.
+
+  - name: coworking-launch-plan
+    category: launch
+    status: planned
+    priority: p2
+    risk: r1
+    modes: [manual]
+    primary_user: owner
+    problem: New locations open with construction done and zero presale pipeline.
+    inputs: Opening date, market, product mix, budget.
+    outputs: Backward-planned launch timeline with presale milestones.
+    evidence_needed: Milestone realism review by operators; no revenue projections without inputs.
+    planned_evals: Timeline coherence checklists.
+
+  - name: coworking-presale-pipeline
+    category: launch
+    status: planned
+    priority: p2
+    risk: r0
+    modes: [export]
+    primary_user: owner
+    problem: Presale interest lists are not pipelines - no stages, no conversion tracking before opening day.
+    inputs: Interest list, opening inventory.
+    outputs: Presale funnel with commitment-stage definitions and opening-day occupancy projection bounds.
+    evidence_needed: Stage taxonomy; projection honesty rules (ranges, not points).
+    planned_evals: Funnel known answers.
+
+  - name: coworking-booking-flow-audit
+    category: website-conversion
+    status: planned
+    priority: p1
+    risk: r0
+    modes: [manual]
+    primary_user: marketer / owner
+    problem: Tour and room-booking flows leak prospects at every extra field and dead end.
+    inputs: Flow walkthrough (steps, fields, failure points) as reported or observed.
+    outputs: Step-by-step friction findings with field-level fixes.
+    evidence_needed: Friction rubric; complements coworking-local-seo-audit conversion checks.
+    planned_evals: Rubric application cases.
+
+  - name: coworking-day-pass-upsell
+    category: website-conversion
+    status: planned
+    priority: p3
+    risk: r1
+    modes: [export]
+    primary_user: community manager
+    problem: Repeat day-pass users who should be members are never offered the math.
+    inputs: Day-pass usage records, membership pricing.
+    outputs: Break-even analysis per user, respectful upsell drafts.
+    evidence_needed: Usage schema; consent/contactability rules.
+    planned_evals: Break-even known answers.

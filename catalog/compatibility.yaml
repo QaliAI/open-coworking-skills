@@ -1,0 +1,102 @@
+# Honest compatibility statements. Labels defined in
+# docs/research/coworking-systems.md. Host support verified against the
+# sources recorded in docs/research/SOURCES.yaml (accessed 2026-07-17).
+
+hosts:
+  # verified: listed on the official Agent Skills client showcase or the
+  # host's own documentation, checked on the access date. "community" means
+  # support is documented by third parties, not the vendor.
+  - name: OpenAI Codex
+    support: native
+    notes: Reads .agents/skills at repo root; also ~/.agents/skills (user) and /etc/codex/skills (admin).
+  - name: Claude Code
+    support: native
+    notes: Agent Skills standard; project skills in .claude/skills - see docs/platform-installation/claude-code.md for using this repo's .agents/skills.
+  - name: GitHub Copilot / VS Code
+    support: native
+    notes: Installable via gh skill install into .agents/skills.
+  - name: Cursor
+    support: native
+    notes: Per official client showcase; see vendor setup docs.
+  - name: Gemini CLI
+    support: native
+    notes: Per official client showcase; see vendor setup docs.
+  - name: OpenCode
+    support: native
+    notes: Per official client showcase; see vendor setup docs.
+  - name: Kiro
+    support: native
+    notes: Per official client showcase; see vendor setup docs.
+  - name: Windsurf
+    support: vendor-documented
+    notes: Cascade reads .windsurf/skills per Windsurf docs; requires copying/symlinking - not on the official showcase at access date.
+  - name: Cline
+    support: community
+    notes: Community tooling documents shared .agents/skills use; not vendor-verified by this project.
+  - name: Antigravity
+    support: community
+    notes: Community tooling documents shared .agents/skills use; not vendor-verified by this project.
+
+systems:
+  # No system exceeds mapping-documented. connector-* labels require live
+  # verification per docs/research/coworking-systems.md.
+  - name: Generic CSV / any system with exports
+    label: export-supported
+    adapter: adapters/generic-csv
+  - name: HubSpot
+    label: mapping-documented
+    adapter: adapters/hubspot
+  - name: OfficeRnD
+    label: mapping-documented
+    adapter: adapters/officernd
+  - name: Nexudus
+    label: mapping-documented
+    adapter: adapters/nexudus
+  - name: Optix
+    label: mapping-documented
+    adapter: adapters/optix
+  - name: Archie
+    label: mapping-documented
+    adapter: adapters/archie
+  - name: Spacebring
+    label: manual
+  - name: Coworks
+    label: manual
+  - name: Cobot
+    label: manual
+  - name: Yardi Kube
+    label: manual
+  - name: Satellite Deskworks
+    label: manual
+  - name: Proximity
+    label: manual
+  - name: Essensys
+    label: manual
+  - name: Salesforce
+    label: manual
+  - name: Pipedrive
+    label: manual
+  - name: Zoho
+    label: manual
+  - name: QuickBooks
+    label: manual
+  - name: Xero
+    label: manual
+  - name: Stripe
+    label: manual
+  - name: Square
+    label: manual
+  - name: Google Business Profile
+    label: manual
+  - name: Google Analytics / Search Console / Ads
+    label: manual
+  - name: Meta Ads / LinkedIn
+    label: manual
+  - name: Mailchimp / Brevo / Listmonk
+    label: manual
+  - name: Google Workspace / Microsoft 365 / Slack / Teams
+    label: manual
+  - name: Kisi / Brivo / Salto / ButterflyMX
+    label: manual
+  - name: Zapier / Make / n8n
+    label: manual

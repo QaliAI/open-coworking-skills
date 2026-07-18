@@ -29,7 +29,7 @@ tasks:
       the closest bucket.
     expected:
       - Labels kept as unmapped with proposals, not silently bucketed
-      - "Dave's friend" flagged as a probable referral needing the person recorded properly
+      - Dave's friend flagged as a probable referral needing the person recorded properly
   - id: no-silent-rewrite
     kind: checklist
     prompt: >

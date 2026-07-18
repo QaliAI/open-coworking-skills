@@ -1,0 +1,38 @@
+# Skill categories. Every catalog entry's `category` must appear here.
+categories:
+  foundation:
+    title: Foundation and governance
+    description: Operator context, data mapping, verification, and privacy tooling that other skills depend on.
+  sales:
+    title: Sales and pipeline
+    description: Lead handling, tours, follow-up, and pipeline hygiene from inquiry to signed agreement.
+  business-intelligence:
+    title: Business intelligence
+    description: Occupancy, revenue, funnel, and leakage analysis with explicit formulas.
+  operations:
+    title: Operations
+    description: Day-to-day running of locations - checklists, maintenance, access, handovers.
+  community-retention:
+    title: Community and retention
+    description: Onboarding, engagement, churn risk, and renewals.
+  marketing:
+    title: Marketing and local demand
+    description: Local search, listings, content, and demand generation for locations.
+  virtual-office:
+    title: Virtual office and mail
+    description: Business-address products, mail operations, and partner-channel reconciliation.
+  finance-pricing:
+    title: Finance and pricing
+    description: Pricing reviews, collections, deposits, and financial reconciliation.
+  people-training:
+    title: People and training
+    description: Training and enablement for community and sales teams.
+  launch:
+    title: Grand openings and launches
+    description: New-location presale, launch planning, and ramp-up.
+  website-conversion:
+    title: Website and conversion
+    description: Converting site visitors into tours and purchases.
+  integration-development:
+    title: Integrations and adapters
+    description: Connecting coworking systems safely - adapters, converters, MCP servers.
