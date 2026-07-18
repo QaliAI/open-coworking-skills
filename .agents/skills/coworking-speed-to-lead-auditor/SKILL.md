@@ -137,7 +137,7 @@ rather than approximating from status changes.
 
 ```
 Basis: business minutes 09:00-17:00 Mon-Fri, location-local timestamps.
-Responded leads: 19. Median 25 business minutes; p90 [value]; max [value].
+Responded leads: 19. Median 30 business minutes; p90 90; max 220.
 Never contacted (3): L-1013 (website, created 14 Jun 19:22), L-1017
 (website, 21 Jun 20:31), L-1021 (no source, 26 Jun 13:37).
 Pattern check: 2 of 3 untouched leads arrived after 17:00 — after-hours

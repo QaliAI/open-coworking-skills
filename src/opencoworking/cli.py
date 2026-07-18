@@ -220,12 +220,17 @@ def main(argv: list[str] | None = None) -> int:
         redactor = Redactor(salt=args.salt, names=collect_names(table.rows, name_cols))
         import csv as _csv
 
+        from .normalize import sanitize_cell
+
         out.parent.mkdir(parents=True, exist_ok=True)
         with out.open("w", newline="", encoding="utf-8") as fh:
             writer = _csv.DictWriter(fh, fieldnames=table.columns)
             writer.writeheader()
             for row in table.rows:
-                writer.writerow(redactor.redact_row(row))
+                # Redacted files get shared onward: neutralize spreadsheet
+                # formula injection on the way out.
+                writer.writerow({k: sanitize_cell(v)
+                                 for k, v in redactor.redact_row(row).items()})
         print(f"Wrote {out} ({redactor.replacements} redactions). "
               "Pattern-based redaction is not a guarantee; review before sharing.")
         return 0

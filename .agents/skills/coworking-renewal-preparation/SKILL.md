@@ -146,9 +146,10 @@ Cliff dates: notice GIVEN 15 Jun · end 31 Aug · no renewal recorded.
 NOTE: notice already on file — this is a save/exit conversation, not a
 standard renewal.
 
-Facts: member since Jun 2025; 3,400 vs 3,500 list (2.9% discount); paid
-on time 12/12 invoices (latest 5 Jun); 3 members on agreement; booking
-data: 2 room bookings in June (baseline unknown - no history provided).
+Facts: member since Jun 2025; 3,400 vs 3,500 list (2.9% discount); every
+invoice in the provided export paid (1 of 1 — June only; request full
+payment history for a real read); 3 members on agreement; booking data:
+1 room booking in June (baseline unknown — no history provided).
 Signals: none recorded for expansion; notice itself is the downsizing
 signal — reason unknown. UNKNOWN: why they gave notice. Get this first.
 

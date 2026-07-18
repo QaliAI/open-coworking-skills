@@ -149,7 +149,7 @@ breaking?" (synthetic demo)
 
 ```
 Checkpoints (June): volume 22 leads (baseline: none provided —
-level-only). Contact rate 19/22 (86%). Speed: median 25 business min, but
+level-only). Contact rate 19/22 (86%). Speed: median 30 business min, but
 3 leads never touched (2 after-hours website). Leads with a tour: 9/22
 (41%). Show rate 5/7 (71%). Product mix: 9 office inquiries vs 1 office
 currently sellable-vacant (OF-103) at LOC-NOR.
