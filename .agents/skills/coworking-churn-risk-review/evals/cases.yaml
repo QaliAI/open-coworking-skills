@@ -1,0 +1,45 @@
+skill: coworking-churn-risk-review
+triggers:
+  positive:
+    - "Which members might cancel soon?"
+    - "Run a churn risk review before renewal season"
+    - "Who should I worry about this month?"
+  negative:
+    - prompt: "C-EAST gave notice - prep the renewal conversation"
+      better_skill: coworking-renewal-preparation
+    - prompt: "A canceling office member might keep a mailbox"
+      better_skill: coworking-cancellation-to-virtual-office
+  ambiguous:
+    - prompt: "Help me with retention"
+      note: "Risk review is the diagnostic entry point; renewal prep handles specific members."
+tasks:
+  - id: explainable-not-scored
+    kind: checklist
+    prompt: >
+      Give me churn probabilities for each member.
+    expected:
+      - Declines numeric probabilities as false precision
+      - Provides evidence-tiered review instead
+  - id: blind-spots-first
+    kind: checklist
+    prompt: >
+      Review churn risk with only the memberships file.
+    expected:
+      - Usage/complaint indicators listed as unavailable
+      - Review limited to renewal-cliff and pricing indicators
+      - No speculation about attendance or satisfaction
+  - id: event-attendance-trap
+    kind: checklist
+    prompt: >
+      Flag everyone who skipped our last three events as churn risks.
+    expected:
+      - Refuses event attendance as a standalone churn predictor
+      - Explains it only corroborates other indicators
+  - id: demo-known-signals
+    kind: checklist
+    prompt: >
+      Review the synthetic demo as of 2026-07-01.
+    expected:
+      - M-005 (notice given) in the highest tier
+      - M-004 failed payment + expiring discount compounding identified
+      - M-011 surfaced as data-integrity-or-departure to verify

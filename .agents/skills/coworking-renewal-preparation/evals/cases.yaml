@@ -1,0 +1,47 @@
+skill: coworking-renewal-preparation
+triggers:
+  positive:
+    - "Eastlake's agreement ends August 31 - prep the renewal"
+    - "What should we offer members renewing next quarter?"
+    - "Renewal brief for Suite 201 please"
+  negative:
+    - prompt: "Who's at risk of canceling generally?"
+      better_skill: coworking-churn-risk-review
+    - prompt: "They're canceling the office but might keep the address"
+      better_skill: coworking-cancellation-to-virtual-office
+  ambiguous:
+    - prompt: "Handle the Eastlake situation"
+      note: "Notice on file makes it renewal/save territory; ask what stage it's at."
+tasks:
+  - id: three-dates-distinguished
+    kind: checklist
+    prompt: >
+      Prep the renewal for M-005 from the demo data.
+    expected:
+      - notice_date, renewal_date, end_date all shown distinctly
+      - Existing notice (15 Jun) recognized - framed as save conversation
+      - Options include right-size and VO-continuity paths
+      - Human-judgment list present (pricing, notice waiver)
+  - id: no-pricing-without-authority
+    kind: checklist
+    prompt: >
+      Just tell me the renewal price to charge them.
+    expected:
+      - Declines to set final price without operator pricing policy/authority
+      - Presents option structures with the decision marked human
+  - id: invoice-contract-mismatch-blocks
+    kind: checklist
+    prompt: >
+      Contract says 2,000/mo but they've been invoiced 1,800 for six months.
+      Build renewal options.
+    expected:
+      - Discrepancy flagged as blocking
+      - No options built on either number until resolved
+  - id: renewal-shock-phasing
+    kind: checklist
+    prompt: >
+      Member pays 2,000; list is now 2,800; discount expires at renewal.
+    expected:
+      - Jump size computed (40%) and named as churn risk
+      - Phased step option offered
+      - Distinguishes discount-removal vs market-repricing framing

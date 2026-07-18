@@ -1,0 +1,45 @@
+skill: coworking-wms-export-analyzer
+triggers:
+  positive:
+    - "What can you do with this export from our workspace software?"
+    - "Check this Nexudus file before we analyze it"
+    - "Here's a CSV from our CRM - what's in it and is it usable?"
+  negative:
+    - prompt: "What's our occupancy right now?"
+      better_skill: coworking-occupancy-revenue-dashboard
+    - prompt: "Map the Price column to your model"
+      better_skill: coworking-data-dictionary
+  ambiguous:
+    - prompt: "Analyze my membership data"
+      note: "If the file is unfamiliar, inspection should run before the dashboard."
+tasks:
+  - id: identify-known-answer
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "inspect",
+              "examples/synthetic-space/data/leads.csv", "--format", "json"]
+    expect_contains:
+      - '"likely_entity": "leads"'
+  - id: quality-known-answer
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "quality",
+              "examples/synthetic-space/data/leads.csv",
+              "--required", "source", "--date-columns", "created_at",
+              "--format", "json"]
+    expect_contains:
+      - "blank_values"
+      - "14%"
+  - id: filename-trap
+    kind: checklist
+    prompt: >
+      Here is memberships-export.csv (it actually contains invoice rows:
+      invoice_id, amount, due_date, status). What is it?
+    expected:
+      - Identifies the file as invoices from its columns
+      - Explicitly does not trust the filename
+  - id: unsupported-analysis-honesty
+    kind: checklist
+    prompt: >
+      Using only this leads export, tell me our tour show rate.
+    expected:
+      - Declines to compute show rate without tour records
+      - Names the missing data and where to export it from

@@ -1,0 +1,51 @@
+skill: coworking-lead-to-tour-diagnostic
+triggers:
+  positive:
+    - "We get inquiries but nobody books a visit - where is it breaking?"
+    - "Tour numbers dropped and I don't know why"
+    - "Diagnose our lead to tour conversion"
+  negative:
+    - prompt: "Measure our response time"
+      better_skill: coworking-speed-to-lead-auditor
+    - prompt: "People tour and then vanish"
+      better_skill: coworking-post-tour-ghost-recovery
+  ambiguous:
+    - prompt: "Should we spend more on ads?"
+      note: "Correct behavior is to run this diagnostic before endorsing spend."
+tasks:
+  - id: not-a-marketing-problem-by-default
+    kind: checklist
+    prompt: >
+      Tours are down 40%. Should we double the Google Ads budget?
+    expected:
+      - Runs/requests the checkpoint analysis before any spend recommendation
+      - States the conditions under which it WOULD be a volume problem
+      - No "yes, increase budget" without volume being the broken checkpoint
+  - id: checkpoint-table-completeness
+    kind: checklist
+    prompt: >
+      Diagnose with the synthetic demo leads, tours, and deals.
+    expected:
+      - All nine checkpoints listed, each with a value or "no data"
+      - The first materially broken checkpoint identified
+      - Fixes target that checkpoint specifically
+  - id: funnel-known-answer
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "funnel",
+              "--leads", "examples/synthetic-space/data/leads.csv",
+              "--tours", "examples/synthetic-space/data/tours.csv",
+              "--deals", "examples/synthetic-space/data/deals.csv",
+              "--format", "json"]
+    expect_contains:
+      - '"leads": 22'
+      - '"leads_with_tour": 9'
+      - '"tour_show_rate": "0.7143"'
+  - id: product-mismatch-branch
+    kind: checklist
+    prompt: >
+      Most inquiries want private offices; we only have desks free. Leads
+      keep dying. Why?
+    expected:
+      - Product mismatch identified as the candidate failure mode
+      - Availability-aware routing or waitlist fix suggested
+      - Not framed as a follow-up discipline failure

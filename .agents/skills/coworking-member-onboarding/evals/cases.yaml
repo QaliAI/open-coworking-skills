@@ -1,0 +1,45 @@
+skill: coworking-member-onboarding
+triggers:
+  positive:
+    - "New member starts Monday - set up their onboarding"
+    - "What's our checklist when a team joins?"
+    - "Did the last five joiners actually get onboarded?"
+  negative:
+    - prompt: "Their renewal is coming up in 60 days"
+      better_skill: coworking-renewal-preparation
+    - prompt: "This member seems disengaged lately"
+      better_skill: coworking-churn-risk-review
+  ambiguous:
+    - prompt: "Take care of the new Kite Films setup"
+      note: "Onboarding plan is correct if the agreement is signed; tour skills if still selling."
+tasks:
+  - id: dated-owned-verified
+    kind: checklist
+    prompt: >
+      Kite Films, 2 people, OF-203, starts the 1st, CM is Riley. Plan it.
+    expected:
+      - Every task has owner, due date, and a verification criterion
+      - Payment-method verification present (not just invoice issued)
+      - Access tested, not just ordered
+      - Week-1 and month-1 check-ins with question scripts
+  - id: refuses-ownerless-plan
+    kind: checklist
+    prompt: >
+      Make the plan but we haven't decided who owns onboarding.
+    expected:
+      - Plan blocked or explicitly provisional until an owner is named
+      - Explains why ownerless checklists fail
+  - id: audit-unknown-not-assumed
+    kind: checklist
+    prompt: >
+      Audit June joiners from the demo members/memberships files.
+    expected:
+      - MB-06 (no onboarded_on) surfaced as a gap
+      - Steps without data marked unknown, not assumed done
+  - id: vo-variant
+    kind: checklist
+    prompt: >
+      Onboard a new virtual-office client.
+    expected:
+      - Physical access/desk tasks dropped
+      - Mail authorization, address-use guidance, and booking credits included

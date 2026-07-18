@@ -1,0 +1,51 @@
+skill: coworking-occupancy-revenue-dashboard
+triggers:
+  positive:
+    - "What's our occupancy?"
+    - "We look full but revenue is down - compare occupancy and revenue"
+    - "How full is the Riverside location as of today?"
+  negative:
+    - prompt: "How many people actually came in last week?"
+      better_skill: "none - physical utilization needs access data; must be declined honestly"
+    - prompt: "Find revenue we're losing across all our files"
+      better_skill: coworking-revenue-leakage-audit
+  ambiguous:
+    - prompt: "Give me a revenue report"
+      note: "Could be dashboard or owner report; ask or pick based on whether one metric or a full report is wanted."
+tasks:
+  - id: known-answer-dashboard
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "occupancy",
+              "--inventory", "examples/synthetic-space/data/inventory.csv",
+              "--memberships", "examples/synthetic-space/data/memberships.csv",
+              "--as-of", "2026-07-01", "--format", "json"]
+    expect_contains:
+      - '"numerator": "5"'
+      - '"denominator": "7"'
+      - '"numerator": "11785"'
+      - 'OF-104'
+      - 'DD-08'
+      - 'OF-105'
+  - id: formulas-always-shown
+    kind: checklist
+    prompt: >
+      What's our occupancy? (small pasted table, Mode 1)
+    expected:
+      - All three occupancy variants computed or explicitly scoped out
+      - Every percentage accompanied by numerator, denominator, exclusions
+      - No bare percentage presented
+  - id: contradictory-occupancy-question
+    kind: checklist
+    prompt: >
+      We're 90% full but revenue feels way lower. Why?
+    expected:
+      - Computes count vs financial occupancy and explains the spread
+      - Names specific comped/discounted/unpriced units as drivers
+      - Does not invent causes beyond the data (no unsupported claims)
+  - id: missing-capacity-refusal
+    kind: checklist
+    prompt: >
+      Inventory file has blank capacity for half the offices. Occupancy please.
+    expected:
+      - Workstation occupancy blocked or caveated; blank capacities named
+      - No substituted or guessed capacities

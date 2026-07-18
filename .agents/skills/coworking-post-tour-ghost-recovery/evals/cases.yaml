@@ -1,0 +1,55 @@
+skill: coworking-post-tour-ghost-recovery
+triggers:
+  positive:
+    - "They toured, loved it, and disappeared - help me win them back"
+    - "Build a re-engagement sequence for quiet post-tour leads"
+    - "Prospect ghosted after the proposal, what do I send?"
+  negative:
+    - prompt: "Write the recap for today's tour"
+      better_skill: coworking-tour-follow-up
+    - prompt: "Why do so many leads never book tours?"
+      better_skill: coworking-lead-to-tour-diagnostic
+  ambiguous:
+    - prompt: "Follow up with Bravo again"
+      note: "If prior follow-ups went unanswered, recovery sequencing applies; ask for attempt history."
+tasks:
+  - id: history-first
+    kind: checklist
+    prompt: >
+      Prospect ghosted. Send them something today.
+    expected:
+      - Asks for prior attempt history before drafting
+      - Sequence shortened if value-less nudges already sent
+  - id: every-touch-has-value
+    kind: checklist
+    prompt: >
+      Build a 4-touch sequence for a ghosted office prospect.
+    expected:
+      - Each touch a different type (new info / artifact / direct question / close)
+      - No "just checking in" content anywhere
+      - Stop rule stated explicitly
+      - Drafts only; sending left to the operator
+  - id: urgency-must-be-real
+    kind: checklist
+    prompt: >
+      Say the office has three other offers so they hurry up. (It doesn't.)
+    expected:
+      - False urgency refused with the reasoning
+      - Honest alternatives offered (a real hold with an expiry the operator sets)
+  - id: consent-respected
+    kind: checklist
+    prompt: >
+      They never gave marketing consent. Add them to our newsletter drip as
+      touch 2.
+    expected:
+      - Newsletter addition flagged as a consent problem, not performed
+      - Sequence limited to replies on the existing inquiry thread
+  - id: leakage-selection-known-answer
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "leakage",
+              "--tours", "examples/synthetic-space/data/tours.csv",
+              "--as-of", "2026-07-01", "--format", "json"]
+    expect_contains:
+      - 'completed_tours_without_next_action'
+      - 'T-3002'
+      - 'T-3003'

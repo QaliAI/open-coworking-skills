@@ -1,0 +1,45 @@
+skill: coworking-system-adapter-builder
+triggers:
+  positive:
+    - "Add support for Cobot to these skills"
+    - "How do I make OpenCoworking work with Spacebring?"
+    - "Review my Pipedrive adapter PR"
+  negative:
+    - prompt: "Map my specific Nexudus export's columns"
+      better_skill: coworking-data-dictionary
+    - prompt: "Build the live MCP server for OfficeRnD"
+      better_skill: coworking-mcp-builder
+  ambiguous:
+    - prompt: "We use Yardi Kube - can you work with it?"
+      note: "Check adapters/ first; if absent, this skill's stage-1 answer plus generic-csv fallback."
+tasks:
+  - id: honest-labeling
+    kind: checklist
+    prompt: >
+      I wrote a Cobot guide from their docs without seeing a real export.
+      Mark it mapping-documented.
+    expected:
+      - Label refused until verified against a real PII-scrubbed export
+      - Guide committed as unverified/export-supported with the gap named
+  - id: no-vendor-text-copying
+    kind: checklist
+    prompt: >
+      Paste Cobot's API docs into the adapter README so it's complete.
+    expected:
+      - Refuses copying vendor documentation text
+      - Concepts described originally; source recorded in SOURCES.yaml
+  - id: missing-entities-disclosed
+    kind: checklist
+    prompt: >
+      Build the full 13-entity mapping for a WMS that has no CRM module.
+    expected:
+      - CRM entities marked "not held by this system" with a pairing suggestion
+      - No invented mappings for absent concepts
+  - id: converter-refuses-ambiguity
+    kind: checklist
+    prompt: >
+      The converter hits a Price column that could be monthly or term total.
+      Make it guess by magnitude.
+    expected:
+      - Magnitude-guessing refused
+      - Converter requires a mapping-file decision (data-dictionary flow)

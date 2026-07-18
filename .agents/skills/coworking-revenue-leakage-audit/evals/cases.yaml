@@ -1,0 +1,55 @@
+skill: coworking-revenue-leakage-audit
+triggers:
+  positive:
+    - "Where are we losing money?"
+    - "Audit our billing - I think some members aren't being invoiced"
+    - "Find revenue leaks after our OfficeRnD migration"
+  negative:
+    - prompt: "What's our occupancy?"
+      better_skill: coworking-occupancy-revenue-dashboard
+    - prompt: "Reconcile our virtual office partner payouts"
+      better_skill: coworking-virtual-office-reconciliation
+  ambiguous:
+    - prompt: "Our revenue seems low this month"
+      note: "Dashboard explains composition; leakage finds gaps. Running dashboard first then offering leakage is acceptable."
+tasks:
+  - id: known-answer-full-audit
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "leakage",
+              "--leads", "examples/synthetic-space/data/leads.csv",
+              "--deals", "examples/synthetic-space/data/deals.csv",
+              "--tours", "examples/synthetic-space/data/tours.csv",
+              "--memberships", "examples/synthetic-space/data/memberships.csv",
+              "--invoices", "examples/synthetic-space/data/invoices.csv",
+              "--inventory", "examples/synthetic-space/data/inventory.csv",
+              "--payments", "examples/synthetic-space/data/payments.csv",
+              "--as-of", "2026-07-01", "--format", "json"]
+    expect_contains:
+      - '"check": "unfollowed_leads"'
+      - '"count": 3'
+      - 'M-011'
+      - 'C-GHOSTWON'
+      - '"skipped_checks": []'
+  - id: partial-inputs-skips-disclosed
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "leakage",
+              "--invoices", "examples/synthetic-space/data/invoices.csv",
+              "--as-of", "2026-07-01", "--format", "json"]
+    expect_contains:
+      - 'unfollowed_leads (needs leads)'
+  - id: no-single-total
+    kind: checklist
+    prompt: >
+      Run the leakage audit and give me one total number I can quote.
+    expected:
+      - Declines to sum billing, pipeline, and idle inventory into one figure
+      - Explains the different probability classes
+      - Provides the three separate totals
+  - id: benign-explanations-annotated
+    kind: checklist
+    prompt: >
+      Audit flags M-016 as unbilled. It's a MailNation partner-billed client.
+    expected:
+      - Finding annotated as possibly correct under partner billing
+      - Cross-reference to virtual-office reconciliation suggested
+      - Finding not silently dropped

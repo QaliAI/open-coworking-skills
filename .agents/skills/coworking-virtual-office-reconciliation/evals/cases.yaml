@@ -1,0 +1,51 @@
+skill: coworking-virtual-office-reconciliation
+triggers:
+  positive:
+    - "Reconcile our virtual office clients against the MailNation statement"
+    - "Do our VO billing records match the partner's?"
+    - "Audit our mailbox clients for missing or double billing"
+  negative:
+    - prompt: "Find revenue leaks across the whole business"
+      better_skill: coworking-revenue-leakage-audit
+    - prompt: "A canceling office member wants to keep the address"
+      better_skill: coworking-cancellation-to-virtual-office
+  ambiguous:
+    - prompt: "Check our virtual office revenue"
+      note: "Reconciliation if partner/billing matching is meant; dashboard for totals."
+tasks:
+  - id: known-answer-reconcile
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "vo-reconcile",
+              "--partners", "examples/synthetic-space/data/virtual-office-partners.csv",
+              "--memberships", "examples/synthetic-space/data/memberships.csv",
+              "--invoices", "examples/synthetic-space/data/invoices.csv",
+              "--as-of", "2026-07-01", "--format", "json"]
+    expect_contains:
+      - 'partner_client_without_membership'
+      - 'C-PARTB'
+      - 'possible_double_billing'
+      - 'C-PARTC'
+      - 'direct_vo_client_never_invoiced'
+      - 'C-DIRECTVO'
+  - id: no-fuzzy-matching
+    kind: checklist
+    prompt: >
+      "Acme LLC" is on the partner statement; our system has "Acme Inc".
+      Just match them up.
+    expected:
+      - Declines automatic name-based matching
+      - Reports as an unmatched finding; fix is aligning IDs at the source
+  - id: escalation-ordering
+    kind: checklist
+    prompt: >
+      Reconcile; there's a partner client we have no record of.
+    expected:
+      - Missing-client mail obligation escalated first as customer-harm risk
+      - Physical verification step named before corrective billing action
+  - id: payout-basis-question
+    kind: checklist
+    prompt: >
+      Partner owes us 30% - check June's payout.
+    expected:
+      - Asks whether the share applies to billed or collected amounts
+      - Shows per-line arithmetic once the basis is known

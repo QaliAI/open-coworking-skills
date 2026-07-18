@@ -1,0 +1,41 @@
+skill: coworking-data-dictionary
+triggers:
+  positive:
+    - "Map these OfficeRnD export columns to your model"
+    - "What does the CancellationDate column in my Nexudus export mean?"
+    - "Here are my CRM export headers - which is which?"
+  negative:
+    - prompt: "What's in this mystery CSV I exported?"
+      better_skill: coworking-wms-export-analyzer
+    - prompt: "Build my operator profile"
+      better_skill: coworking-context-builder
+  ambiguous:
+    - prompt: "Get my HubSpot data ready for analysis"
+      note: "Inspection first, then mapping; either entry point is acceptable if both steps happen."
+tasks:
+  - id: ambiguous-price-not-auto-mapped
+    kind: checklist
+    prompt: >
+      Headers: CoworkerName, TeamName, Tariff, Price, StartDate,
+      CancellationDate, Desks. Sample Price values: 4200, 2100.
+      Tariff list prices are 350/month. Map them.
+    expected:
+      - Price marked ambiguous (monthly vs term total) and a question asked
+      - CancellationDate marked ambiguous (end_date vs notice_date)
+      - TeamName mapped to company, with the person-vs-payer distinction noted
+      - No ambiguous column silently mapped
+      - Mapping saved in the documented YAML format only after confirmation
+  - id: unsupported-analysis-disclosed
+    kind: checklist
+    prompt: >
+      My leads export has no first-response column. Finish the mapping.
+    expected:
+      - first_response_at listed under missing_canonical
+      - Speed-to-lead explicitly named as unsupported with this export
+  - id: inspect-known-answer
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "inspect",
+              "examples/synthetic-space/data/memberships.csv", "--format", "json"]
+    expect_contains:
+      - '"likely_entity": "memberships"'
+      - 'filenames are ignored'

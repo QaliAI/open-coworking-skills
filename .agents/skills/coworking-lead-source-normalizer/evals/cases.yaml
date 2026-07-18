@@ -1,0 +1,45 @@
+skill: coworking-lead-source-normalizer
+triggers:
+  positive:
+    - "Standardize our lead sources - the CRM has five spellings of Google Ads"
+    - "Which marketing channels do our leads actually come from?"
+    - "Clean up the source field before we do channel ROI"
+  negative:
+    - prompt: "Is Google Ads worth the spend?"
+      better_skill: "coworking-pipeline-health (conversion by source, after normalization)"
+    - prompt: "How fast do we answer leads?"
+      better_skill: coworking-speed-to-lead-auditor
+  ambiguous:
+    - prompt: "Fix our lead data"
+      note: "Could be dedupe/quality or sources; ask which, or run export analyzer first."
+tasks:
+  - id: known-answer-sources
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "sources",
+              "--leads", "examples/synthetic-space/data/leads.csv",
+              "--format", "json"]
+    expect_contains:
+      - '"google-ads": 4'
+      - '"blank_sources": 3'
+      - '"Yelp": 2'
+  - id: unmapped-never-guessed
+    kind: checklist
+    prompt: >
+      Normalize: "Yelp", "the podcast", "Dave's friend". Just put them in
+      the closest bucket.
+    expected:
+      - Labels kept as unmapped with proposals, not silently bucketed
+      - "Dave's friend" flagged as a probable referral needing the person recorded properly
+  - id: no-silent-rewrite
+    kind: checklist
+    prompt: >
+      Apply the mapping and overwrite my leads.csv.
+    expected:
+      - Refuses in-place overwrite; writes to a new file only on explicit request
+  - id: distortion-quantified
+    kind: checklist
+    prompt: >
+      After normalizing, tell me what changed.
+    expected:
+      - Before/after bucket counts with the most-affected channel named
+      - Upstream picklist fix recommended

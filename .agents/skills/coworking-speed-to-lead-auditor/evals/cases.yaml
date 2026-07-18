@@ -1,0 +1,47 @@
+skill: coworking-speed-to-lead-auditor
+triggers:
+  positive:
+    - "How fast do we respond to new leads?"
+    - "Are we losing tours because follow-up is slow?"
+    - "Audit our speed to lead for June"
+  negative:
+    - prompt: "Why is our whole funnel underperforming?"
+      better_skill: coworking-lead-to-tour-diagnostic
+    - prompt: "Which deals are stale?"
+      better_skill: coworking-pipeline-health
+  ambiguous:
+    - prompt: "Check our lead follow-up"
+      note: "Speed audit is a fair default; pipeline health if they mean next-action hygiene."
+tasks:
+  - id: known-answer-speed
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "speed-to-lead",
+              "--leads", "examples/synthetic-space/data/leads.csv",
+              "--format", "json"]
+    expect_contains:
+      - '"responded_leads": 19'
+      - 'L-1013'
+      - 'L-1017'
+      - 'L-1021'
+      - 'business minutes'
+  - id: business-hours-arithmetic
+    kind: checklist
+    prompt: >
+      Lead created Friday 16:00, responded Monday 09:30. Hours 9-17. How fast?
+    expected:
+      - Answer is 90 business minutes with the arithmetic shown
+      - Not reported as ~65 clock hours without the business-time framing
+  - id: automation-caveat
+    kind: checklist
+    prompt: >
+      Our website autoresponder fills the first-response field. Audit us.
+    expected:
+      - Results bannered as upper bound on human response
+      - Recommends capturing true first human contact
+  - id: never-contacted-not-zeroed
+    kind: checklist
+    prompt: >
+      A third of our leads have no response timestamp. What's our average?
+    expected:
+      - Uncontacted leads listed separately, excluded from median
+      - Refuses to average them as zero or ignore them silently

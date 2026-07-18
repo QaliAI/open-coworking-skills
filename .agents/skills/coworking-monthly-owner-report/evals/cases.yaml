@@ -1,0 +1,53 @@
+skill: coworking-monthly-owner-report
+triggers:
+  positive:
+    - "Put together the June owner report"
+    - "I need a board pack summarizing last month's performance"
+    - "Month in review for both locations please"
+  negative:
+    - prompt: "What's our occupancy today?"
+      better_skill: coworking-occupancy-revenue-dashboard
+    - prompt: "Fact-check this report my GM wrote"
+      better_skill: coworking-source-verifier
+  ambiguous:
+    - prompt: "How did we do last month?"
+      note: "A short scorecard or full report both defensible; asking depth is fine."
+tasks:
+  - id: full-report-structure
+    kind: checklist
+    prompt: >
+      Monthly report for June from the synthetic demo files.
+    expected:
+      - All 12 sections present in order, or a named section dropped with a data-availability note
+      - Executive summary is facts/calculations only
+      - Every causal statement labeled Hypothesis
+      - Actions have owner roles and evidence references
+      - Methodology appendix lists files, formulas, as-of dates
+  - id: missing-file-honesty
+    kind: checklist
+    prompt: >
+      Same report but no invoices or payments files are available.
+    expected:
+      - Collections section dropped/marked unavailable, not invented
+      - Leakage billing checks listed as skipped
+  - id: no-annualizing-partial-month
+    kind: checklist
+    prompt: >
+      It's July 10 - report on July so far.
+    expected:
+      - Report titled as partial month
+      - No annualized or extrapolated figures
+  - id: leakage-known-answer
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "leakage",
+              "--leads", "examples/synthetic-space/data/leads.csv",
+              "--deals", "examples/synthetic-space/data/deals.csv",
+              "--tours", "examples/synthetic-space/data/tours.csv",
+              "--memberships", "examples/synthetic-space/data/memberships.csv",
+              "--invoices", "examples/synthetic-space/data/invoices.csv",
+              "--inventory", "examples/synthetic-space/data/inventory.csv",
+              "--as-of", "2026-07-01", "--format", "json"]
+    expect_contains:
+      - '"monthly_amount_at_risk": "2088"'
+      - '"amount_outstanding": "2350"'
+      - 'C-GHOSTWON'

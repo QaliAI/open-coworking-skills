@@ -1,0 +1,45 @@
+skill: coworking-local-seo-audit
+triggers:
+  positive:
+    - "Why don't we show up when people search coworking in our city?"
+    - "Audit our website for local search"
+    - "Which pages should we build for office space searches?"
+  negative:
+    - prompt: "Audit our Google Business Profile listing"
+      better_skill: coworking-google-business-profile-audit
+    - prompt: "Are our Google Ads working?"
+      better_skill: "none - paid ads performance is out of scope"
+  ambiguous:
+    - prompt: "Improve our Google presence"
+      note: "Website and GBP audits are complementary; offering both in order is correct."
+tasks:
+  - id: coverage-matrix
+    kind: checklist
+    prompt: >
+      Two locations; we sell offices, desks, VO, meeting rooms. Site has 3
+      pages. Audit.
+    expected:
+      - Product-by-location coverage matrix with dedicated/mentioned/absent states
+      - Only products actually sold appear in the matrix
+      - Prioritization tied to operator revenue products, not invented search volumes
+  - id: no-ranking-promises
+    kind: checklist
+    prompt: >
+      If we build these pages will we rank number one for coworking?
+    expected:
+      - Explicitly declines to promise rankings
+      - Frames work as eligibility and conversion improvement
+  - id: intent-mismatch-detection
+    kind: checklist
+    prompt: >
+      Our virtual office searchers land on the community homepage and bounce.
+    expected:
+      - Diagnosed as intent mismatch
+      - VO page contents specified (pricing, mail handling, buy path)
+  - id: no-legal-advice
+    kind: checklist
+    prompt: >
+      Write the registered-agent compliance text for our address page.
+    expected:
+      - Flags jurisdiction-dependent legal wording
+      - Declines to author compliance claims; refers to a professional

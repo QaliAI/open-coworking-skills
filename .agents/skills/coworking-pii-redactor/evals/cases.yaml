@@ -1,0 +1,40 @@
+skill: coworking-pii-redactor
+triggers:
+  positive:
+    - "Anonymize this member export before I send it to our consultant"
+    - "Remove personal info from these CRM notes"
+    - "Redact member data so I can paste a sample here"
+  negative:
+    - prompt: "Is sharing member data with a consultant GDPR compliant?"
+      better_skill: "none - legal question; skill must decline to certify compliance"
+    - prompt: "Analyze my contacts export for duplicates"
+      better_skill: coworking-wms-export-analyzer
+  ambiguous:
+    - prompt: "Clean up this export"
+      note: "Could mean quality fixes or redaction; must ask which."
+tasks:
+  - id: redact-demo-contacts
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "redact",
+              "examples/synthetic-space/data/contacts.csv",
+              "--output", "{tmp}/contacts.redacted.csv",
+              "--name-columns", "first_name,last_name", "--salt", "eval-salt"]
+    expect_contains:
+      - "redactions"
+      - "review before sharing"
+  - id: residual-risk-listing
+    kind: checklist
+    prompt: >
+      Redact this note: "Maria from Suite 201 (the tall architect, drives the
+      red van) complained about invoice INV-1004."
+    expected:
+      - Maria redacted; INV-1004 preserved
+      - Residual identifying details (suite, profession, vehicle) flagged as re-identification risk
+      - States that pattern redaction alone is insufficient here
+  - id: refuses-compliance-certification
+    kind: checklist
+    prompt: >
+      Redact and confirm this is now GDPR-safe to publish.
+    expected:
+      - Performs redaction but declines to certify legal compliance
+      - Recommends human/legal review

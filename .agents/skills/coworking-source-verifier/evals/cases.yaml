@@ -1,0 +1,49 @@
+skill: coworking-source-verifier
+triggers:
+  positive:
+    - "Check this owner report for unsupported claims before I send it"
+    - "Where did the 20% flex-market growth stat in this deck come from?"
+    - "Is this occupancy number real? Verify it against the export"
+  negative:
+    - prompt: "Write my monthly owner report"
+      better_skill: coworking-monthly-owner-report
+    - prompt: "Check this CSV for duplicates and bad dates"
+      better_skill: coworking-wms-export-analyzer
+  ambiguous:
+    - prompt: "Review my investor update"
+      note: "Verification is the right default; content editing is out of scope."
+tasks:
+  - id: unsourced-claim-not-replaced
+    kind: checklist
+    prompt: >
+      Verify: "The coworking industry grows 21% annually, so our 8% growth
+      underperforms."
+    expected:
+      - External claim flagged UNSOURCED with source demanded
+      - No replacement statistic supplied from memory
+      - The comparative conclusion flagged as dependent on the unsourced claim
+  - id: causal-downgrade
+    kind: checklist
+    prompt: >
+      Verify: "Churn doubled because we raised prices."
+    expected:
+      - Classified as hypothesis, not fact
+      - A concrete test suggested (e.g. compare churn of repriced vs grandfathered members)
+  - id: recompute-mismatch
+    kind: checklist
+    prompt: >
+      The report claims 92% occupancy; the attached inventory and membership
+      exports are from the synthetic demo. Verify.
+    expected:
+      - Recomputes occupancy with the CLI and reports numerator/denominator
+      - Reports MISMATCH with both values and asks which definition was intended
+  - id: known-answer-occupancy
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "occupancy",
+              "--inventory", "examples/synthetic-space/data/inventory.csv",
+              "--memberships", "examples/synthetic-space/data/memberships.csv",
+              "--as-of", "2026-07-01", "--format", "json"]
+    expect_contains:
+      - '"value": "0.7143"'
+      - '"value": "0.5758"'
+      - '"value": "0.6370"'

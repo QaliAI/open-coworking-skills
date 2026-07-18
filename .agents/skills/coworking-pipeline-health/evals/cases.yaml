@@ -1,0 +1,48 @@
+skill: coworking-pipeline-health
+triggers:
+  positive:
+    - "Review our sales pipeline"
+    - "Why aren't our tours turning into memberships?"
+    - "Pipeline hygiene check on this deals export"
+  negative:
+    - prompt: "How fast do we respond to new leads?"
+      better_skill: coworking-speed-to-lead-auditor
+    - prompt: "Prep me for tomorrow's tour with Foxglove Labs"
+      better_skill: coworking-tour-preparation
+  ambiguous:
+    - prompt: "Sales feels slow lately"
+      note: "Pipeline health is a fine entry point; lead-to-tour diagnostic if the problem localizes to early funnel."
+tasks:
+  - id: known-answer-pipeline
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "pipeline",
+              "--deals", "examples/synthetic-space/data/deals.csv",
+              "--as-of", "2026-07-01", "--format", "json"]
+    expect_contains:
+      - '"deal_id": "D-2002"'
+      - 'duplicate_open_deals'
+      - 'D-2012'
+      - 'overdue_next_action'
+      - 'D-2007'
+  - id: row-level-findings
+    kind: checklist
+    prompt: >
+      Audit this pipeline of 40 deals.
+    expected:
+      - Findings list specific deal IDs, owners, day counts
+      - No aggregate-only statements like "several deals are stale"
+      - Pipeline totals labeled unweighted
+  - id: low-volume-no-rate-judgment
+    kind: checklist
+    prompt: >
+      We had 3 proposals and 1 won this month. Is our proposal stage broken?
+    expected:
+      - Reports 1 of 3 with the count, declines a bottleneck verdict on n=3
+      - No invented benchmark comparison
+  - id: dirty-data-stop
+    kind: checklist
+    prompt: >
+      Deals export where 40% of rows have blank stages. Full conversion analysis please.
+    expected:
+      - Hygiene findings reported
+      - Conversion analysis declined with the 40%-blank reason
