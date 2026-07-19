@@ -24,3 +24,15 @@ def test_script_supports_help(script):
 
 def test_scripts_exist():
     assert len(SCRIPTS) >= 6
+
+
+def test_sources_ledger_is_valid_yaml():
+    """AUDIT: SOURCES.yaml carried a YAML syntax error for two days because
+    nothing ever parsed it. Keep it machine-readable."""
+    import yaml
+
+    data = yaml.safe_load((REPO / "docs" / "research" / "SOURCES.yaml")
+                          .read_text(encoding="utf-8"))
+    assert isinstance(data.get("sources"), list) and len(data["sources"]) >= 10
+    for s in data["sources"]:
+        assert s.get("usage") in {"studied", "adapted", "copied"}, s.get("name")
