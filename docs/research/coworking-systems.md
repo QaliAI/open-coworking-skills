@@ -18,9 +18,11 @@ own exports without credentials.
 | `connector-tested` | Connector verified against a live or sandbox account |
 | `official-partner-supported` | The vendor participates in maintenance |
 
-**No system currently carries a label above `mapping-documented`.** Claiming
-`connector-prototype` or higher requires fetching current vendor API docs,
-recording them in `SOURCES.yaml`, and testing against a sandbox.
+**As of 2026-07-18, HubSpot and OfficeRnD carry `connector-prototype
+(mock-tested)`** - read-only client code built against vendor docs fetched
+that day (recorded in `SOURCES.yaml`) and exercised against mocked
+transports only. No system is sandbox- or live-tested; raising a label
+further requires an actual account test, recorded here.
 
 ## Workspace-management systems (WMS)
 
