@@ -1,0 +1,15 @@
+contact_id,first_name,last_name,email,phone,company_id,created_at,consent_marketing
+HCT-01,Zoë,Müller,zoe@anchoranalytics.example,555-0161,HC-ANCHOR,2025-10-01,true
+HCT-02,Ray,Okafor,ray@anchoranalytics.example,555-0162,HC-ANCHOR,2025-10-02,true
+HCT-03,Nina,Bridge,nina@bridgevine.example,555-0163,HC-BRIDGE,2025-08-01,false
+HCT-04,Sana,Qureshi,sana@quarryarch.example,555-0164,HC-QUARRY,2026-04-20,true
+HCT-05,José,García-Ibáñez,jose@deltarobotics.example,555-0165,HC-DELTA,2026-04-15,true
+HCT-06,Petra,Canal,petra@canalbooks.example,,HC-CANAL,2026-01-20,false
+HCT-07,健,田中,ken.tanaka@emberstudio.example,555-0167,HC-EMBER,2026-05-25,true
+HCT-08,Finn,Fjord,finn@fjordconsulting.example,555-0168,HC-FJORD,2026-02-20,true
+HCT-09,Gala,Grotto,gala@grottolegal.example,555-0169,HC-GROTTO,2026-03-10,false
+HCT-10,Piotr,Portal,piotr@portalventures.example,555-0170,HC-PORTAL,2026-05-28,true
+HCT-11,Rhea,Ridge,rhea@ridgeinsurance.example,555-0171,HC-RIDGE,2026-05-15,true
+HCT-12,Zoe,Muller,ZOE@anchoranalytics.example,555-0161,HC-ANCHOR,2026-06-11,true
+HCT-13,Naia,Nomad,naia@nomadfilms.example,555-0173,HC-NOMAD,2026-05-10,true
+HCT-14,Silas,Siren,silas@sirenaudio.example,555-0174,HC-SIREN,2026-03-01,false

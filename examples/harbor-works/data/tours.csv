@@ -1,0 +1,7 @@
+tour_id,lead_id,deal_id,location_id,scheduled_at,completed_at,status,toured_product,host,next_action
+HWT-01,HWL-01,HWD-02,HW-PDX,2026-06-04 14:00,2026-06-04 14:40,completed,private-office,dana,proposal sent 2026-06-05
+HWT-02,HWL-02,HWD-07,HW-BOS,2026-06-05 10:00,2026-06-05 10:35,completed,private-office,marta,
+HWT-03,HWL-04,HWD-04,HW-PDX,2026-06-08 15:00,,no_show,private-office,dana,
+HWT-04,HWL-05,HWD-05,HW-PDX,2026-06-09 13:00,,canceled,team-suite,dana,rescheduled to HWT-05
+HWT-05,HWL-05,HWD-05,HW-PDX,2026-06-10 13:00,,scheduled,team-suite,dana,host rescheduled tour
+HWT-06,HWL-06,HWD-03,HW-BOS,2026-04-20 11:00,2026-04-20 11:45,completed,team-suite,marta,waiting on decision

@@ -1,0 +1,19 @@
+company_id,name,industry,size,created_at
+HC-ANCHOR,Anchor Analytics Demo,software,12,2025-10-01
+HC-BRIDGE,Bridge & Vine Demo,design,7,2025-08-01
+HC-CANAL,Canal Bookkeeping Demo,accounting,2,2026-01-20
+HC-DELTA,Delta Robotics Demo,hardware,11,2026-04-15
+HC-EMBER,Ember Studio Demo,media,3,2026-05-25
+HC-FJORD,Fjord Consulting Demo,consulting,1,2026-02-20
+HC-GROTTO,Grotto Legal Demo,legal,1,2026-03-10
+HC-HARBORINT,Harbor Works Internal,operator,5,2024-02-01
+HC-ISLE,Isle Therapy Demo,health,2,2025-06-15
+HC-JETTY,Jetty Freight Demo,logistics,9,2025-05-01
+HC-KELP,Kelp Notary Demo,legal,1,2026-01-05
+HC-MISTRAL,Mistral Imports Demo,trade,2,2026-02-14
+HC-NOMAD,Nomad Films Demo,media,2,2026-05-10
+HC-PORTAL,Portal Ventures Demo,vc,4,2026-05-28
+HC-QUARRY,Quarry Architecture Demo,architecture,6,2026-04-20
+HC-RIDGE,Ridge Insurance Demo,insurance,8,2026-05-15
+HC-SIREN,Siren Audio Demo,media,1,2026-03-01
+HC-OMEN,"=HYPERLINK(""http://evil.example"",""Omen Demo"")",unknown,1,2026-06-01
