@@ -456,7 +456,7 @@ def leakage_report(as_of: date, leads: Table | None = None, deals: Table | None 
                                     "before treating as leakage")
                 unbilled.append(item)
         if unbilled:
-            at_risk = sum((Decimal(u["monthly_rate"]) for u in unbilled
+            at_risk = sum((Decimal(str(u["monthly_rate"])) for u in unbilled
                            if u["monthly_rate"]), ZERO)
             findings.append({"check": "active_memberships_without_recent_invoice",
                              "count": len(unbilled), "items": unbilled[:25],
