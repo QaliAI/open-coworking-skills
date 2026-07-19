@@ -75,6 +75,15 @@ def _add_common(p: argparse.ArgumentParser) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Windows consoles default to cp1252, which cannot encode characters the
+    # reports use (e.g. the warning sign); without this, the quick start
+    # crashes with UnicodeEncodeError on a stock PowerShell.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except (OSError, ValueError):  # pragma: no cover - exotic streams
+                pass
     parser = argparse.ArgumentParser(
         prog="opencoworking",
         description="Deterministic analysis tools for coworking exports. "
@@ -240,4 +249,9 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except BrokenPipeError:
+        # Downstream consumer (head, Select-Object -First) closed the pipe;
+        # that is not an error in this program.
+        sys.exit(0)

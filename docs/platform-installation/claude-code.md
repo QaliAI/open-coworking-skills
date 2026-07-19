@@ -8,8 +8,8 @@ Agent Skills standard; skills load from `.claude/skills` (project),
 ## Via GitHub CLI (once this repo is on GitHub)
 
 ```bash
-gh skill install QaliAI/open-coworking-skills --all --agent claude-code            # project
-gh skill install QaliAI/open-coworking-skills coworking-pipeline-health --agent claude-code --scope user
+gh skill install QaliAI/open-coworking-skills --all --allow-hidden-dirs --agent claude-code            # project
+gh skill install QaliAI/open-coworking-skills coworking-pipeline-health --allow-hidden-dirs --agent claude-code --scope user
 ```
 
 ## Manual — project scope

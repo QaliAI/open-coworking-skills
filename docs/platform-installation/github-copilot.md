@@ -9,7 +9,7 @@ Inside the repository where you want the skills (once this repo is
 published):
 
 ```bash
-gh skill install QaliAI/open-coworking-skills --all
+gh skill install QaliAI/open-coworking-skills --all --allow-hidden-dirs
 ```
 
 Defaults: agent `github-copilot`, project scope, destination
@@ -19,11 +19,16 @@ that directory, so one install serves several tools.
 Useful variants:
 
 ```bash
-gh skill install QaliAI/open-coworking-skills                       # interactive picker
-gh skill install QaliAI/open-coworking-skills coworking-pipeline-health --pin v0.1.0
-gh skill install QaliAI/open-coworking-skills --scope user          # all your projects
-gh skill install /path/to/local/clone --from-local --all            # before it's published
+gh skill install QaliAI/open-coworking-skills --allow-hidden-dirs                # interactive picker
+gh skill install QaliAI/open-coworking-skills coworking-pipeline-health --allow-hidden-dirs --pin v0.1.0
+gh skill install QaliAI/open-coworking-skills --all --allow-hidden-dirs --scope user
+gh skill install /path/to/local/clone coworking-pipeline-health --from-local --allow-hidden-dirs   # before it's published (one skill per call)
 ```
+
+`--allow-hidden-dirs` is required because this repo keeps skills in the
+hidden `.agents/skills/` directory (verified against gh 2.92, which finds
+zero skills here without it). Note gh installs one named skill per call;
+use `--all` for everything.
 
 ## Manual
 

@@ -26,9 +26,12 @@ Fastest cross-host path where GitHub CLI ≥ the version shipping `gh skill`
 is installed:
 
 ```bash
-gh skill install QaliAI/open-coworking-skills --all           # project scope, .agents/skills/
-gh skill install QaliAI/open-coworking-skills coworking-pipeline-health --agent claude-code --scope user
+gh skill install QaliAI/open-coworking-skills --all --allow-hidden-dirs           # project scope, .agents/skills/
+gh skill install QaliAI/open-coworking-skills coworking-pipeline-health --allow-hidden-dirs --agent claude-code --scope user
 ```
 
-(Requires this repository to be published on GitHub; until then, clone
-locally and use `gh skill install --from-local .` or the manual method.)
+`--allow-hidden-dirs` is REQUIRED: gh (tested: 2.92) finds zero skills in
+the hidden `.agents/skills/` directory without it. Until this repository
+is published, install from a local copy instead:
+`gh skill install /path/to/clone <skill-name> --from-local --allow-hidden-dirs`
+(one named skill per call, or `--all`), or use the manual method.

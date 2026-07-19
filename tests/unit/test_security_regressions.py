@@ -76,3 +76,28 @@ class TestInvalidEncoding:
         p.write_bytes(b"a,b\n\xff\xfe\x9d,2\n")
         with pytest.raises(IngestError):
             load_csv(p)
+
+
+class TestWindowsConsoleEncoding:
+    """AUDIT (clean-consumer test): the quick-start occupancy command crashed
+    with UnicodeEncodeError on default cp1252 Windows consoles because report
+    markdown contains non-ASCII (warning sign). The CLI must reconfigure its
+    streams to UTF-8."""
+
+    def test_cli_survives_cp1252_stdout(self):
+        import os
+        import subprocess
+        import sys
+        from pathlib import Path
+
+        repo = Path(__file__).resolve().parents[2]
+        env = dict(os.environ, PYTHONIOENCODING="cp1252")
+        env.pop("PYTHONUTF8", None)
+        r = subprocess.run(
+            [sys.executable, "-m", "opencoworking.cli", "occupancy",
+             "--inventory", str(repo / "examples/synthetic-space/data/inventory.csv"),
+             "--memberships", str(repo / "examples/synthetic-space/data/memberships.csv"),
+             "--as-of", "2026-07-01"],
+            capture_output=True, env=env, cwd=repo)
+        assert r.returncode == 0, r.stderr.decode(errors="replace")[:400]
+        assert b"office_occupancy" in r.stdout

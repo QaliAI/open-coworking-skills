@@ -10,7 +10,7 @@ over this page:** https://opencode.ai/docs/skills/
    from `.agents/skills/` into the skills location OpenCode's current
    documentation specifies (project or global).
 2. Where `gh skill install` supports an opencode target in your gh
-   version: `gh skill install QaliAI/open-coworking-skills --all
+   version: `gh skill install QaliAI/open-coworking-skills --all --allow-hidden-dirs
    --agent <target>`.
 
 ## Using the skills

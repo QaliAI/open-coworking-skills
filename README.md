@@ -78,7 +78,7 @@ Canonical skills live in [`.agents/skills/`](.agents/skills/) per the
 directory Codex reads natively and `gh skill install` targets:
 
 ```bash
-gh skill install QaliAI/open-coworking-skills --all
+gh skill install QaliAI/open-coworking-skills --all --allow-hidden-dirs
 ```
 
 Per-host guides (Codex, Claude Code, Copilot, Cursor, Gemini CLI,
