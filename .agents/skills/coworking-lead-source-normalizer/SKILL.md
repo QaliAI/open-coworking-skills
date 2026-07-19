@@ -1,6 +1,6 @@
 ---
 name: coworking-lead-source-normalizer
-description: Cleans up inconsistent lead-source labels in coworking CRM data ("Google Ads" vs "adwords" vs "google ppc") by mapping them to canonical buckets, reporting blank and unmapped labels, so source ROI and conversion-by-source analyses stop lying. Use when an operator asks which marketing channels work, complains that source reports are messy, or wants lead sources standardized or deduplicated.
+description: Cleans up inconsistent lead-source labels in coworking CRM data ("Google Ads" vs "adwords" vs "google ppc") by mapping them to canonical buckets, reporting blank and unmapped labels, so source ROI and conversion-by-source analyses stop lying. Use when an operator complains that source labels or source reports are messy, wants lead sources standardized, merged, or deduplicated, or asks which channels their leads are actually recorded under. Not for judging whether a channel or ad spend is worth it - that is conversion analysis, done after normalization.
 license: Apache-2.0
 compatibility: Mode 2 requires Python 3.11+ with the opencoworking package.
 metadata:

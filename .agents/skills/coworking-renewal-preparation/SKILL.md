@@ -1,6 +1,6 @@
 ---
 name: coworking-renewal-preparation
-description: Prepares a coworking membership renewal brief - agreement terms and notice dates, payment and support history, utilization, expansion or downsizing signals, current versus list pricing, discount history, recommended renewal options, and the judgment calls that need a human. Use when an operator says a member's renewal or agreement end is approaching, "prep the renewal conversation", or asks what to offer a renewing member.
+description: Prepares a coworking membership renewal brief - agreement terms and notice dates, payment and support history, utilization, expansion or downsizing signals, current versus list pricing, discount history, recommended renewal options, and the judgment calls that need a human. Use when an operator says a member's renewal or agreement end is approaching, a member just gave notice and they want a save conversation, "prep the renewal conversation", or asks what to offer a renewing member.
 license: Apache-2.0
 metadata:
   opencoworking.category: community-retention

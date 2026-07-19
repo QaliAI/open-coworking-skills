@@ -115,7 +115,7 @@ OpenCode, Windsurf, Cline, Kiro, Antigravity, manual):
 | [`coworking-mcp-builder`](.agents/skills/coworking-mcp-builder/SKILL.md) | Integrations and adapters | Naive MCP servers over member data are PII leaks and billing incidents waiting to happen. | manual | R1 | stable |
 | [`coworking-system-adapter-builder`](.agents/skills/coworking-system-adapter-builder/SKILL.md) | Integrations and adapters | Without a disciplined adapter path every new platform request becomes "edit all skills". | manual | R1 | stable |
 
-Plus **25 planned skills** tracked in [`catalog/skills.yaml`](catalog/skills.yaml) and [ROADMAP.md](ROADMAP.md).
+Plus **32 planned skills** tracked in [`catalog/skills.yaml`](catalog/skills.yaml) and [ROADMAP.md](ROADMAP.md).
 <!-- catalog:end -->
 
 ## Example operator workflows
