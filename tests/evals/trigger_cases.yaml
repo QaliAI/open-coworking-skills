@@ -60,8 +60,10 @@ skills:
       - prompt: "These columns are confusing"
         acceptable: [coworking-data-dictionary, coworking-wms-export-analyzer]
     collision:
+      # Run-2 correction: once crm-wms-reconciliation existed, it became the
+      # better routing for this phrasing; both are acceptable.
       - prompt: "My HubSpot contacts don't line up with OfficeRnD"
-        acceptable: [coworking-data-dictionary]
+        acceptable: [coworking-data-dictionary, coworking-crm-wms-reconciliation]
         unacceptable: [coworking-pii-redactor]
       - prompt: "Rename the columns in this export so your tools understand them"
         acceptable: [coworking-data-dictionary]
@@ -318,8 +320,10 @@ skills:
       - "Half our leads say 'google' and the other half say 'adwords'"
       - "Our source dropdown became a junk drawer"
     negative:
+      # Run-2 correction: ad-spend ROI needs spend data no skill covers;
+      # "none" is the honest routing (the judge was right).
       - prompt: "Is Google Ads worth the spend?"
-        expected: coworking-pipeline-health
+        expected: none
       - prompt: "How fast do we answer leads?"
         expected: coworking-speed-to-lead-auditor
       - prompt: "Audit our local search presence"
@@ -412,8 +416,11 @@ skills:
         expected: coworking-post-tour-ghost-recovery
       - prompt: "Prep me for Thursday's tour"
         expected: coworking-tour-preparation
+      # Run-2 correction: the leakage audit implements exactly this check
+      # (completed_tours_without_next_action); the judge outperformed the
+      # original expectation.
       - prompt: "Which tours have no recorded next step?"
-        expected: coworking-pipeline-health
+        expected: coworking-revenue-leakage-audit
     ambiguous:
       - prompt: "Handle the Foxglove tour comms"
         acceptable: [coworking-tour-follow-up, coworking-tour-preparation]
@@ -726,3 +733,307 @@ skills:
       - prompt: "Make a converter script for our exports"
         acceptable: [coworking-system-adapter-builder]
         unacceptable: [coworking-pii-redactor]
+
+  # --- Wave 2 (beta) skills, added 2026-07-18 -------------------------------
+
+  coworking-crm-wms-reconciliation:
+    direct_positive:
+      - "Reconcile our CRM against the workspace management system"
+      - "My HubSpot contacts do not match OfficeRnD"
+      - "Why do sales records and billing records disagree?"
+      - "Run a CRM versus WMS reconciliation"
+    indirect_positive:
+      - "Why do CRM totals not match active memberships?"
+      - "Sales says 41 customers, billing says 46 - which is real?"
+      - "After the migration our two systems tell different stories"
+    negative:
+      - prompt: "Reconcile the virtual office partner statement"
+        expected: coworking-virtual-office-reconciliation
+      - prompt: "Find members who were never invoiced"
+        expected: coworking-revenue-leakage-audit
+      - prompt: "Plan our move to a new CRM"
+        expected: coworking-data-migration-readiness
+    ambiguous:
+      - prompt: "Our numbers don't add up between systems"
+        acceptable: [coworking-crm-wms-reconciliation, coworking-revenue-leakage-audit]
+      - prompt: "Clean up the mess between sales and billing"
+        acceptable: [coworking-crm-wms-reconciliation]
+    collision:
+      - prompt: "Members are active but I see no won deal anywhere"
+        acceptable: [coworking-crm-wms-reconciliation, coworking-revenue-leakage-audit]
+        unacceptable: [coworking-member-onboarding]
+      - prompt: "Two systems spell the same company differently - link them"
+        acceptable: [coworking-crm-wms-reconciliation]
+        unacceptable: [coworking-lead-source-normalizer]
+
+  coworking-daily-operator-brief:
+    direct_positive:
+      - "What should I work on today?"
+      - "Morning brief for the sales team"
+      - "Build today's action queue from our exports"
+      - "Daily rundown for the community manager"
+    indirect_positive:
+      - "Which prospects need action today?"
+      - "I just got back from vacation - what's on fire?"
+      - "Start-of-day list: tours, move-ins, failed payments, the lot"
+    negative:
+      - prompt: "Put together the June owner report"
+        expected: coworking-monthly-owner-report
+      - prompt: "Which failed payments should we chase first, in what order?"
+        expected: coworking-collections-prioritizer
+      - prompt: "Prep me for the 2pm tour"
+        expected: coworking-tour-preparation
+    ambiguous:
+      - prompt: "Catch me up on the business"
+        acceptable: [coworking-daily-operator-brief, coworking-monthly-owner-report]
+      - prompt: "What's urgent?"
+        acceptable: [coworking-daily-operator-brief]
+    collision:
+      - prompt: "Which leads have fallen through the cracks this week?"
+        acceptable: [coworking-daily-operator-brief, coworking-revenue-leakage-audit, coworking-speed-to-lead-auditor]
+        unacceptable: [coworking-lead-source-normalizer]
+      - prompt: "What does finance need to look at this morning?"
+        acceptable: [coworking-daily-operator-brief, coworking-collections-prioritizer]
+        unacceptable: [coworking-monthly-owner-report]
+
+  coworking-occupancy-forecast:
+    direct_positive:
+      - "How many offices will become available in the next 90 days?"
+      - "Forecast occupancy at 30, 60, and 90 days"
+      - "Show me the vacancy pipeline"
+      - "What's the move-out schedule looking like?"
+    indirect_positive:
+      - "Will we have space for a 10-person team in September?"
+      - "What does occupancy look like next quarter?"
+      - "When does the big suite free up?"
+    negative:
+      - prompt: "What's our occupancy today?"
+        expected: coworking-occupancy-revenue-dashboard
+      - prompt: "Which renewals are at risk?"
+        expected: coworking-renewal-expansion-risk
+      - prompt: "Why is the space full but revenue low?"
+        expected: coworking-occupancy-revenue-dashboard
+    ambiguous:
+      - prompt: "Are we going to be full in the fall?"
+        acceptable: [coworking-occupancy-forecast]
+      - prompt: "Occupancy outlook please"
+        acceptable: [coworking-occupancy-forecast, coworking-occupancy-revenue-dashboard]
+    collision:
+      - prompt: "A prospect wants an 8-person office in October - do we have one?"
+        acceptable: [coworking-occupancy-forecast, coworking-tour-preparation]
+        unacceptable: [coworking-local-seo-audit]
+      - prompt: "Count the departures we already know about"
+        acceptable: [coworking-occupancy-forecast]
+        unacceptable: [coworking-churn-risk-review]
+
+  coworking-renewal-expansion-risk:
+    direct_positive:
+      - "Which upcoming renewals are at risk?"
+      - "Scan all agreements ending in the next 90 days"
+      - "Renewal pipeline across the whole portfolio"
+      - "Run the renewal window scan"
+    indirect_positive:
+      - "Renewal season is coming - who needs a real conversation?"
+      - "Three discount cliffs land in August - what else is lurking?"
+      - "Which accounts might expand when their term rolls over?"
+    negative:
+      - prompt: "Prep the Eastlake renewal brief"
+        expected: coworking-renewal-preparation
+      - prompt: "Who's disengaged and might quit outside renewal windows?"
+        expected: coworking-churn-risk-review
+      - prompt: "How many workstations do those departures free up?"
+        expected: coworking-occupancy-forecast
+    ambiguous:
+      - prompt: "Help me get ahead of renewals"
+        acceptable: [coworking-renewal-expansion-risk, coworking-renewal-preparation]
+      - prompt: "Who should I call about their contract?"
+        acceptable: [coworking-renewal-expansion-risk]
+    collision:
+      - prompt: "Which cancellations should I call today?"
+        acceptable: [coworking-churn-risk-review, coworking-renewal-expansion-risk, coworking-daily-operator-brief]
+        unacceptable: [coworking-collections-prioritizer]
+      - prompt: "Everyone's discount expires this quarter - now what?"
+        acceptable: [coworking-renewal-expansion-risk, coworking-discount-pricing-audit]
+        unacceptable: [coworking-lead-source-normalizer]
+
+  coworking-discount-pricing-audit:
+    direct_positive:
+      - "Are our discounts out of hand?"
+      - "Audit pricing and discounts by product"
+      - "How much list value are we giving away?"
+      - "Run the discount dependence report"
+    indirect_positive:
+      - "Are discounts masking weak financial occupancy?"
+      - "Every renewal seems to have a special rate - how bad is it?"
+      - "Which products earn the least per desk?"
+    negative:
+      - prompt: "What price should we quote this one member at renewal?"
+        expected: coworking-renewal-preparation
+      - prompt: "Show me financial occupancy"
+        expected: coworking-occupancy-revenue-dashboard
+      - prompt: "Are meeting rooms priced right?"
+        expected: coworking-meeting-event-yield
+    ambiguous:
+      - prompt: "Should we raise prices?"
+        acceptable: [coworking-discount-pricing-audit]
+      - prompt: "Revenue per desk seems low"
+        acceptable: [coworking-discount-pricing-audit, coworking-occupancy-revenue-dashboard]
+    collision:
+      - prompt: "Which offices are discounted below list?"
+        acceptable: [coworking-discount-pricing-audit, coworking-occupancy-revenue-dashboard]
+        unacceptable: [coworking-collections-prioritizer]
+      # Run-2 correction: the skill's own description refuses market-rate
+      # claims, so declining to activate anything is also correct.
+      - prompt: "What's the market rate for offices around here?"
+        acceptable: [coworking-discount-pricing-audit, none]
+        unacceptable: [coworking-local-seo-audit]
+
+  coworking-collections-prioritizer:
+    direct_positive:
+      - "Which failed payments should we chase first?"
+      - "Build this week's collections queue"
+      - "Prioritize the overdue invoices"
+      - "Who owes us money and what do I do about it?"
+    indirect_positive:
+      - "Which failed payments deserve attention first?"
+      - "Two cards bounced and one invoice is a month old - where do I start?"
+      - "The receivables list is growing and I'm chasing randomly"
+    negative:
+      - prompt: "Find active members who were never invoiced"
+        expected: coworking-revenue-leakage-audit
+      - prompt: "Are these virtual office payouts right?"
+        expected: coworking-virtual-office-reconciliation
+      - prompt: "What's due today across the whole business?"
+        expected: coworking-daily-operator-brief
+    ambiguous:
+      - prompt: "Sort out our billing problems"
+        acceptable: [coworking-collections-prioritizer, coworking-revenue-leakage-audit]
+      - prompt: "Handle the overdue accounts"
+        acceptable: [coworking-collections-prioritizer]
+    collision:
+      - prompt: "A member with a failed payment renews next month - what first?"
+        acceptable: [coworking-collections-prioritizer, coworking-renewal-preparation]
+        unacceptable: [coworking-post-tour-ghost-recovery]
+      - prompt: "Send the debtors a payment reminder"
+        acceptable: [coworking-collections-prioritizer]
+        unacceptable: [coworking-tour-follow-up]
+
+  coworking-meeting-event-yield:
+    direct_positive:
+      - "Are meeting and event spaces producing enough revenue?"
+      - "Analyze room utilization and booking revenue"
+      - "Is the boardroom worth it?"
+      - "Meeting room yield report please"
+    indirect_positive:
+      - "The event loft feels busy but I can't see the money"
+      - "Members book rooms constantly - are we earning anything from that?"
+      - "Should we convert the training room to offices?"
+    negative:
+      - prompt: "What's our office occupancy?"
+        expected: coworking-occupancy-revenue-dashboard
+      - prompt: "Are our offices priced right?"
+        expected: coworking-discount-pricing-audit
+      - prompt: "How full will we be next quarter?"
+        expected: coworking-occupancy-forecast
+    ambiguous:
+      - prompt: "How's the events business doing?"
+        acceptable: [coworking-meeting-event-yield, coworking-monthly-owner-report]
+      - prompt: "Room stats please"
+        acceptable: [coworking-meeting-event-yield]
+    collision:
+      - prompt: "Nonmembers keep booking our boardroom - good or bad?"
+        acceptable: [coworking-meeting-event-yield]
+        unacceptable: [coworking-lead-to-tour-diagnostic]
+      - prompt: "Meeting room revenue for the owner pack"
+        acceptable: [coworking-meeting-event-yield, coworking-monthly-owner-report]
+        unacceptable: [coworking-collections-prioritizer]
+
+  coworking-multi-location-benchmark:
+    direct_positive:
+      - "Which of our locations performs best?"
+      - "Compare our sites on a fair basis"
+      - "Portfolio scorecard across locations"
+      - "Benchmark Downtown against Riverside"
+    indirect_positive:
+      - "Is the satellite site actually underperforming or just smaller?"
+      - "Where should the next dollar of investment go, by site?"
+      - "Same playbook, two locations, different results - why?"
+    negative:
+      - prompt: "What's occupancy at the downtown site?"
+        expected: coworking-occupancy-revenue-dashboard
+      - prompt: "Compare office pricing between the two sites"
+        expected: coworking-discount-pricing-audit
+      - prompt: "Monthly report covering both locations"
+        expected: coworking-monthly-owner-report
+    ambiguous:
+      - prompt: "How are the locations doing?"
+        acceptable: [coworking-multi-location-benchmark, coworking-monthly-owner-report]
+      - prompt: "Rank our spaces"
+        acceptable: [coworking-multi-location-benchmark]
+    collision:
+      - prompt: "Response times by location please"
+        acceptable: [coworking-multi-location-benchmark, coworking-speed-to-lead-auditor]
+        unacceptable: [coworking-google-business-profile-audit]
+      - prompt: "The flagship makes more money - close the satellite?"
+        acceptable: [coworking-multi-location-benchmark]
+        unacceptable: [coworking-cancellation-to-virtual-office]
+
+  coworking-ai-concierge-knowledge-audit:
+    direct_positive:
+      - "Our chatbot keeps giving wrong prices - audit it"
+      - "Check the FAQ bot against our real policies"
+      - "Is our AI concierge telling people the truth?"
+      - "Audit the member app's automated answers"
+    indirect_positive:
+      - "The bot told someone we have showers - we don't"
+      - "Before we launch the website chat, make sure it won't lie"
+      - "A prospect was quoted last year's day pass price by the widget"
+    negative:
+      - prompt: "Verify the claims in my investor deck"
+        expected: coworking-source-verifier
+      - prompt: "Build the MCP server the concierge will read from"
+        expected: coworking-mcp-builder
+      - prompt: "Audit our Google Business Profile answers"
+        expected: coworking-google-business-profile-audit
+    ambiguous:
+      - prompt: "Review our chatbot"
+        acceptable: [coworking-ai-concierge-knowledge-audit, coworking-mcp-builder]
+      - prompt: "Our automated answers need checking"
+        acceptable: [coworking-ai-concierge-knowledge-audit]
+    collision:
+      - prompt: "The bot's pricing answers contradict the website"
+        acceptable: [coworking-ai-concierge-knowledge-audit]
+        unacceptable: [coworking-discount-pricing-audit]
+      - prompt: "Someone tricked the chatbot into promising a discount"
+        acceptable: [coworking-ai-concierge-knowledge-audit]
+        unacceptable: [coworking-collections-prioritizer]
+
+  coworking-data-migration-readiness:
+    direct_positive:
+      - "We're switching from Cobot to OfficeRnD - are we ready?"
+      - "Run a migration readiness audit on our exports"
+      - "What survives a move to a new CRM?"
+      - "Plan the data migration checklist"
+    indirect_positive:
+      - "Migrate us off this platform without losing our history"
+      - "The new system's importer wants files - are ours good enough?"
+      - "Last migration lost half our invoices - not again"
+    negative:
+      - prompt: "Write a permanent adapter for our platform"
+        expected: coworking-system-adapter-builder
+      - prompt: "Keep the CRM and WMS in sync ongoing"
+        expected: coworking-crm-wms-reconciliation
+      - prompt: "What's in this export file?"
+        expected: coworking-wms-export-analyzer
+    ambiguous:
+      - prompt: "We're leaving our workspace software"
+        acceptable: [coworking-data-migration-readiness]
+      - prompt: "Get our data ready for the new system"
+        acceptable: [coworking-data-migration-readiness, coworking-data-dictionary]
+    collision:
+      - prompt: "Deduplicate contacts before the big move"
+        acceptable: [coworking-data-migration-readiness, coworking-wms-export-analyzer]
+        unacceptable: [coworking-pii-redactor]
+      - prompt: "Did everything arrive in the new system?"
+        acceptable: [coworking-data-migration-readiness, coworking-crm-wms-reconciliation]
+        unacceptable: [coworking-monthly-owner-report]

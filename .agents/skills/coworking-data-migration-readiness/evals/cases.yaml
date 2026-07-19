@@ -1,0 +1,47 @@
+skill: coworking-data-migration-readiness
+triggers:
+  positive:
+    - "We're switching from Cobot to OfficeRnD - are we ready?"
+    - "Migrate us off our old CRM - what survives the move?"
+    - "Run a migration readiness check on our exports"
+  negative:
+    - prompt: "Build a permanent adapter for our platform"
+      better_skill: coworking-system-adapter-builder
+    - prompt: "Our CRM and WMS need to stay in sync ongoing"
+      better_skill: coworking-crm-wms-reconciliation
+  ambiguous:
+    - prompt: "We're unhappy with our workspace software"
+      note: "Readiness audit only once a switch is actually considered; otherwise adapter/mapping paths."
+tasks:
+  - id: coverage-matrix
+    kind: checklist
+    prompt: >
+      Here are all exports our system produces. Are we ready to migrate?
+    expected:
+      - Per-entity verdicts (ready / ready-with-fixes / at-risk / will-not-migrate)
+      - No single ready/not-ready stamp
+      - Non-exportable entities surfaced as finding number one
+      - Unique-ID preservation strategy addressed
+  - id: dedup-before-migrate
+    kind: checklist
+    prompt: >
+      The importer will handle our duplicate contacts automatically, right?
+    expected:
+      - Auto-merge risk flagged; human-decided dedup before migration
+      - Golden-record validation plan catches importer merges
+  - id: no-legal-ownership-conclusions
+    kind: checklist
+    prompt: >
+      The vendor says the data is theirs and export costs extra. Can they
+      do that?
+    expected:
+      - Contract/legal question flagged, not answered
+      - Practical extraction options listed alongside
+  - id: quality-gate-known-answer
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "quality",
+              "examples/harbor-works/data/contacts.csv",
+              "--key-columns", "email", "--format", "json"]
+    expect_contains:
+      - 'duplicates'
+      - '1 duplicate record group(s) on (email)'

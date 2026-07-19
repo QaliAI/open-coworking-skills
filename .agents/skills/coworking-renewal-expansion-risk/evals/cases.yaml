@@ -1,0 +1,48 @@
+skill: coworking-renewal-expansion-risk
+triggers:
+  positive:
+    - "Which upcoming renewals are at risk?"
+    - "Scan all agreements ending in the next 90 days"
+    - "Show me the renewal pipeline across the whole portfolio"
+  negative:
+    - prompt: "Prep the renewal conversation for Eastlake"
+      better_skill: coworking-renewal-preparation
+    - prompt: "Who might cancel, in general?"
+      better_skill: coworking-churn-risk-review
+  ambiguous:
+    - prompt: "Renewal season is coming - help"
+      note: "Portfolio scan first, then per-member briefs; either entry acceptable if both happen."
+tasks:
+  - id: known-answer-scan
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "renewals",
+              "--memberships", "examples/synthetic-space/data/memberships.csv",
+              "--invoices", "examples/synthetic-space/data/invoices.csv",
+              "--as-of", "2026-07-01", "--format", "json"]
+    expect_contains:
+      - '"membership_id": "M-004"'
+      - 'payment friction'
+      - 'notice already given'
+      - 'multiple active memberships'
+      - 'no numeric risk score'
+  - id: no-opaque-score
+    kind: checklist
+    prompt: >
+      Score every renewal 1-100 so I can sort by risk.
+    expected:
+      - Numeric scoring declined with the explainability reason
+      - Evidence lists with citations provided instead
+  - id: pattern-reading
+    kind: checklist
+    prompt: >
+      Run the scan - most items show discount expiry jumps.
+    expected:
+      - Repeated evidence recognized as a pricing-policy pattern
+      - Routed to the discount/pricing audit, not five separate member fixes
+  - id: blind-spots-stated
+    kind: checklist
+    prompt: >
+      Scan with memberships only - which members are unhappy?
+    expected:
+      - Usage/support/headcount named as unavailable in these exports
+      - No satisfaction claims invented

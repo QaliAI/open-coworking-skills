@@ -301,7 +301,8 @@ skills:
 
   - name: coworking-crm-wms-reconciliation
     category: business-intelligence
-    status: planned
+    status: beta
+    version: "0.1.0"
     priority: p1
     risk: r0
     modes: [manual, export]
@@ -314,10 +315,11 @@ skills:
 
   - name: coworking-daily-operator-brief
     category: operations
-    status: planned
+    status: beta
+    version: "0.1.0"
     priority: p1
     risk: r0
-    modes: [export]
+    modes: [manual, export]
     primary_user: owner / community manager / sales / finance
     problem: Mornings start with ten open tabs and no prioritized list of leads awaiting response, today's tours, move-ins, renewals, and failed payments.
     inputs: Whatever canonical exports exist; the as-of date; the requesting role.
@@ -327,10 +329,11 @@ skills:
 
   - name: coworking-occupancy-forecast
     category: business-intelligence
-    status: planned
+    status: beta
+    version: "0.1.0"
     priority: p1
     risk: r0
-    modes: [export]
+    modes: [manual, export]
     primary_user: owner / GM
     problem: Nobody can answer "how many offices free up in the next 90 days" without spreadsheet archaeology.
     inputs: Inventory, memberships (end/notice dates), pending move-ins; optional weighted deals.
@@ -340,10 +343,11 @@ skills:
 
   - name: coworking-renewal-expansion-risk
     category: community-retention
-    status: planned
+    status: beta
+    version: "0.1.0"
     priority: p2
     risk: r0
-    modes: [export]
+    modes: [manual, export]
     primary_user: owner / GM
     problem: Renewals surface one by one instead of as a scanned portfolio with risk and expansion evidence.
     inputs: Memberships, invoices/payments; optional usage and notes.
@@ -353,10 +357,11 @@ skills:
 
   - name: coworking-discount-pricing-audit
     category: finance-pricing
-    status: planned
+    status: beta
+    version: "0.1.0"
     priority: p1
     risk: r0
-    modes: [export]
+    modes: [manual, export]
     primary_user: owner
     problem: Discounts accrete silently until financial occupancy sags and nobody remembers why any given member pays what they pay.
     inputs: Inventory, memberships (contracted vs list), locations.
@@ -366,10 +371,11 @@ skills:
 
   - name: coworking-meeting-event-yield
     category: business-intelligence
-    status: planned
+    status: beta
+    version: "0.1.0"
     priority: p1
     risk: r0
-    modes: [export]
+    modes: [manual, export]
     primary_user: GM
     problem: Meeting rooms and event spaces are priced and scheduled blind without booked-hours, revenue-per-hour, and member/nonmember mix analysis.
     inputs: Room bookings, room/event inventory, opening hours.
@@ -379,10 +385,11 @@ skills:
 
   - name: coworking-multi-location-benchmark
     category: business-intelligence
-    status: planned
+    status: beta
+    version: "0.1.0"
     priority: p2
     risk: r0
-    modes: [export]
+    modes: [manual, export]
     primary_user: multi-location owner
     problem: Cross-location comparisons reward size instead of performance because nothing is normalized per sellable workstation.
     inputs: Multi-location canonical exports.
@@ -392,7 +399,8 @@ skills:
 
   - name: coworking-ai-concierge-knowledge-audit
     category: foundation
-    status: planned
+    status: beta
+    version: "0.1.0"
     priority: p2
     risk: r0
     modes: [manual]
@@ -405,7 +413,8 @@ skills:
 
   - name: coworking-data-migration-readiness
     category: integration-development
-    status: planned
+    status: beta
+    version: "0.1.0"
     priority: p2
     risk: r0
     modes: [manual, export]
@@ -431,10 +440,11 @@ skills:
 
   - name: coworking-collections-prioritizer
     category: finance-pricing
-    status: planned
+    status: beta
+    version: "0.1.0"
     priority: p1
     risk: r0
-    modes: [export]
+    modes: [manual, export]
     primary_user: billing
     problem: Failed and overdue invoices chased in random order instead of by amount, age, and relationship risk.
     inputs: Invoices, payments, memberships.

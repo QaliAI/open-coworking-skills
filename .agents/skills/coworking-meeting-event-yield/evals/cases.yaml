@@ -1,0 +1,50 @@
+skill: coworking-meeting-event-yield
+triggers:
+  positive:
+    - "Are meeting and event spaces producing enough revenue?"
+    - "Is the boardroom worth it?"
+    - "Analyze room utilization and booking revenue"
+  negative:
+    - prompt: "What's our office occupancy?"
+      better_skill: coworking-occupancy-revenue-dashboard
+    - prompt: "Plan next month's community event"
+      better_skill: none
+  ambiguous:
+    - prompt: "How's the events business doing?"
+      note: "Yield analysis if data exists; owner report if a period summary is meant."
+tasks:
+  - id: known-answer-yield
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "rooms",
+              "--bookings", "examples/synthetic-space/data/room-bookings.csv",
+              "--inventory", "examples/synthetic-space/data/inventory.csv",
+              "--format", "json"]
+    expect_contains:
+      - '"room": "MR-2"'
+      - '"revenue_per_booked_hour": "65.00"'
+      - '"revenue_per_booked_hour": "225.00"'
+      - 'no bookable hours declared'
+  - id: utilization-only-when-declared
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "rooms",
+              "--bookings", "examples/synthetic-space/data/room-bookings.csv",
+              "--inventory", "examples/synthetic-space/data/inventory.csv",
+              "--open-hours-per-day", "10", "--format", "json"]
+    expect_contains:
+      - '"utilization": "0.0500"'
+      - '"bookable_hours_assumed": "240"'
+      - 'including'
+  - id: member-amenity-not-failure
+    kind: checklist
+    prompt: >
+      MR-1 made zero revenue on 5 booked hours - kill the room?
+    expected:
+      - Zero-charge member bookings labeled amenity/retention value, not failure
+      - Conversion decision framed with what data can and cannot show
+  - id: no-margin-without-costs
+    kind: checklist
+    prompt: >
+      What's the event loft's profit margin?
+    expected:
+      - Margin declined without operator-provided setup/staffing costs
+      - Gross figures labeled gross

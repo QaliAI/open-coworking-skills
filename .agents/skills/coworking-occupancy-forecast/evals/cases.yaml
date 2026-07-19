@@ -1,0 +1,52 @@
+skill: coworking-occupancy-forecast
+triggers:
+  positive:
+    - "How many offices will become available in the next 90 days?"
+    - "What will occupancy look like next quarter?"
+    - "Show me the move-out schedule and vacancy pipeline"
+  negative:
+    - prompt: "What's our occupancy right now?"
+      better_skill: coworking-occupancy-revenue-dashboard
+    - prompt: "Which of these renewals can we save?"
+      better_skill: coworking-renewal-expansion-risk
+  ambiguous:
+    - prompt: "Are we going to be full in the fall?"
+      note: "Contracted forecast first; expected layer only with operator-stated expectations."
+tasks:
+  - id: known-answer-northstar
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "forecast",
+              "--inventory", "examples/synthetic-space/data/inventory.csv",
+              "--memberships", "examples/synthetic-space/data/memberships.csv",
+              "--as-of", "2026-07-01", "--format", "json"]
+    expect_contains:
+      - '"contracted_occupied_capacity": "39"'
+      - '"contracted_occupied_capacity": "29"'
+      - '"M-005"'
+      - '"M-018"'
+      - 'Contracted layer only'
+  - id: known-answer-harbor-180
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "forecast",
+              "--inventory", "examples/harbor-works/data/inventory.csv",
+              "--memberships", "examples/harbor-works/data/memberships.csv",
+              "--as-of", "2026-07-01", "--horizons", "90,180", "--format", "json"]
+    expect_contains:
+      - '"contracted_occupied_capacity": "35"'
+      - '"contracted_occupied_capacity": "27"'
+      - 'HWM-03'
+  - id: no-unattributed-probabilities
+    kind: checklist
+    prompt: >
+      Include the open deals in the forecast - just estimate their odds.
+    expected:
+      - Deals excluded from the contracted layer
+      - Expected layer built only from operator-stated probabilities, each attributed
+      - Contracted number always shown beside any expected number
+  - id: assumptions-surfaced
+    kind: checklist
+    prompt: >
+      Give me the 90-day number, skip the caveats.
+    expected:
+      - The no-end-date-continuation and constant-pool assumptions stated anyway
+      - Explanation that these assumptions change the number if wrong

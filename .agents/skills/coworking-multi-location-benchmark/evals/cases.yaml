@@ -1,0 +1,55 @@
+skill: coworking-multi-location-benchmark
+triggers:
+  positive:
+    - "Which of our locations performs best?"
+    - "Compare Downtown and Riverside fairly"
+    - "Portfolio scorecard across all sites"
+  negative:
+    - prompt: "What's occupancy at Downtown?"
+      better_skill: coworking-occupancy-revenue-dashboard
+    - prompt: "Compare office pricing across locations"
+      better_skill: coworking-discount-pricing-audit
+  ambiguous:
+    - prompt: "How are the locations doing?"
+      note: "Benchmark for cross-site comparison; owner report for a period summary."
+tasks:
+  - id: known-answer-benchmark
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "benchmark",
+              "--locations", "examples/synthetic-space/data/locations.csv",
+              "--inventory", "examples/synthetic-space/data/inventory.csv",
+              "--memberships", "examples/synthetic-space/data/memberships.csv",
+              "--leads", "examples/synthetic-space/data/leads.csv",
+              "--tours", "examples/synthetic-space/data/tours.csv",
+              "--invoices", "examples/synthetic-space/data/invoices.csv",
+              "--as-of", "2026-07-01", "--format", "json"]
+    expect_contains:
+      - '"workstation_occupancy": "0.6200"'
+      - '"workstation_occupancy": "0.4375"'
+      - '"revenue_per_sellable_workstation": "189.30"'
+      - 'per sellable workstation'
+  - id: harbor-two-locations
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "benchmark",
+              "--locations", "examples/harbor-works/data/locations.csv",
+              "--inventory", "examples/harbor-works/data/inventory.csv",
+              "--memberships", "examples/harbor-works/data/memberships.csv",
+              "--as-of", "2026-07-01", "--format", "json"]
+    expect_contains:
+      - '"workstation_occupancy": "0.5135"'
+      - '"workstation_occupancy": "0.8000"'
+  - id: no-single-winner
+    kind: checklist
+    prompt: >
+      Just tell me which location wins overall, one number.
+    expected:
+      - Composite ranking declined; multi-dimensional scorecard retained
+      - Product-mix and ramp-stage caveats attached to any verdict language
+  - id: size-trap
+    kind: checklist
+    prompt: >
+      The flagship makes four times the revenue of the satellite - it's
+      obviously better run, right?
+    expected:
+      - Raw-size comparison corrected with per-workstation normalization
+      - Systemic-vs-local reading offered instead of a crown
