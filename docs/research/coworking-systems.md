@@ -34,7 +34,7 @@ Optix, Archie).
 Known public developer-documentation entry points (recorded for future
 connector work; not fetched or verified this build):
 
-- OfficeRnD: https://developers.officernd.com/
+- OfficeRnD: https://developer.officernd.com/
 - Nexudus: https://developers.nexudus.com/
 - Optix: https://developer.optixapp.com/
 - Cobot: https://dev.cobot.me/
