@@ -11,31 +11,31 @@ reviewer. All BUILD_REPORT.md claims treated as unverified until proven.
 
 ## Part A — adversarial audit
 
-- [ ] A1 Fresh venv, documented clean install, run EVERY documented check;
+- [x] A1 Fresh venv, documented clean install, run EVERY documented check;
       independently count tests, evals, CLI commands, skills, datasets
-- [ ] A2 Determinism: regenerate demo, byte-compare; spaces-in-path tests
-- [ ] A3 Claim-by-claim table → EXPERT_AUDIT.md
-- [ ] A4 Per-skill audit matrix (24 skills): specificity, spec compliance,
+- [x] A2 Determinism: regenerate demo, byte-compare; spaces-in-path tests
+- [x] A3 Claim-by-claim table → EXPERT_AUDIT.md
+- [x] A4 Per-skill audit matrix (24 skills): specificity, spec compliance,
       descriptions, overlap/collision, examples vs actual demo outputs,
       eval coverage, maturity honesty. Downgrade weak skills.
-- [ ] A5 Trigger/collision eval system: ≥14 prompts/skill machine-readable,
+- [x] A5 Trigger/collision eval system: ≥14 prompts/skill machine-readable,
       deterministic runner; record executed vs prepared →
       docs/evals/trigger-collision-report.md
-- [ ] A6 Second adversarial dataset: Harbor Works Demo (2 locations, TZ +
+- [x] A6 Second adversarial dataset: Harbor Works Demo (2 locations, TZ +
       currency conflict, injections, unicode, malformed rows, duplicate
       contacts, skipped stages, VO payout mismatches...) with expected
       answers computed independently of the engine; integration tests
-- [ ] A7 Operator acceptance scenarios A–J across 8 personas →
+- [x] A7 Operator acceptance scenarios A–J across 8 personas →
       docs/evals/operator-acceptance-report.md
-- [ ] A8 Host installation tests (gh CLI skill tooling, Claude Code local;
+- [x] A8 Host installation tests (gh CLI skill tooling, Claude Code local;
       Codex documented-only) — record exact commands/versions
-- [ ] A9 Clean consumer simulation in temp dir with spaces →
+- [x] A9 Clean consumer simulation in temp dir with spaces →
       RELEASE_READINESS.md
-- [ ] A10 Security adversarial tests (CSV injection, embedded newlines,
+- [x] A10 Security adversarial tests (CSV injection, embedded newlines,
       encodings, traversal, oversized fields, secret/PII leakage, network
       calls, action pinning) → docs/security/adversarial-test-report.md;
       repair + regression tests
-- [ ] A11 Provenance/licensing: URLs resolve, ledger accuracy
+- [x] A11 Provenance/licensing: URLs resolve, ledger accuracy
 
 ## Part B — Wave 2 (after defects repaired)
 
@@ -54,3 +54,7 @@ claim), README/product improvements, WAVE2_REPORT.md.
 No remote, no publish, no tags. Local commits allowed. Preserve sound
 work; targeted fixes. Prepared-but-unexecuted tests are never reported as
 passing.
+
+All Part A items completed 2026-07-18; Part B delivered as ten beta
+skills + connectors. Results: EXPERT_AUDIT.md, RELEASE_READINESS.md,
+WAVE2_REPORT.md, docs/evals/, docs/security/adversarial-test-report.md.
