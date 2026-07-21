@@ -446,10 +446,17 @@ def leakage_report(as_of: date, leads: Table | None = None, deals: Table | None 
                     and not _truthy(r.get("complimentary", ""))
                     and r.get("membership_id", "").strip() not in invoiced):
                 rate = _money(r.get("contracted_rate", ""))
-                unbilled.append({"membership_id": r.get("membership_id", "?"),
-                                 "monthly_rate": None if rate is None else str(rate)})
+                freq = r.get("billing_frequency", "").strip().lower()
+                item: dict[str, object] = {
+                    "membership_id": r.get("membership_id", "?"),
+                    "monthly_rate": None if rate is None else str(rate)}
+                if freq and freq != "monthly":
+                    item["note"] = (f"billing_frequency={freq}: a {freq} prepayment "
+                                    "outside the 45-day window may be correct - verify "
+                                    "before treating as leakage")
+                unbilled.append(item)
         if unbilled:
-            at_risk = sum((Decimal(u["monthly_rate"]) for u in unbilled
+            at_risk = sum((Decimal(str(u["monthly_rate"])) for u in unbilled
                            if u["monthly_rate"]), ZERO)
             findings.append({"check": "active_memberships_without_recent_invoice",
                              "count": len(unbilled), "items": unbilled[:25],

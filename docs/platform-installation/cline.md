@@ -13,7 +13,7 @@ issue so this page can be upgraded or corrected.
 Place skills in your project's `.agents/skills/`:
 
 ```bash
-gh skill install QaliAI/open-coworking-skills --all     # once published
+gh skill install QaliAI/open-coworking-skills --all --allow-hidden-dirs     # once published
 # or copy manually — see manual.md
 ```
 

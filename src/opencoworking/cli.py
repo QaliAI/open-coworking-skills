@@ -33,6 +33,16 @@ from .quality import (
 )
 from .redact import Redactor, collect_names
 from .render import findings_markdown, generic_markdown, metrics_markdown, to_json
+from .wave2 import (
+    collections_queue,
+    daily_brief,
+    location_benchmark,
+    occupancy_forecast,
+    pricing_audit,
+    reconcile_report,
+    renewal_scan,
+    room_yield,
+)
 
 
 def _parse_as_of(value: str | None) -> date:
@@ -75,6 +85,15 @@ def _add_common(p: argparse.ArgumentParser) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Windows consoles default to cp1252, which cannot encode characters the
+    # reports use (e.g. the warning sign); without this, the quick start
+    # crashes with UnicodeEncodeError on a stock PowerShell.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except (OSError, ValueError):  # pragma: no cover - exotic streams
+                pass
     parser = argparse.ArgumentParser(
         prog="opencoworking",
         description="Deterministic analysis tools for coworking exports. "
@@ -133,6 +152,65 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--partners", required=True)
     p.add_argument("--memberships", required=True)
     p.add_argument("--invoices", required=True)
+    _add_common(p)
+
+    p = sub.add_parser("reconcile", help="CRM vs WMS reconciliation across exports")
+    p.add_argument("--companies", required=True)
+    p.add_argument("--deals", required=True)
+    p.add_argument("--memberships", required=True)
+    p.add_argument("--contacts")
+    p.add_argument("--inventory")
+    p.add_argument("--invoices")
+    p.add_argument("--wms-companies", dest="wms_companies",
+                   help="second company list from the WMS side (enables name matching)")
+    _add_common(p)
+
+    p = sub.add_parser("brief", help="daily role-filtered operator action queue")
+    p.add_argument("--role", choices=["owner", "community", "sales", "finance"],
+                   default="owner")
+    for name in ("leads", "deals", "tours", "memberships", "invoices", "inventory"):
+        p.add_argument(f"--{name}", help=f"{name} export (optional)")
+    _add_common(p)
+
+    p = sub.add_parser("forecast", help="contracted occupancy forecast at horizons")
+    p.add_argument("--inventory", required=True)
+    p.add_argument("--memberships", required=True)
+    p.add_argument("--horizons", default="30,60,90,180",
+                   help="comma-separated day horizons (default 30,60,90,180)")
+    _add_common(p)
+
+    p = sub.add_parser("renewals", help="portfolio renewal window scan")
+    p.add_argument("--memberships", required=True)
+    p.add_argument("--invoices")
+    p.add_argument("--window-days", type=int, default=90)
+    _add_common(p)
+
+    p = sub.add_parser("pricing", help="discount and pricing audit per product x location")
+    p.add_argument("--inventory", required=True)
+    p.add_argument("--memberships", required=True)
+    p.add_argument("--deep-discount-pct", type=int, default=25)
+    _add_common(p)
+
+    p = sub.add_parser("collections", help="prioritized internal collections worklist")
+    p.add_argument("--invoices", required=True)
+    p.add_argument("--payments")
+    p.add_argument("--memberships")
+    _add_common(p)
+
+    p = sub.add_parser("rooms", help="meeting/event room yield from bookings")
+    p.add_argument("--bookings", required=True)
+    p.add_argument("--inventory", required=True)
+    p.add_argument("--open-hours-per-day", dest="open_hours", type=str, default=None,
+                   help="declared bookable hours per day (enables utilization)")
+    _add_common(p)
+
+    p = sub.add_parser("benchmark", help="normalized multi-location scorecard")
+    p.add_argument("--locations", required=True)
+    p.add_argument("--inventory", required=True)
+    p.add_argument("--memberships", required=True)
+    p.add_argument("--leads")
+    p.add_argument("--tours")
+    p.add_argument("--invoices")
     _add_common(p)
 
     p = sub.add_parser("redact", help="redact PII from an export into a new file")
@@ -209,6 +287,72 @@ def main(argv: list[str] | None = None) -> int:
         _emit(report, args, findings_markdown(report, "Virtual-office reconciliation"))
         return 0
 
+    if args.command == "reconcile":
+        report = reconcile_report(
+            as_of, companies=_load(args.companies), deals=_load(args.deals),
+            memberships=_load(args.memberships),
+            contacts=_load(args.contacts) if args.contacts else None,
+            inventory=_load(args.inventory) if args.inventory else None,
+            invoices=_load(args.invoices) if args.invoices else None,
+            wms_companies=_load(args.wms_companies) if args.wms_companies else None)
+        _emit(report, args, findings_markdown(report, "CRM-WMS reconciliation"))
+        return 0
+
+    if args.command == "brief":
+        tables = {name: (_load(getattr(args, name)) if getattr(args, name) else None)
+                  for name in ("leads", "deals", "tours", "memberships", "invoices",
+                               "inventory")}
+        report = daily_brief(as_of, args.role, **tables)
+        _emit(report, args, generic_markdown(report, f"Daily brief - {args.role}"))
+        return 0
+
+    if args.command == "forecast":
+        try:
+            horizons = tuple(int(h) for h in args.horizons.split(",") if h.strip())
+        except ValueError:
+            raise SystemExit("--horizons must be comma-separated integers") from None
+        report = occupancy_forecast(_load(args.inventory), _load(args.memberships),
+                                    as_of, horizons)
+        _emit(report, args, generic_markdown(report, "Contracted occupancy forecast"))
+        return 0
+
+    if args.command == "renewals":
+        report = renewal_scan(_load(args.memberships), as_of,
+                              invoices=_load(args.invoices) if args.invoices else None,
+                              window_days=args.window_days)
+        _emit(report, args, generic_markdown(report, "Renewal window scan"))
+        return 0
+
+    if args.command == "pricing":
+        report = pricing_audit(_load(args.inventory), _load(args.memberships),
+                               as_of, args.deep_discount_pct)
+        _emit(report, args, generic_markdown(report, "Discount and pricing audit"))
+        return 0
+
+    if args.command == "collections":
+        report = collections_queue(
+            _load(args.invoices), as_of,
+            payments=_load(args.payments) if args.payments else None,
+            memberships=_load(args.memberships) if args.memberships else None)
+        _emit(report, args, generic_markdown(report, "Collections worklist"))
+        return 0
+
+    if args.command == "rooms":
+        from decimal import Decimal as _D
+        open_hours = _D(args.open_hours) if args.open_hours else None
+        report = room_yield(_load(args.bookings), _load(args.inventory), open_hours)
+        _emit(report, args, generic_markdown(report, "Meeting and event yield"))
+        return 0
+
+    if args.command == "benchmark":
+        report = location_benchmark(
+            as_of, _load(args.locations), _load(args.inventory), _load(args.memberships),
+            leads=_load(args.leads) if args.leads else None,
+            tours=_load(args.tours) if args.tours else None,
+            invoices=_load(args.invoices) if args.invoices else None)
+        _emit(report, args, generic_markdown(report, "Multi-location benchmark"))
+        return 0
+
     if args.command == "redact":
         table = _load(args.file)
         out = Path(args.output)
@@ -220,12 +364,17 @@ def main(argv: list[str] | None = None) -> int:
         redactor = Redactor(salt=args.salt, names=collect_names(table.rows, name_cols))
         import csv as _csv
 
+        from .normalize import sanitize_cell
+
         out.parent.mkdir(parents=True, exist_ok=True)
         with out.open("w", newline="", encoding="utf-8") as fh:
             writer = _csv.DictWriter(fh, fieldnames=table.columns)
             writer.writeheader()
             for row in table.rows:
-                writer.writerow(redactor.redact_row(row))
+                # Redacted files get shared onward: neutralize spreadsheet
+                # formula injection on the way out.
+                writer.writerow({k: sanitize_cell(v)
+                                 for k, v in redactor.redact_row(row).items()})
         print(f"Wrote {out} ({redactor.replacements} redactions). "
               "Pattern-based redaction is not a guarantee; review before sharing.")
         return 0
@@ -235,4 +384,9 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except BrokenPipeError:
+        # Downstream consumer (head, Select-Object -First) closed the pipe;
+        # that is not an error in this program.
+        sys.exit(0)

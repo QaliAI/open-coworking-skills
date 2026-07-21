@@ -125,14 +125,16 @@ consultant."
 **Output (excerpt):**
 
 ```
-Wrote contacts.redacted.csv (44 redactions). Pattern-based redaction is not
+Wrote contacts.redacted.csv (67 redactions). Pattern-based redaction is not
 a guarantee; review before sharing.
 
-Replacements: 22 emails, 20 phones, 2 names-in-notes
+Replacements: 22 emails, 22 phones, 23 name occurrences (from the declared
+first_name/last_name columns)
 Residual risks to review by hand:
-- 'notes' column row 7 mentions "the founder of the bakery downstairs"
-- company names kept; C-HYDRA is a sole trader whose company name is a
-  personal brand — consider redacting
+- company names kept by design; C-HYDRA is a sole trader whose company
+  name is effectively a personal brand — consider redacting it too
+- no free-text notes column in this export; when one exists it is the
+  main leak surface and must be reviewed row by row
 ```
 
 ## Evals

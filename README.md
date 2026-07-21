@@ -39,9 +39,9 @@ core value; everything is also scriptable.
 
 ## What makes it different
 
-- **Tested, not vibed** — deterministic Python does the arithmetic; the
-  demo dataset's expected answers were computed by hand and verified by
-  integration tests; 15 known-answer eval cases run in CI.
+- **Tested, not vibed** — deterministic Python does the arithmetic; both
+  demo datasets' expected answers were computed by hand and verified by
+  integration tests; 29 known-answer eval cases run in CI.
 - **Metric honesty** — every number ships with its numerator, denominator,
   exclusions, and period. Coworking terms aren't standardized and no skill
   pretends otherwise.
@@ -54,6 +54,36 @@ core value; everything is also scriptable.
 - **Safety by design** — all skills are read-only or draft-only (R0/R1);
   nothing sends, charges, or deletes; member PII rules and a tested
   redactor are built in; imported data is never treated as instructions.
+
+## Choose your starting point
+
+| You are... | Start with | Then |
+|---|---|---|
+| **Owner / GM** | "What's our occupancy?" and "Where are we losing money?" on your own exports | The [monthly owner report](.agents/skills/coworking-monthly-owner-report/SKILL.md) and [occupancy forecast](.agents/skills/coworking-occupancy-forecast/SKILL.md) |
+| **Community manager** | The [daily brief](.agents/skills/coworking-daily-operator-brief/SKILL.md) (`--role community`) and [member onboarding](.agents/skills/coworking-member-onboarding/SKILL.md) | [Churn risk review](.agents/skills/coworking-churn-risk-review/SKILL.md) before renewal season |
+| **Sales manager** | [Pipeline health](.agents/skills/coworking-pipeline-health/SKILL.md) + [speed-to-lead](.agents/skills/coworking-speed-to-lead-auditor/SKILL.md) | Tour prep → follow-up → ghost recovery, in that order |
+| **Finance / bookkeeping** | [Collections prioritizer](.agents/skills/coworking-collections-prioritizer/SKILL.md) + [leakage audit](.agents/skills/coworking-revenue-leakage-audit/SKILL.md) | [VO reconciliation](.agents/skills/coworking-virtual-office-reconciliation/SKILL.md) if you have partner-billed clients |
+| **Consultant** | Run the whole toolkit on the [synthetic demos](examples/synthetic-space/README.md) first, then on a client's redacted exports | [CRM-WMS reconciliation](.agents/skills/coworking-crm-wms-reconciliation/SKILL.md) — it usually finds the engagement |
+| **Technical user / integrator** | [Technical quickstart](docs/getting-started/technical-quickstart.md), then the [adapter](.agents/skills/coworking-system-adapter-builder/SKILL.md) and [MCP builder](.agents/skills/coworking-mcp-builder/SKILL.md) skills | The [connector prototypes](src/opencoworking/connectors/) (mock-tested; read their status honestly) |
+
+## The three modes, in one picture
+
+```mermaid
+flowchart LR
+    A[Operator question] --> B{Data at hand?}
+    B -- "paste / describe" --> M1[Mode 1: guided manual\nno code, no credentials]
+    B -- "CSV/XLSX exports" --> M2[Mode 2: deterministic CLI\ntested formulas, fixtures]
+    B -- "live API (optional)" --> M3[Mode 3: read-only connectors\nmock-tested prototypes only]
+    M1 --> S[Skill workflow: findings with\nformulas, caveats, actions]
+    M2 --> S
+    M3 --> S
+    S --> H[Human decides and acts -\nnothing here sends, charges, or deletes]
+```
+
+A typical path from one skill to a full operator workflow: export
+analyzer → data dictionary → occupancy dashboard → leakage audit →
+daily brief every morning → owner report every month — each output feeds
+the next, and every step works before any of the others exist.
 
 ## Five-minute quick start
 
@@ -78,7 +108,7 @@ Canonical skills live in [`.agents/skills/`](.agents/skills/) per the
 directory Codex reads natively and `gh skill install` targets:
 
 ```bash
-gh skill install QaliAI/open-coworking-skills --all
+gh skill install QaliAI/open-coworking-skills --all --allow-hidden-dirs
 ```
 
 Per-host guides (Codex, Claude Code, Copilot, Cursor, Gemini CLI,
@@ -115,7 +145,7 @@ OpenCode, Windsurf, Cline, Kiro, Antigravity, manual):
 | [`coworking-mcp-builder`](.agents/skills/coworking-mcp-builder/SKILL.md) | Integrations and adapters | Naive MCP servers over member data are PII leaks and billing incidents waiting to happen. | manual | R1 | stable |
 | [`coworking-system-adapter-builder`](.agents/skills/coworking-system-adapter-builder/SKILL.md) | Integrations and adapters | Without a disciplined adapter path every new platform request becomes "edit all skills". | manual | R1 | stable |
 
-Plus **25 planned skills** tracked in [`catalog/skills.yaml`](catalog/skills.yaml) and [ROADMAP.md](ROADMAP.md).
+Plus **22 planned skills** tracked in [`catalog/skills.yaml`](catalog/skills.yaml) and [ROADMAP.md](ROADMAP.md).
 <!-- catalog:end -->
 
 ## Example operator workflows
@@ -142,15 +172,41 @@ More: [examples/sample-requests/](examples/sample-requests/README.md).
 3. **Connected** — optional future read-only connectors (MCP), never
    required. See honest current status below.
 
+Real before/after outputs from the demo data live in
+[examples/sample-outputs/](examples/sample-outputs/) — generated by
+running the commands, never hand-written.
+
+## What this cannot do
+
+- **Send, post, charge, modify, or delete anything.** Every skill is
+  read-only or draft-only; humans send drafts.
+- **Know your market.** No market rates, no industry benchmarks, no
+  "spaces like yours" statistics — analyses are of YOUR data only.
+- **Predict.** The occupancy "forecast" is contracted arithmetic;
+  probabilistic layers require your stated assumptions, attributed.
+- **Measure attendance.** Physical utilization needs access-log data no
+  current skill consumes.
+- **Give legal, tax, or compliance advice.** Ever. The skills flag those
+  questions to professionals.
+- **Guarantee any host's activation behavior.** Descriptions are
+  routing-tested (476/476 with an LLM judge), but hosts differ.
+- **Replace judgment.** Merges, prices, saves, and escalations are
+  deliberately routed to named humans.
+
 ## Supported systems (honest labels)
 
 Any system that exports CSV works today via the
-[generic CSV adapter](adapters/generic-csv/README.md). Field-mapping
-guides exist for **HubSpot, OfficeRnD, Nexudus, Optix, Archie**
-(`mapping-documented` — verify against your own export; columns vary).
-**No live API connector exists yet for any system**, and none is claimed.
-Label definitions and the full matrix:
-[catalog/compatibility.yaml](catalog/compatibility.yaml) and
+[generic CSV adapter](adapters/generic-csv/README.md).
+
+| System | Status | Meaning |
+|---|---|---|
+| Anything with CSV export | export-supported | Works now, no credentials |
+| HubSpot, OfficeRnD | connector-prototype (**mock-tested**) | Read-only API client code exists, tested ONLY against mocked responses — never against a live or sandbox account |
+| Nexudus, Optix, Archie | mapping-documented | Written field-mapping guides; verify against your own export |
+| Everything else researched | manual | Paste what you see; checklists apply |
+
+**No system is sandbox- or live-tested.** Label definitions and the full
+matrix: [catalog/compatibility.yaml](catalog/compatibility.yaml) and
 [docs/research/coworking-systems.md](docs/research/coworking-systems.md).
 
 ## Architecture
@@ -184,11 +240,34 @@ Fixtures are 100% synthetic (enforced by tests).
 
 ## Quality and evaluation
 
-Every stable skill has trigger evals (positive/negative/ambiguous) and
-task evals; every computable output has command-based known-answer cases
-against hand-computed fixtures. CI runs tests on Linux and Windows, skill
-validation, catalog consistency, link checking, secret scanning, and the
-deterministic evals. Details: [docs/skill-authoring/eval-guide.md](docs/skill-authoring/eval-guide.md).
+Every skill has trigger evals and task evals; every computable output has
+command-based known-answer cases against **hand-computed** fixtures on
+**two** independent synthetic businesses (149 tests, 29 executed command
+evals). A 476-case trigger/collision suite exists, with two executed
+LLM-judged routing runs (476/476 on run 2) — see the
+[trigger report](docs/evals/trigger-collision-report.md) for exactly what
+"executed" means and what remains prepared-only. Maturity is transparent
+in the table above: **stable** = complete, tested, and reviewed; **beta**
+= complete and engine-tested but not yet operator-proven. Audit trail:
+[EXPERT_AUDIT.md](EXPERT_AUDIT.md) ·
+[RELEASE_READINESS.md](RELEASE_READINESS.md).
+
+## Troubleshooting (from real clean-install testing)
+
+- **`gh skill install ... ` finds no skills** → add
+  `--allow-hidden-dirs` (skills live in the hidden `.agents/` directory;
+  verified required on gh 2.92).
+- **`UnicodeEncodeError` on Windows consoles** → fixed in current code
+  (the CLI forces UTF-8 output); update your copy if you see it.
+- **Nonzero exit when piping to `head` / `Select-Object -First`** → the
+  downstream command closes the pipe; harmless, and handled in current
+  code.
+- **`error: field larger than field limit`** → update your copy; fields
+  up to 32 MiB now load, larger ones fail with a clear message.
+- **Paths with spaces** → quote them; every command is tested against
+  spaced paths.
+- **`--horizons`/`--as-of` format errors** → dates are `YYYY-MM-DD`;
+  horizons are comma-separated integers.
 
 ## Try the demo
 
@@ -224,7 +303,10 @@ sounds like a guarantee is a bug; please report it.
 
 ## Project status
 
-Pre-release (`0.1.0-dev`). 24 production skills, tested tooling, and a
-synthetic demo exist and pass CI-grade validation locally; no release has
-been tagged and no connector is live. The
-[roadmap](ROADMAP.md) lists what's next.
+Pre-release (`0.1.0-dev`), independently audited 2026-07-18
+([EXPERT_AUDIT.md](EXPERT_AUDIT.md)). 24 stable + 10 beta skills, an
+18-command tested CLI, two synthetic businesses with hand-computed
+answer keys, and mock-tested connector prototypes. No release tagged, no
+remote, no connector live-validated; CI has not yet run on GitHub. The
+release gate: [RELEASE_READINESS.md](RELEASE_READINESS.md); what's next:
+[ROADMAP.md](ROADMAP.md).

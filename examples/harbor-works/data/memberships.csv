@@ -1,0 +1,17 @@
+membership_id,company_id,location_id,product,unit_id,start_date,end_date,term_months,notice_date,renewal_date,contracted_rate,list_rate,discount_pct,deposit,status,billing_frequency,complimentary
+HWM-01,HC-ANCHOR,HW-PDX,private-office,PDX-O2,2025-11-01,,12,,2026-11-01,1700,1900,10.5,1700,active,monthly,
+HWM-02,HC-ANCHOR,HW-BOS,private-office,BOS-O1,2026-04-01,,12,,2027-04-01,1600,1600,0,1600,active,monthly,
+HWM-03,HC-BRIDGE,HW-PDX,team-suite,PDX-S1,2025-08-15,2026-09-30,12,2026-06-20,,2300,3200,28.1,2300,active,monthly,
+HWM-04,HC-CANAL,HW-PDX,private-office,PDX-O1,2026-02-01,,6,,2026-08-01,900,900,0,900,active,monthly,
+HWM-05,HC-DELTA,HW-BOS,team-suite,BOS-S1,2026-05-01,,12,,2027-05-01,4300,4800,10.4,4300,active,monthly,
+HWM-06,HC-EMBER,HW-PDX,dedicated-desk,PDX-D1,2026-06-01,,,,,300,300,0,,active,monthly,
+HWM-07,HC-EMBER,HW-PDX,dedicated-desk,PDX-D2,2026-06-20,,,,,300,300,0,,active,monthly,
+HWM-08,HC-FJORD,HW-PDX,hot-desk,,2026-03-01,,,,,190,190,0,,active,monthly,
+HWM-09,HC-GROTTO,HW-BOS,virtual-office,,2026-03-10,,12,,2027-03-10,110,110,0,,active,monthly,
+HWM-10,HC-HARBORINT,HW-PDX,dedicated-desk,PDX-D3,2024-06-01,,,,,0,300,100,,active,monthly,true
+HWM-11,HC-ISLE,HW-BOS,private-office,BOS-O3,2025-07-01,2026-06-15,12,2026-05-01,,900,950,5.3,900,active,monthly,
+HWM-12,HC-JETTY,HW-PDX,private-office,PDX-O3,2025-06-01,2026-05-31,12,2026-04-15,,3400,3600,5.6,3400,canceled,monthly,
+HWM-13,HC-JETTY,HW-PDX,dedicated-desk,PDX-D4,2026-06-01,,,,,290,,,,active,monthly,
+HWM-14,HC-KELP,HW-BOS,virtual-office,,2026-01-05,,12,,2027-01-05,95,110,13.6,,active,monthly,
+HWM-16,HC-MISTRAL,HW-BOS,virtual-office,,2026-02-14,,12,,2027-02-14,"€89,00",110,,, active,monthly,
+HWM-17,HC-NOMAD,HW-PDX,dedicated-desk,PDX-D9,2026-06-01,,,,,300,300,0,,active,monthly,

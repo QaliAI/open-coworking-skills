@@ -12,7 +12,7 @@ If your assistant supports Agent Skills, install this collection (see
 tool). If you use GitHub CLI:
 
 ```
-gh skill install QaliAI/open-coworking-skills --all
+gh skill install QaliAI/open-coworking-skills --all --allow-hidden-dirs
 ```
 
 If you can't install skills at all, you can still open any skill file

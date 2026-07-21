@@ -34,5 +34,5 @@ built-in CRM. Each is exportable as a spreadsheet from its list view.
 - Discounts may be modeled as separate line items rather than a reduced rate.
 
 Future connector work must start from current OfficeRnD developer docs
-(https://developers.officernd.com/) and record findings in
+(https://developer.officernd.com/) and record findings in
 `docs/research/SOURCES.yaml`.

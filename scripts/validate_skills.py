@@ -28,7 +28,8 @@ VALID_MATURITY = {"experimental", "beta", "stable", "deprecated"}
 VALID_RISK = {"r0", "r1", "r2", "r3", "r4"}
 VALID_SENSITIVITY = {"public", "internal", "confidential", "restricted"}
 PLACEHOLDER_RE = re.compile(
-    r"\bTODO\b|\bTBD\b|\bFIXME\b|\bXXX\b|coming soon|lorem ipsum|<placeholder>|\[insert",
+    r"\bTODO\b|\bTBD\b|\bFIXME\b|\bXXX\b|coming soon|lorem ipsum|<placeholder>|\[insert"
+    r"|\[value s?\]|\[values?\]|\[number\]|\[amount\]|\[figure\]",
     re.I,
 )
 SECRET_RES = [

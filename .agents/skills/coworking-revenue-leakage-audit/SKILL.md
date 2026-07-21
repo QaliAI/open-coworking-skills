@@ -142,7 +142,8 @@ auto-send dunning emails (R3) — draft only if asked, per repo risk rules.
 **Output (excerpt):**
 
 ```
-BILLING GAPS — 4,438/mo at risk
+BILLING GAPS — 2,088/mo unbilled + 2,350 outstanding (a monthly rate and
+a one-time balance: related, but not addable into one number)
 - Unbilled active memberships (2,088/mo): M-011 (1,900 — status 'active'
   but ended 31 May; likely a missed renewal or wrong status), M-016 (89 —
   partner-billed VO client: verify against partner statement, may be

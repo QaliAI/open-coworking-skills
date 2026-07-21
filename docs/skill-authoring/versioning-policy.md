@@ -30,7 +30,7 @@ A release may be tagged only when, from a clean checkout:
 
 Tags are immutable once pushed; a bad release gets a new PATCH, not a
 moved tag. Installation pinning: users can pin with
-`gh skill install QaliAI/open-coworking-skills <skill> --pin <tag>`.
+`gh skill install QaliAI/open-coworking-skills <skill> --allow-hidden-dirs --pin <tag>`.
 
 ## Migration guidance
 

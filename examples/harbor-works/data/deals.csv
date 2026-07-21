@@ -1,0 +1,9 @@
+deal_id,lead_id,company_id,location_id,product,stage,created_at,updated_at,expected_value,expected_move_in,owner,next_action,next_action_date,lost_reason
+HWD-01,,HC-ANCHOR,HW-BOS,private-office,won,2026-03-10,2026-03-28,1600,2026-04-01,marta,,,
+HWD-02,HWL-01,HC-PORTAL,HW-PDX,private-office,won,2026-06-02,2026-06-05,1900,2026-08-01,dana,,,
+HWD-03,HWL-06,HC-DELTA,HW-BOS,team-suite,won,2026-04-16,2026-04-29,4300,2026-05-01,marta,,,
+HWD-04,HWL-04,HC-QUARRY,HW-PDX,private-office,proposal,2026-04-22,2026-05-05,1900,2026-09-01,,,,
+HWD-05,HWL-05,HC-QUARRY,HW-PDX,private-office,qualified,2026-06-10,2026-06-25,1900,2026-09-01,dana,call re revised terms,2026-06-27,
+HWD-06,HWL-03,HC-EMBER,HW-PDX,dedicated-desk,won,2026-05-30,2026-05-30,300,2026-06-01,dana,,,
+HWD-07,HWL-02,HC-RIDGE,HW-BOS,private-office,lost,2026-06-03,2026-06-20,1600,,marta,,,chose competitor
+HWD-08,HWL-08,HC-FJORD,HW-PDX,hot-desk,won,2026-02-21,2026-02-27,190,2026-03-01,dana,,,

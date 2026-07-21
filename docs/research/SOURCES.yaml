@@ -76,9 +76,15 @@ sources:
     maintainer: GitHub
     date_accessed: "2026-07-17"
     license: GitHub documentation terms
-    knowledge_used: "gh skill install OWNER/REPO [skill[@version]]" installs to
+    knowledge_used: >-
+      'gh skill install OWNER/REPO [skill[@version]]' installs to
       .agents/skills/ at project scope by default; --agent, --scope, --pin,
-      --all, --from-local, --force flags; discovery of any .../SKILL.md path.
+      --all, --from-local, --force flags. Audit correction 2026-07-18,
+      verified against gh 2.92 by execution: hidden directories (including
+      .agents/skills) are SKIPPED unless --allow-hidden-dirs is passed; at
+      most one named skill per invocation (or --all); gh skill publish
+      --dry-run validates skills but only under non-hidden conventions
+      unless given an explicit path.
     usage: studied
     attribution_required: no
     restrictions: none identified
@@ -143,7 +149,7 @@ sources:
 # a connector is actually built and tested against live docs.
 
   - name: OfficeRnD developer documentation
-    location: https://developers.officernd.com/
+    location: https://developer.officernd.com/
     maintainer: OfficeRnD
     date_accessed: not fetched this build
     license: vendor documentation terms
@@ -204,3 +210,38 @@ sources:
     usage: copied
     attribution_required: built into the text
     restrictions: none
+
+# --- Wave 2 connector research (audit session, 2026-07-18) -----------------
+
+  - name: HubSpot CRM API documentation (understanding-the-crm, private-apps)
+    location: https://developers.hubspot.com/docs/api/crm/understanding-the-crm
+    maintainer: HubSpot
+    date_accessed: "2026-07-18"
+    license: HubSpot documentation terms
+    knowledge_used: Base https://api.hubapi.com; Bearer private-app token in
+      Authorization header; CRM v3 object endpoints for contacts/companies/
+      deals with a newer calendar-versioned scheme (2026-03) rolling out;
+      associations API; tiered private-app rate limits (~100-190 req/10s,
+      daily caps by subscription). Used to build the mock-tested read-only
+      connector prototype; NOT live-verified.
+    usage: studied
+    attribution_required: no
+    restrictions: re-verify endpoint versions and scopes before live use
+
+  - name: OfficeRnD API documentation (welcome, making-your-first-api-request)
+    location: https://developer.officernd.com/docs/making-your-first-api-request
+    maintainer: OfficeRnD
+    date_accessed: "2026-07-18"
+    license: vendor documentation terms
+    knowledge_used: Base https://app.officernd.com/api/v2/organizations/
+      {org-slug}; OAuth2 client-credentials (client_id/client_secret ->
+      Bearer token); entity set incl. members, companies, memberships,
+      contracts, resources, bookings, invoices, payments, locations; cursor
+      pagination fields cursorNext/cursorPrev. Token endpoint URL NOT
+      verified from fetched pages - connector takes it as an explicit
+      parameter. Used for the mock-tested read-only prototype; NOT
+      live-verified.
+    usage: studied
+    attribution_required: no
+    restrictions: resolve the token endpoint and confirm field names against
+      the live API reference before any live use

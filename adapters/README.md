@@ -7,14 +7,16 @@ defined in [`docs/research/coworking-systems.md`](../docs/research/coworking-sys
 | Adapter | Status | What exists |
 |---|---|---|
 | [generic-csv](generic-csv/README.md) | **implemented** | Canonical CSV format consumed directly by `opencoworking` CLI; fully tested |
-| [hubspot](hubspot/README.md) | mapping-documented | Field-mapping guide for standard HubSpot CRM exports |
-| [officernd](officernd/README.md) | mapping-documented | Field-mapping guide for OfficeRnD exports |
+| [hubspot](hubspot/README.md) | connector-prototype (mock-tested) | Mapping guide + read-only API prototype (`src/opencoworking/connectors/hubspot.py`), mocked tests only |
+| [officernd](officernd/README.md) | connector-prototype (mock-tested) | Mapping guide + read-only API prototype (`src/opencoworking/connectors/officernd.py`), mocked tests only |
 | [nexudus](nexudus/README.md) | mapping-documented | Field-mapping guide for Nexudus exports |
 | [optix](optix/README.md) | mapping-documented | Field-mapping guide for Optix exports |
 | [archie](archie/README.md) | mapping-documented | Field-mapping guide for Archie exports |
 
-No adapter claims `connector-prototype` or higher: no live API connector has
-been built or tested yet. Vendor export column names vary by plan, version,
+HubSpot and OfficeRnD now carry `connector-prototype (mock-tested)`: read-only
+client code exists, exercised only against mocked transports with synthetic
+fixtures - **no live or sandbox validation has been performed**, and offline
+Modes 1-2 never require them. Vendor export column names vary by plan, version,
 custom fields, and locale — the guides tell you what to look for and how to
 verify, not exact strings to trust blindly.
 

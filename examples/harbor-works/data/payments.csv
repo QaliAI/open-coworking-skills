@@ -1,0 +1,10 @@
+payment_id,invoice_id,amount,paid_at,method,status
+HWP-01,HWI-01,1700,2026-06-02,card,succeeded
+HWP-02,HWI-02,1600,2026-06-03,ach,succeeded
+HWP-03,HWI-03,2300,2026-06-01,card,failed
+HWP-04,HWI-05,4300,2026-06-04,ach,succeeded
+HWP-05,HWI-06,300,2026-06-01,card,succeeded
+HWP-06,HWI-07,110,2026-06-02,card,succeeded
+HWP-07,HWI-08,290,2026-06-03,card,refunded
+HWP-08,HWI-09,89,2026-06-05,card,succeeded
+HWP-09,HWI-10,3400,2026-05-03,ach,succeeded

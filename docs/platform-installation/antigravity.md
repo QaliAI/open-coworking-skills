@@ -11,7 +11,7 @@ you can confirm behavior either way.
 ## Install (per community-documented behavior)
 
 ```bash
-gh skill install QaliAI/open-coworking-skills --all     # once published
+gh skill install QaliAI/open-coworking-skills --all --allow-hidden-dirs     # once published
 # or copy the skill folders into your project's .agents/skills/ manually
 ```
 

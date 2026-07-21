@@ -294,18 +294,136 @@ skills:
     dependencies: []
 
   # --------------------------------------------------------------- planned
-  - name: coworking-meeting-room-utilization
+  # (Wave 2 audit note, 2026-07-18: coworking-meeting-room-utilization and
+  # coworking-pricing-review were superseded by the more complete
+  # coworking-meeting-event-yield and coworking-discount-pricing-audit
+  # entries below and removed rather than kept as near-duplicates.)
+
+  - name: coworking-crm-wms-reconciliation
     category: business-intelligence
-    status: planned
+    status: beta
+    version: "0.1.0"
     priority: p1
     risk: r0
-    modes: [export]
+    modes: [manual, export]
+    primary_user: owner / operations
+    problem: CRM and WMS disagree about who is a customer - won deals without memberships, memberships without deals, conflicting names, values, and dates - and nobody knows which system to trust.
+    inputs: CRM exports (contacts, companies, deals, tours) and WMS exports (memberships, members, inventory, invoices).
+    outputs: Match summary with exact/probable matches and confidence, unmatched and conflicting records, financial exposure, manual review queue, durable-ID strategy.
+    evidence_needed: Cross-system fixtures with conflicting records; matching known-answers; never-silently-merge evals.
+    planned_evals: Known-answer reconciliation on both synthetic businesses; probable-match confidence cases.
+
+  - name: coworking-daily-operator-brief
+    category: operations
+    status: beta
+    version: "0.1.0"
+    priority: p1
+    risk: r0
+    modes: [manual, export]
+    primary_user: owner / community manager / sales / finance
+    problem: Mornings start with ten open tabs and no prioritized list of leads awaiting response, today's tours, move-ins, renewals, and failed payments.
+    inputs: Whatever canonical exports exist; the as-of date; the requesting role.
+    outputs: Role-filtered action queue where every item carries why-it-matters, owner, urgency, evidence, and next action.
+    evidence_needed: Date-window rules per item class; role filters; fixtures.
+    planned_evals: Known-answer queues on both synthetic businesses per role.
+
+  - name: coworking-occupancy-forecast
+    category: business-intelligence
+    status: beta
+    version: "0.1.0"
+    priority: p1
+    risk: r0
+    modes: [manual, export]
+    primary_user: owner / GM
+    problem: Nobody can answer "how many offices free up in the next 90 days" without spreadsheet archaeology.
+    inputs: Inventory, memberships (end/notice dates), pending move-ins; optional weighted deals.
+    outputs: Contracted future occupancy at 30/60/90/180 days with per-horizon event lists, strictly separated from any scenario layer.
+    evidence_needed: Horizon arithmetic fixtures; assumption-exposure rules.
+    planned_evals: Known-answer horizons on both synthetic businesses.
+
+  - name: coworking-renewal-expansion-risk
+    category: community-retention
+    status: beta
+    version: "0.1.0"
+    priority: p2
+    risk: r0
+    modes: [manual, export]
+    primary_user: owner / GM
+    problem: Renewals surface one by one instead of as a scanned portfolio with risk and expansion evidence.
+    inputs: Memberships, invoices/payments; optional usage and notes.
+    outputs: Portfolio renewal scan - every agreement in the window with evidence-based risk and expansion indicators, feeding per-member coworking-renewal-preparation.
+    evidence_needed: Window-scan rules distinct from per-member prep; fixtures.
+    planned_evals: Known-answer window scans; no-opaque-score evals.
+
+  - name: coworking-discount-pricing-audit
+    category: finance-pricing
+    status: beta
+    version: "0.1.0"
+    priority: p1
+    risk: r0
+    modes: [manual, export]
+    primary_user: owner
+    problem: Discounts accrete silently until financial occupancy sags and nobody remembers why any given member pays what they pay.
+    inputs: Inventory, memberships (contracted vs list), locations.
+    outputs: Discount-dependence report, revenue per workstation by product/location, expiring-promo list, repricing questions routed to a human.
+    evidence_needed: Yield formulas; no-market-price-claims guardrails.
+    planned_evals: Known-answer discount stats on both synthetic businesses.
+
+  - name: coworking-meeting-event-yield
+    category: business-intelligence
+    status: beta
+    version: "0.1.0"
+    priority: p1
+    risk: r0
+    modes: [manual, export]
     primary_user: GM
-    problem: Room pricing and calendar policy set blind without booked-vs-bookable-hours analysis.
-    inputs: Room bookings, room inventory, opening hours.
-    outputs: Utilization by room/daypart, member vs nonmember mix, pricing observations.
-    evidence_needed: Booking fixtures with opening-hours edge cases; utilization formula tests.
-    planned_evals: Known-answer booked-hours cases incl. overnight and multi-day bookings.
+    problem: Meeting rooms and event spaces are priced and scheduled blind without booked-hours, revenue-per-hour, and member/nonmember mix analysis.
+    inputs: Room bookings, room/event inventory, opening hours.
+    outputs: Per-room booked hours, gross and per-hour revenue, member vs nonmember vs comped mix, utilization when bookable hours are declared, product-specific actions.
+    evidence_needed: Booking-hours edge fixtures (overnight, multi-day); utilization formula tests.
+    planned_evals: Known-answer yield on both synthetic businesses.
+
+  - name: coworking-multi-location-benchmark
+    category: business-intelligence
+    status: beta
+    version: "0.1.0"
+    priority: p2
+    risk: r0
+    modes: [manual, export]
+    primary_user: multi-location owner
+    problem: Cross-location comparisons reward size instead of performance because nothing is normalized per sellable workstation.
+    inputs: Multi-location canonical exports.
+    outputs: Normalized per-location scorecard (occupancy variants, revenue per workstation, funnel rates, collections, data quality) with product-mix and data-availability caveats.
+    evidence_needed: Normalization rules; two-location fixtures.
+    planned_evals: Known-answer benchmarks on both synthetic businesses.
+
+  - name: coworking-ai-concierge-knowledge-audit
+    category: foundation
+    status: beta
+    version: "0.1.0"
+    priority: p2
+    risk: r0
+    modes: [manual]
+    primary_user: owner / community manager
+    problem: Member-facing chatbots and FAQ answers drift from approved pricing, capacities, and policies, and nobody audits them against source truth.
+    inputs: Approved FAQ/catalog/pricing/policies plus existing chatbot answers or transcripts.
+    outputs: Per-answer verdicts (unsupported claims, contradictions, outdated pricing, invented amenities), corrected answers with sources, escalation list, regression questions.
+    evidence_needed: Verdict taxonomy; injection-resistant transcript handling.
+    planned_evals: Contradiction/outdated-pricing detection cases; escalation cases.
+
+  - name: coworking-data-migration-readiness
+    category: integration-development
+    status: beta
+    version: "0.1.0"
+    priority: p2
+    risk: r0
+    modes: [manual, export]
+    primary_user: operator / technical integrator
+    problem: CRM/WMS migrations lose history, duplicate people, and break billing because nobody audits entity coverage and identifiers before cutover.
+    inputs: Source-system exports; target system's entity model; migration goals.
+    outputs: Coverage audit, source-to-target mapping, dedup rules, validation plan, cutover and rollback checklists, post-migration reconciliation plan.
+    evidence_needed: Coverage checklist grounded in the canonical model; fixtures.
+    planned_evals: Coverage-gap detection cases on synthetic exports.
 
   - name: coworking-cohort-retention
     category: business-intelligence
@@ -322,29 +440,17 @@ skills:
 
   - name: coworking-collections-prioritizer
     category: finance-pricing
-    status: planned
+    status: beta
+    version: "0.1.0"
     priority: p1
     risk: r0
-    modes: [export]
+    modes: [manual, export]
     primary_user: billing
     problem: Failed and overdue invoices chased in random order instead of by amount, age, and relationship risk.
     inputs: Invoices, payments, memberships.
     outputs: Ordered collection worklist with suggested (human-sent) approach per aging band.
     evidence_needed: Aging-band rules; dunning-tone review for respectfulness.
     planned_evals: Ordering known-answers; refusal to auto-send.
-
-  - name: coworking-pricing-review
-    category: finance-pricing
-    status: planned
-    priority: p2
-    risk: r0
-    modes: [manual, export]
-    primary_user: owner
-    problem: List prices drift from reality - discount dependence and unit-mix performance go unexamined.
-    inputs: Inventory, memberships, discount history.
-    outputs: Discount-dependence report, unit-type yield comparison, repricing questions for a human.
-    evidence_needed: Yield formula definitions; guardrails against naive price advice.
-    planned_evals: Discount-dependence known answers; no-recommendation-without-market-data cases.
 
   - name: coworking-deposit-reconciliation
     category: finance-pricing

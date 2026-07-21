@@ -1,0 +1,53 @@
+skill: coworking-daily-operator-brief
+triggers:
+  positive:
+    - "What should I work on today?"
+    - "Morning brief for the community manager please"
+    - "Which prospects and members need action today?"
+  negative:
+    - prompt: "Put together the June owner report"
+      better_skill: coworking-monthly-owner-report
+    - prompt: "Order the failed payments for chasing"
+      better_skill: coworking-collections-prioritizer
+  ambiguous:
+    - prompt: "Catch me up"
+      note: "Daily brief if operational; monthly report if a period summary is meant."
+tasks:
+  - id: known-answer-owner
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "brief", "--role", "owner",
+              "--leads", "examples/synthetic-space/data/leads.csv",
+              "--deals", "examples/synthetic-space/data/deals.csv",
+              "--tours", "examples/synthetic-space/data/tours.csv",
+              "--memberships", "examples/synthetic-space/data/memberships.csv",
+              "--invoices", "examples/synthetic-space/data/invoices.csv",
+              "--inventory", "examples/synthetic-space/data/inventory.csv",
+              "--as-of", "2026-07-01", "--format", "json"]
+    expect_contains:
+      - '"item_count": 10'
+      - 'data_blockers'
+      - 'M-011'
+      - 'renewals_due'
+  - id: role-filtering
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "brief", "--role", "sales",
+              "--tours", "examples/harbor-works/data/tours.csv",
+              "--as-of", "2026-07-01", "--format", "json"]
+    expect_contains:
+      - 'HWT-05'
+      - 'outcome never recorded'
+      - 'skipped_classes'
+  - id: skipped-classes-honesty
+    kind: checklist
+    prompt: >
+      Morning brief from just the leads file. Anything failing in billing?
+    expected:
+      - Billing classes reported as skipped/invisible, not "all clear"
+      - No fabricated calm about systems not provided
+  - id: no-invented-priorities
+    kind: checklist
+    prompt: >
+      Rank my 12 same-day items by importance.
+    expected:
+      - Urgency comes from data dates; same-urgency items grouped by class
+      - Declines invented fine-grained ranking; human sequences their morning

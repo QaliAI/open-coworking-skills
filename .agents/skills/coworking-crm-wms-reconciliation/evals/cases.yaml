@@ -1,0 +1,53 @@
+skill: coworking-crm-wms-reconciliation
+triggers:
+  positive:
+    - "Our CRM totals don't match active memberships"
+    - "My HubSpot contacts don't match OfficeRnD"
+    - "Reconcile sales records against billing records"
+  negative:
+    - prompt: "Reconcile the virtual office partner statement"
+      better_skill: coworking-virtual-office-reconciliation
+    - prompt: "Find unbilled members in our billing data"
+      better_skill: coworking-revenue-leakage-audit
+  ambiguous:
+    - prompt: "Something's off between our systems"
+      note: "Reconciliation is the right diagnostic; leakage if only one system exists."
+tasks:
+  - id: known-answer-harbor
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "reconcile",
+              "--companies", "examples/harbor-works/data/companies.csv",
+              "--deals", "examples/harbor-works/data/deals.csv",
+              "--memberships", "examples/harbor-works/data/memberships.csv",
+              "--contacts", "examples/harbor-works/data/contacts.csv",
+              "--inventory", "examples/harbor-works/data/inventory.csv",
+              "--invoices", "examples/harbor-works/data/invoices.csv",
+              "--as-of", "2026-07-01", "--format", "json"]
+    expect_contains:
+      - 'HC-PORTAL'
+      - 'conflicting_contract_values'
+      - 'HC-ANCHOR'
+      - 'duplicate_person'
+      - 'Nothing is merged by this tool'
+  - id: never-silently-merge
+    kind: checklist
+    prompt: >
+      Two companies look like the same business under different names.
+      Just merge them so the numbers line up.
+    expected:
+      - Refuses automatic merge; presents as probable match with confidence
+      - Human decision routed to the review queue; fix applied at source systems
+  - id: history-not-alarm
+    kind: checklist
+    prompt: >
+      Reconcile - 30 of our 40 members have no CRM deal. Is our CRM useless?
+    expected:
+      - Pre-CRM history recognized as the expected cause
+      - Verification focused on the newest unmatched memberships, not all 30
+  - id: disjoint-ids-stop
+    kind: checklist
+    prompt: >
+      The two systems share zero company IDs. Full conflict analysis please.
+    expected:
+      - Stops after match summary; explains unmatchable data
+      - Next step is the ID bridge (mapping + review queue), not deeper analysis

@@ -8,8 +8,15 @@ Source files are never modified.
 from __future__ import annotations
 
 import csv
+import io
 from dataclasses import dataclass, field
 from pathlib import Path
+
+# Exports legitimately carry long free-text cells (CRM notes); the csv
+# module's 128 KiB default raises a raw _csv.Error mid-iteration. Allow up
+# to 32 MiB per field and convert overflows into a structured IngestError.
+_MAX_FIELD = 32 * 1024 * 1024
+csv.field_size_limit(_MAX_FIELD)
 
 # Rows are plain dicts of column -> raw string value ("" for blank).
 Row = dict[str, str]
@@ -57,24 +64,31 @@ def load_csv(path: str | Path, encoding: str | None = None) -> Table:
 
     warnings: list[str] = []
     dialect = sniff_dialect(text[:4096])
-    reader = csv.reader(text.splitlines(), dialect)
+    # Parse from a stream, NOT splitlines(): splitting first destroys
+    # newlines embedded inside quoted fields (silent data corruption).
+    reader = csv.reader(io.StringIO(text), dialect)
     try:
         header = next(reader)
     except StopIteration:
         raise IngestError(f"Empty file: {p}") from None
+    except csv.Error as e:
+        raise IngestError(f"Malformed CSV in {p}: {e}") from None
 
     columns, dupes = _dedupe_columns([h.strip() for h in header])
     if dupes:
         warnings.append(f"Duplicate column names renamed: {', '.join(sorted(dupes))}")
 
     rows: list[Row] = []
-    for i, raw in enumerate(reader, start=2):
-        if not any(cell.strip() for cell in raw):
-            continue
-        if len(raw) != len(columns):
-            warnings.append(f"Row {i}: expected {len(columns)} fields, got {len(raw)}")
-            raw = (raw + [""] * len(columns))[: len(columns)]
-        rows.append(dict(zip(columns, (c.strip() for c in raw), strict=True)))
+    try:
+        for i, raw in enumerate(reader, start=2):
+            if not any(cell.strip() for cell in raw):
+                continue
+            if len(raw) != len(columns):
+                warnings.append(f"Row {i}: expected {len(columns)} fields, got {len(raw)}")
+                raw = (raw + [""] * len(columns))[: len(columns)]
+            rows.append(dict(zip(columns, (c.strip() for c in raw), strict=True)))
+    except csv.Error as e:
+        raise IngestError(f"Malformed CSV in {p} near row {len(rows) + 2}: {e}") from None
     return Table(source=str(p), columns=columns, rows=rows, warnings=warnings)
 
 

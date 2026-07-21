@@ -38,17 +38,20 @@ hosts:
     notes: Community tooling documents shared .agents/skills use; not vendor-verified by this project.
 
 systems:
-  # No system exceeds mapping-documented. connector-* labels require live
-  # verification per docs/research/coworking-systems.md.
+  # Label ladder per docs/research/coworking-systems.md. As of 2026-07-18 the
+  # highest label held is connector-prototype (mock-tested) - NO system is
+  # sandbox- or live-tested.
   - name: Generic CSV / any system with exports
     label: export-supported
     adapter: adapters/generic-csv
   - name: HubSpot
-    label: mapping-documented
+    label: connector-prototype (mock-tested)
     adapter: adapters/hubspot
+    notes: Read-only prototype in src/opencoworking/connectors/hubspot.py; mocked tests only, never live-tested (2026-07-18 docs in SOURCES.yaml)
   - name: OfficeRnD
-    label: mapping-documented
+    label: connector-prototype (mock-tested)
     adapter: adapters/officernd
+    notes: Read-only prototype in src/opencoworking/connectors/officernd.py; mocked tests only, never live-tested; token endpoint unverified (2026-07-18 docs in SOURCES.yaml)
   - name: Nexudus
     label: mapping-documented
     adapter: adapters/nexudus

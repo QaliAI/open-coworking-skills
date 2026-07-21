@@ -1,0 +1,20 @@
+unit_id,location_id,unit_type,name,capacity,sellable,out_of_service,list_price,floor,amenities,available_from,notes
+PDX-O1,HW-PDX,office,Studio 1,2,true,false,900,1,window,,
+PDX-O2,HW-PDX,office,Studio 2,5,true,false,1900,1,corner,,
+PDX-O3,HW-PDX,office,Studio 3,10,true,false,3600,2,skyline,,vacated by Jetty Demo 31 May
+PDX-S1,HW-PDX,suite,The Boathouse,8,true,false,3200,2,kitchen,,
+PDX-D1,HW-PDX,desk,Dock 1,1,true,false,300,1,,,
+PDX-D2,HW-PDX,desk,Dock 2,1,true,false,300,1,,,
+PDX-D3,HW-PDX,desk,Dock 3,1,true,false,300,1,,,
+PDX-D4,HW-PDX,desk,Dock 4,1,true,false,,1,,,list price never entered
+PDX-HD,HW-PDX,hot-desk,Tide Pool,8,true,false,,1,,,floating plans
+PDX-M1,HW-PDX,meeting-room,Chartroom,10,false,false,,1,tv,,bookable
+PDX-INT,HW-PDX,office,Staff Office,3,false,false,1200,1,,,blocked for internal use
+BOS-O1,HW-BOS,office,Berth 1,4,true,false,1600,3,window,,
+BOS-O2,HW-BOS,office,Berth 2,6,true,true,2400,3,window,,flood repair since April
+BOS-O3,HW-BOS,office,Berth 3,2,true,false,950,3,interior,,
+BOS-S1,HW-BOS,suite,The Lighthouse,12,true,false,4800,4,private entrance,,
+BOS-D1,HW-BOS,desk,Pier Desk 1,1,true,false,340,3,,,
+BOS-D2,HW-BOS,desk,Pier Desk 2,1,true,false,340,3,,,
+BOS-M1,HW-BOS,meeting-room,Compass Room,8,false,false,,3,vc,,bookable
+BOS-EV,HW-BOS,event-space,The Deck,80,false,false,,5,stage,,bookable

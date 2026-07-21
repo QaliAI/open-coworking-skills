@@ -46,7 +46,9 @@ per the Agent Skills specification (https://agentskills.io/specification).
 
 ## Layout
 
-- `.agents/skills/` — canonical installable skills (stable only)
+- `.agents/skills/` — canonical installable skills (stable and beta;
+  maturity is declared in frontmatter and the catalog — beta means
+  complete and tested but not yet operator-proven)
 - `src/opencoworking/` — shared deterministic Python package (3.11+, stdlib-first)
 - `schemas/` — vendor-neutral JSON Schemas for the coworking data model
 - `references/` — shared domain references (data model, formulas, terminology)

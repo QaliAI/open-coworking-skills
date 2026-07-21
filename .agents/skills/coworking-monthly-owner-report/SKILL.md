@@ -158,9 +158,10 @@ service with 1,400/mo of list value idle.
 3. Confirm OF-104 repair date; every idle month costs 1,400 of list value —
    Ops. Evidence: occupancy flags.
 ...
-Hypothesis: the 3 untouched website leads (L-1013, L-1017, L-1021) reflect
-after-hours submissions with no assigned owner; test by checking submission
-timestamps against staffing.
+Hypothesis: the 3 untouched leads (L-1013 and L-1017 via website, L-1021
+with no source) reflect after-hours submissions with no assigned owner —
+two arrived after 17:00; test by checking submission timestamps against
+staffing.
 ```
 
 ## Evals

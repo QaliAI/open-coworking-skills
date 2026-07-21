@@ -1,0 +1,3 @@
+location_id,name,address,city,market,timezone,opened_on,status,sellable_workstations
+HW-PDX,Harbor Works Pearl District,55 Fictional Wharf,Portland,Portland Pearl,America/Los_Angeles,2024-02-01,open,30
+HW-BOS,Harbor Works Seaport,9 Sample Pier,Boston,Boston Seaport,America/New_York,2025-09-15,open,22

@@ -17,7 +17,7 @@ Routes:
    project or user skills directory Gemini CLI's docs specify for your
    version.
 3. If `gh skill install` lists a gemini agent target in your gh version,
-   `gh skill install QaliAI/open-coworking-skills --all --agent <target>`.
+   `gh skill install QaliAI/open-coworking-skills --all --allow-hidden-dirs --agent <target>`.
 
 ## Using the skills
 
