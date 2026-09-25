@@ -1,0 +1,11 @@
+{
+  "status": "finalized",
+  "review_required": false,
+  "reviewer": "Sample Reviewer (open-source demo)",
+  "reviewer_notes": "Synthetic dataset; checklist walked through to demonstrate release.",
+  "finalized_at": "2026-07-22T09:00:00+00:00",
+  "final_report": "report.final.html",
+  "draft_report": "report.html",
+  "sent_to_client": false,
+  "note": "The tool does not deliver reports. Sending to the client is a human, manual step outside this tool."
+}

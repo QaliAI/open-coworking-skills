@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coworking Revenue & Operations Health Check — Northstar Coworking Demo</title>
+<meta name="generator" content="Coworking Revenue &amp; Operations Health Check 1.0">
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{--ink:#16202e;--muted:#5b6779;--line:#d9dfe8;--accent:#0f4c81;--accent-soft:#eaf1f8;
+--pos:#1c6b4a;--warn:#8a5a00;--bad:#9b2c2c;--chip:#f4f6f9;}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 40px 64px;color:var(--ink);
+font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+background:#fff;max-width:1080px;margin-inline:auto}
+h1{font-size:27px;line-height:1.25;margin:0 0 4px}
+h2{font-size:20px;margin:38px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--accent);
+color:var(--accent)}
+h3{font-size:16px;margin:24px 0 8px}
+h4{font-size:14px;margin:18px 0 6px;text-transform:uppercase;letter-spacing:.04em;
+color:var(--muted)}
+p{margin:8px 0}
+.sub{color:var(--muted);margin-top:0}
+.banner{padding:14px 18px;border-radius:8px;margin:18px 0 26px;font-weight:600;
+letter-spacing:.02em;border:2px solid}
+.banner-draft{background:#fff4e5;border-color:#d98324;color:#7a4300}
+.banner-final{background:#eaf6ef;border-color:#2f7d54;color:#134a30}
+.banner ul{margin:8px 0 0;font-weight:400}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.06em;
+padding:2px 7px;border-radius:999px;text-transform:uppercase}
+.tag-fact{background:#e8eef5;color:#23486b}
+.tag-calculation{background:#e6f0ea;color:#1c6b4a}
+.tag-inference{background:#fdf0dc;color:#8a5a00}
+.tag-recommendation{background:#f0e9f7;color:#5b3a86}
+.conf{font-size:11.5px;padding:2px 8px;border-radius:999px;border:1px solid var(--line)}
+.conf-high{background:#eaf6ef;color:var(--pos);border-color:#bcdcc9}
+.conf-medium{background:#fdf7e8;color:var(--warn);border-color:#e8d9a8}
+.conf-low{background:#fbeded;color:var(--bad);border-color:#e3bcbc}
+.module{font-size:11.5px;color:var(--muted)}
+.count{font-size:11.5px;color:var(--muted)}
+.finding{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;
+padding:14px 18px;margin:14px 0;break-inside:avoid;background:#fff}
+.finding-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.finding-head h3{margin:0}
+.tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.statement{margin:8px 0 4px}
+dl.contract{display:grid;grid-template-columns:132px 1fr;gap:2px 14px;margin:10px 0 0;
+font-size:13.5px}
+dl.contract dt{color:var(--muted);font-weight:600}
+dl.contract dd{margin:0}
+.records,.muted{font-size:12.5px;color:var(--muted)}
+.lbl{display:inline-block;min-width:58px;color:var(--muted);font-weight:600;
+text-transform:uppercase;font-size:10.5px;letter-spacing:.05em}
+table.grid{width:100%;border-collapse:collapse;margin:10px 0 16px;font-size:13px;
+break-inside:avoid}
+table.grid th{background:var(--accent-soft);text-align:left;padding:7px 9px;
+border:1px solid var(--line);font-size:12px;text-transform:uppercase;letter-spacing:.03em;
+color:#26506f}
+table.grid td{padding:7px 9px;border:1px solid var(--line);vertical-align:top}
+table.grid tbody tr:nth-child(even){background:#fafbfd}
+.not-measurable{border:1px dashed #b48b3c;background:#fffaf0;border-radius:8px;
+padding:12px 16px;margin:14px 0;break-inside:avoid}
+.not-measurable strong{color:#8a5a00}
+.not-measurable p{margin:4px 0}
+.not-measurable .needs{font-size:12.5px;color:var(--muted)}
+.callout{background:var(--chip);border-left:3px solid var(--accent);padding:10px 14px;
+border-radius:6px;font-size:13.5px}
+.callout-warn{background:#fff4e5;border-left-color:#d98324}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;
+margin:14px 0}
+.metric-card{border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:8px;
+padding:12px 14px;break-inside:avoid}
+.metric-undefined{border-top-color:#b48b3c}
+.metric-name{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.metric-value{font-size:26px;font-weight:700;margin:2px 0}
+.metric-frac{font-size:12.5px;color:var(--muted)}
+.formula{font-size:12.5px;color:#33445c;background:#f7f9fc;border-radius:6px;padding:6px 9px}
+.exclusions{font-size:12px;color:var(--muted);margin:6px 0 0}
+ul.warnlist{margin:6px 0 0;padding-left:18px;font-size:12.5px;color:var(--warn)}
+ul.summary{margin:10px 0;padding-left:20px}
+ul.summary li{margin:6px 0}
+ul.assumptions{margin:8px 0;padding-left:20px;font-size:13px;color:#33445c}
+ul.findings-list{margin:8px 0;padding-left:20px;font-size:13px}
+.opportunity{border:1px solid var(--line);border-radius:10px;margin:16px 0;overflow:hidden;
+break-inside:avoid}
+.opp-head{display:flex;gap:12px;align-items:center;background:var(--accent-soft);
+padding:10px 14px}
+.opp-head h3{margin:0;font-size:15.5px}
+.rank{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:13px;
+flex:0 0 auto}
+.opp-body{padding:12px 14px}
+.opp-amount{margin-bottom:6px}
+.amount{font-size:22px;font-weight:700;color:var(--pos)}
+.amount-soft{font-size:15px;color:var(--muted);font-weight:600}
+.amount-unit{font-size:12.5px;color:var(--muted);margin-left:8px}
+.lede{font-size:15.5px}
+footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:12.5px;
+color:var(--muted)}
+.signature{border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin:16px 0;
+break-inside:avoid}
+@page{size:A4;margin:14mm}
+@media print{
+  body{padding:0;font-size:10.5pt;max-width:none}
+  h1{font-size:19pt}h2{font-size:14pt}h3{font-size:12pt}
+  h2,h3,h4{break-after:avoid}
+  .finding,.metric-card,.opportunity,.not-measurable,.signature,table.grid{break-inside:avoid}
+  a{color:inherit;text-decoration:none}
+  .no-print{display:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Coworking Revenue & Operations Health Check — Northstar Coworking Demo</h1>
+  <p class="sub">Coworking revenue and operations review · as of
+     2026-07-01 · generated 2026-07-21T00:00:00+00:00</p>
+</header>
+<div class="banner banner-draft">DRAFT REPORT — REVIEW REQUIRED<ul><li>No number in this report has been reviewed by a human yet.</li><li>Check the Data quality and Data limitations sections before using any figure.</li><li>Run <code>opencoworking health-check-finalize</code> after review to produce the released version.</li><li>The tool does not email, publish, or send this report to anyone.</li></ul></div>
+<nav class="no-print" aria-label="Contents">
+  <h4>Contents</h4>
+  <ol><li><a href="#s1">Executive summary</a></li><li><a href="#s2">Data quality and data handling</a></li><li><a href="#s3">Occupancy</a></li><li><a href="#s4">Revenue leakage</a></li><li><a href="#s5">Sales pipeline</a></li><li><a href="#s6">Speed to lead</a></li><li><a href="#s7">Tour conversion</a></li><li><a href="#s8">Collections and churn</a></li><li><a href="#s9">Portfolio detail (locations, systems, rooms, pricing)</a></li><li><a href="#s10">Top 5 opportunities</a></li><li><a href="#s11">90-day action plan</a></li><li><a href="#s12">Methodology and formulas</a></li><li><a href="#s13">Data limitations</a></li></ol>
+</nav>
+<section class="report-section" id="s1"><h2>1. Executive summary</h2><p class="lede">Prepared for <strong>Northstar Coworking Demo</strong> at <strong>2026-07-01</strong>, from the exports supplied for this engagement. Every number below is in the sections that follow, with its formula and its limitation attached.</p>
+<ul class='summary'><li>Occupancy reads three different ways: <strong>71.4%</strong> by office count, <strong>57.6%</strong> by workstation, and <strong>63.7%</strong> by contracted revenue against list potential.</li><li><strong>2,088.00</strong> per month of recurring rate sits on 3 active membership(s) with no invoice in the last 45 days.</li><li><strong>2,350.00</strong> in already failed or overdue balances across 2 invoice(s).</li><li><strong>1,400.00</strong> per month of list value is idle on 1 out-of-service unit(s).</li><li><strong>3</strong> lead(s) never received a recorded first response.</li><li><strong>2</strong> completed tour(s) have no recorded next step.</li><li>Contracted occupancy is <strong>43.9%</strong> at 90 days, with 1 recorded departure(s) (M-005).</li></ul>
+<p class="callout"><strong>No causality is claimed anywhere in this report.</strong> Every statement is labelled FACT, CALCULATION, INFERENCE, or RECOMMENDATION. Where two numbers move together, that is reported as a coincidence in the data, not as a cause.</p>
+<h4>The five things to do first</h4>
+<table class="grid"><thead><tr><th>#</th><th>Opportunity</th><th>Measured amount</th><th>Amount basis</th><th>Owner</th><th>Confidence</th></tr></thead><tbody><tr><td>1</td><td>Backfill or renew the contracts ending inside 90 days</td><td>3,400.00</td><td>per month of recurring revenue at risk</td><td>sales</td><td>high</td></tr><tr><td>2</td><td>Bill or correct the active memberships with no invoice in 45 days</td><td>2,088.00</td><td>per month of recurring revenue at risk</td><td>finance</td><td>high</td></tr><tr><td>3</td><td>Work the failed and overdue invoice queue in aging order</td><td>2,350.00</td><td>one-time balance outstanding</td><td>finance</td><td>medium</td></tr><tr><td>4</td><td>Review what left in the trailing churn window</td><td>760.00</td><td>per month of recurring revenue that has already left</td><td>community</td><td>medium</td></tr><tr><td>5</td><td>Set a repair-or-relist date for the out-of-service units</td><td>1,400.00</td><td>per month of list value; erosion, not cash</td><td>owner</td><td>medium</td></tr></tbody></table></section>
+<section class="report-section" id="s2"><h2>2. Data quality and data handling</h2><table class="grid"><thead><tr><th>File</th><th>Preflight</th><th>Rows</th><th>Identifier columns found</th><th>Notes</th></tr></thead><tbody><tr><td>companies.csv</td><td>ok</td><td>26</td><td>—</td><td>—</td></tr><tr><td>contacts.csv</td><td>warning</td><td>22</td><td>first_name, last_name, email, phone</td><td>contains direct identifiers in: first_name, last_name, email, phone</td></tr><tr><td>deals.csv</td><td>warning</td><td>12</td><td>—</td><td>free-text columns can contain personal data and unstructured third-party content: lost_reason</td></tr><tr><td>events.csv</td><td>ok</td><td>3</td><td>—</td><td>—</td></tr><tr><td>inventory.csv</td><td>warning</td><td>26</td><td>—</td><td>free-text columns can contain personal data and unstructured third-party content: notes</td></tr><tr><td>invoices.csv</td><td>ok</td><td>17</td><td>—</td><td>—</td></tr><tr><td>leads.csv</td><td>warning</td><td>22</td><td>—</td><td>free-text columns can contain personal data and unstructured third-party content: lost_reason</td></tr><tr><td>locations.csv</td><td>warning</td><td>2</td><td>address</td><td>contains direct identifiers in: address</td></tr><tr><td>members.csv</td><td>ok</td><td>13</td><td>—</td><td>—</td></tr><tr><td>memberships.csv</td><td>ok</td><td>19</td><td>—</td><td>—</td></tr><tr><td>payments.csv</td><td>ok</td><td>15</td><td>—</td><td>—</td></tr><tr><td>reviews.csv</td><td>warning</td><td>4</td><td>—</td><td>free-text columns can contain personal data and unstructured third-party content: text</td></tr><tr><td>room-bookings.csv</td><td>ok</td><td>8</td><td>—</td><td>—</td></tr><tr><td>tours.csv</td><td>ok</td><td>9</td><td>—</td><td>—</td></tr><tr><td>virtual-office-partners.csv</td><td>ok</td><td>3</td><td>—</td><td>—</td></tr></tbody></table><p class="muted">Pattern-based screening reduces risk; it does not certify that a folder is free of personal or secret data.</p><h3>How your data was handled</h3><ul class='assumptions'><li>15 file(s) were screened before any analysis; 0 blocked and 6 flagged for human review.</li><li>1 identifier-shaped value(s) were replaced with stable pseudonyms anywhere they occurred in this report and its machine-readable bundle.</li><li>No file declared identifier columns.</li><li>No export row is copied into this report directory: the report and its bundle carry aggregates, classifications, and record identifiers (M-011, INV-1004) only.</li><li>Pattern-based screening and redaction reduce risk; they do not certify a folder or a document. The reviewer confirms both before release (REVIEW_CHECKLIST.md).</li><li>This tool makes no network calls, uploads nothing, and sends nothing to anyone.</li></ul><table class="grid"><thead><tr><th>File</th><th>Role</th><th>Rows</th><th>Identified by</th><th>Analysed</th><th>Renamed cols</th><th>Unmapped headers</th><th>Missing required</th><th>Checks</th></tr></thead><tbody><tr><td>companies.csv</td><td>companies</td><td>26</td><td>—</td><td>no</td><td>0</td><td>—</td><td>—</td><td>0 err / 0 warn</td></tr><tr><td>contacts.csv</td><td>contacts</td><td>22</td><td>—</td><td>no</td><td>0</td><td>—</td><td>—</td><td>0 err / 0 warn</td></tr><tr><td>deals.csv</td><td>deals</td><td>12</td><td>—</td><td>no</td><td>0</td><td>—</td><td>—</td><td>0 err / 0 warn</td></tr><tr><td>inventory.csv</td><td>inventory</td><td>26</td><td>—</td><td>no</td><td>0</td><td>—</td><td>—</td><td>0 err / 0 warn</td></tr><tr><td>invoices.csv</td><td>invoices</td><td>17</td><td>—</td><td>no</td><td>0</td><td>—</td><td>—</td><td>0 err / 0 warn</td></tr><tr><td>leads.csv</td><td>leads</td><td>22</td><td>—</td><td>no</td><td>0</td><td>—</td><td>—</td><td>0 err / 0 warn</td></tr><tr><td>locations.csv</td><td>locations</td><td>2</td><td>—</td><td>no</td><td>0</td><td>—</td><td>—</td><td>0 err / 0 warn</td></tr><tr><td>members.csv</td><td>members</td><td>13</td><td>—</td><td>no</td><td>0</td><td>—</td><td>—</td><td>0 err / 0 warn</td></tr><tr><td>memberships.csv</td><td>memberships</td><td>19</td><td>—</td><td>no</td><td>0</td><td>—</td><td>—</td><td>0 err / 0 warn</td></tr><tr><td>payments.csv</td><td>payments</td><td>15</td><td>—</td><td>no</td><td>0</td><td>—</td><td>—</td><td>0 err / 0 warn</td></tr><tr><td>room-bookings.csv</td><td>room_bookings</td><td>8</td><td>—</td><td>no</td><td>0</td><td>—</td><td>—</td><td>0 err / 0 warn</td></tr><tr><td>tours.csv</td><td>tours</td><td>9</td><td>—</td><td>no</td><td>0</td><td>—</td><td>—</td><td>0 err / 0 warn</td></tr><tr><td>virtual-office-partners.csv</td><td>virtual_office_partners</td><td>3</td><td>—</td><td>no</td><td>0</td><td>—</td><td>—</td><td>0 err / 0 warn</td></tr></tbody></table><h3>Findings</h3><div class="findings">
+<article class="finding" id="finding-1">
+  <header>
+    <div class="finding-head">
+      <h3>Every input file was identified and structurally checked</h3>
+      <div class="tags"><span class="tag tag-fact" title="Quoted from the export; no calculation involved.">FACT</span>
+        <span class="conf conf-high">confidence: high</span>
+        <span class="module">data quality</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">0 export(s) were read, identified from column signatures, and checked for blank required values, unparseable dates, and duplicate keys (0 error-severity and 0 warning-severity finding(s)).</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>companies.csv (26 rows); contacts.csv (22 rows); deals.csv (12 rows); events.csv (3 rows); inventory.csv (26 rows); invoices.csv (17 rows); leads.csv (22 rows); locations.csv (2 rows); members.csv (13 rows); memberships.csv (19 rows); payments.csv (15 rows); reviews.csv (4 rows); room-bookings.csv (8 rows); tours.csv (9 rows); virtual-office-partners.csv (3 rows)</dd>
+    <dt>Calculation</dt><dd>Counts of the checks in the Data quality section; no estimation.</dd>
+    <dt>Confidence</dt><dd>high — inputs complete, mapping exact, no data-quality findings on the records used</dd>
+    <dt>Limitation</dt><dd>Quality checks only cover structural problems the schema can express; business rules (correct stage names, real move-in dates) still need human verification.</dd>
+  </dl>
+  
+</article>
+<article class="finding" id="finding-2">
+  <header>
+    <div class="finding-head">
+      <h3>1 membership(s) marked active past their end date</h3>
+      <div class="tags"><span class="tag tag-fact" title="Quoted from the export; no calculation involved.">FACT</span>
+        <span class="conf conf-high">confidence: high</span>
+        <span class="module">data quality</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">Records: M-011</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>memberships.csv (19 rows)</dd>
+    <dt>Calculation</dt><dd>status == &#x27;active&#x27; and end_date &lt; as-of date</dd>
+    <dt>Confidence</dt><dd>high — exact date comparison against the membership export</dd>
+    <dt>Limitation</dt><dd>Either a renewal was never recorded or billing is continuing on an expired agreement; both corrupt every occupancy and retention number until fixed.</dd>
+  </dl>
+  
+</article></div></section>
+<section class="report-section" id="s3"><h2>3. Occupancy</h2><div class="metric-grid">
+<div class="metric-card">
+  <div class="metric-name">office_occupancy</div>
+  <div class="metric-value">71.4%</div>
+  <div class="metric-frac">5 / 7</div>
+  <p class="formula">occupied sellable in-service offices / sellable in-service offices</p>
+  <p class="exclusions"><span class="lbl">Excludes</span> out-of-service units, non-sellable units</p>
+  
+</div>
+<div class="metric-card">
+  <div class="metric-name">workstation_occupancy</div>
+  <div class="metric-value">57.6%</div>
+  <div class="metric-frac">38 / 66</div>
+  <p class="formula">workstation capacity of occupied sellable in-service units / total sellable in-service workstation capacity</p>
+  <p class="exclusions"><span class="lbl">Excludes</span> out-of-service units, non-sellable units</p>
+  
+</div>
+<div class="metric-card">
+  <div class="metric-name">financial_occupancy</div>
+  <div class="metric-value">63.7%</div>
+  <div class="metric-frac">11785 / 18500</div>
+  <p class="formula">contracted recurring revenue of occupied priced units / list-price total of all priced sellable in-service units</p>
+  <p class="exclusions"><span class="lbl">Excludes</span> out-of-service units, non-sellable units, units without a list price (both sides)</p>
+  <ul class="warnlist"><li>2 sellable unit(s) have no list price and are excluded from financial occupancy on both sides.</li></ul>
+</div></div>
+<h3>Occupancy flags (named units, not estimates)</h3>
+<table class="grid"><thead><tr><th>Flag</th><th>Units</th><th>Unit IDs</th><th>Why it matters</th></tr></thead><tbody><tr><td>out_of_service_units</td><td>1</td><td>OF-104</td><td>Excluded from occupancy denominators; each is capacity producing no revenue.</td></tr><tr><td>complimentary_occupancy</td><td>1</td><td>DD-08</td><td>Counted as occupied but contribute zero revenue; they inflate count-based occupancy relative to financial occupancy.</td></tr><tr><td>missing_list_price</td><td>2</td><td>DD-07, HD-POOL</td><td>Excluded from financial occupancy on both sides.</td></tr><tr><td>discount_over_25pct</td><td>1</td><td>OF-105</td><td>Occupied but materially below list; physical occupancy hides the revenue gap.</td></tr></tbody></table>
+<h3>Referential issues found while joining inventory to memberships</h3>
+<ul class='findings-list'><li>{&#x27;type&#x27;: &#x27;active_memberships_without_unit&#x27;, &#x27;count&#x27;: 6, &#x27;membership_ids&#x27;: [&#x27;M-009&#x27;, &#x27;M-010&#x27;, &#x27;M-015&#x27;, &#x27;M-016&#x27;, &#x27;M-017&#x27;, &#x27;M-020&#x27;], &#x27;note&#x27;: &#x27;Not an error for floating/community memberships, but they are excluded from unit occupancy and shown separately.&#x27;}</li></ul>
+<h3>Contracted forward view (what is already signed, nothing assumed)</h3>
+<table class="grid"><thead><tr><th>Horizon</th><th>Date</th><th>Occupied capacity</th><th>Occupancy</th><th>Recorded departures</th><th>Arrivals</th></tr></thead><tbody><tr><td>30 days</td><td>2026-07-31</td><td>39 / 66</td><td>59.1%</td><td>—</td><td>M-018</td></tr><tr><td>60 days</td><td>2026-08-30</td><td>39 / 66</td><td>59.1%</td><td>—</td><td>M-018</td></tr><tr><td>90 days</td><td>2026-09-29</td><td>29 / 66</td><td>43.9%</td><td>M-005</td><td>M-018</td></tr><tr><td>180 days</td><td>2026-12-28</td><td>29 / 66</td><td>43.9%</td><td>M-005</td><td>M-018</td></tr></tbody></table>
+<ul class='assumptions'><li>Contracted layer only: active agreements minus recorded end dates, plus signed pending move-ins. No renewal probability is applied - agreements with no end date are assumed to continue.</li><li>Sellable capacity held constant; out-of-service units assumed to stay out of service (update the inventory to change this).</li><li>Floating/hot-desk/virtual memberships without unit assignments are excluded from unit-capacity occupancy.</li><li>No pipeline or probabilistic layer is included here; scenario layers must state their own assumptions.</li></ul><h3>Findings</h3><div class="findings">
+<article class="finding" id="finding-1">
+  <header>
+    <div class="finding-head">
+      <h3>Occupancy is three different numbers: 71.4% by office count, 57.6% by workstation, 63.7% financially</h3>
+      <div class="tags"><span class="tag tag-calculation" title="Arithmetic on the exports, with the formula shown.">CALCULATION</span>
+        <span class="conf conf-medium">confidence: medium</span>
+        <span class="module">occupancy</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">Office count 5/7; workstations 38/66; contracted revenue 11785/18500 of list potential.</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>inventory.csv (26 rows); memberships.csv (19 rows)</dd>
+    <dt>Calculation</dt><dd>office = occupied sellable in-service offices / sellable in-service offices; workstation = capacity of occupied units / capacity of sellable in-service units; financial = contracted MRR of occupied priced units / list total of all priced sellable in-service units.</dd>
+    <dt>Confidence</dt><dd>medium — small denominator (7 records)</dd>
+    <dt>Limitation</dt><dd>Occupancy measures contracted inventory consumption, not attendance: no access-log data is involved, and units without a list price are excluded from the financial ratio on both sides.</dd>
+  </dl>
+  
+</article>
+<article class="finding" id="finding-2">
+  <header>
+    <div class="finding-head">
+      <h3>Physical occupancy overstates paid occupancy by 7.7 percentage points</h3>
+      <div class="tags"><span class="tag tag-calculation" title="Arithmetic on the exports, with the formula shown.">CALCULATION</span>
+        <span class="conf conf-medium">confidence: medium</span>
+        <span class="module">occupancy</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">Office-count occupancy (71.4%) minus financial occupancy (63.7%) = 7.7 percentage points. The named drivers are listed in the occupancy flags (out-of-service units, complimentary units, discounted units, unpriced units).</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>inventory.csv (26 rows); memberships.csv (19 rows)</dd>
+    <dt>Calculation</dt><dd>difference between the two occupancy metrics at this as-of date</dd>
+    <dt>Confidence</dt><dd>medium — small denominator (7 records)</dd>
+    <dt>Limitation</dt><dd>A spread is arithmetic, not a cause: the flags name which units contribute, and attributing the gap to a strategy needs operator context.</dd>
+  </dl>
+  
+</article>
+<article class="finding" id="finding-3">
+  <header>
+    <div class="finding-head">
+      <h3>4 occupancy distortion flag(s) name specific units</h3>
+      <div class="tags"><span class="tag tag-fact" title="Quoted from the export; no calculation involved.">FACT</span>
+        <span class="conf conf-high">confidence: high</span>
+        <span class="module">occupancy</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">Out of service units (1): OF-104; Complimentary occupancy (1): DD-08; Missing list price (2): DD-07, HD-POOL; Discount over 25pct (1): OF-105 (28.6% below list)</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>inventory.csv (26 rows); memberships.csv (19 rows)</dd>
+    <dt>Calculation</dt><dd>engine flags from occupancy_report (no estimation)</dd>
+    <dt>Confidence</dt><dd>high — flags quote unit IDs straight from the inventory export</dd>
+    <dt>Limitation</dt><dd>Flags identify where the number is distorted; whether the distortion is intentional (comped desk, promotional rate) is an operator decision.</dd>
+  </dl>
+  
+</article>
+<article class="finding" id="finding-4">
+  <header>
+    <div class="finding-head">
+      <h3>Contracted occupancy is 43.9% at 90 days (2026-09-29)</h3>
+      <div class="tags"><span class="tag tag-calculation" title="Arithmetic on the exports, with the formula shown.">CALCULATION</span>
+        <span class="conf conf-high">confidence: high</span>
+        <span class="module">occupancy</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">Contracted occupied capacity 29 of 66 sellable workstations; 1 recorded departure(s) (M-005) and 1 arrival(s) (M-018) inside the horizon.</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>inventory.csv (26 rows); memberships.csv (19 rows)</dd>
+    <dt>Calculation</dt><dd>active agreements minus recorded end dates plus signed pending move-ins / sellable capacity, per occupancy_forecast</dd>
+    <dt>Confidence</dt><dd>high — inputs complete, mapping exact, no data-quality findings on the records used</dd>
+    <dt>Limitation</dt><dd>Contracted layer only: agreements with no end date are assumed to continue and no renewal probability is applied. Sales pipeline is not included.</dd>
+  </dl>
+  
+</article></div></section>
+<section class="report-section" id="s4"><h2>4. Revenue leakage</h2><div class='finding'><div class='finding-head'><h3>Unfollowed leads</h3><div class='tags'><span class='count'>3 record(s)</span></div></div><p class='statement'>Leads still &#x27;new&#x27; with no recorded first response.</p><p class='records'><span class='lbl'>Records</span>L-1013, L-1017, L-1021</p></div>
+<div class='finding'><div class='finding-head'><h3>Stale open deals 30d</h3><div class='tags'><span class='count'>2 record(s)</span></div></div><p class='statement'>Open deals untouched for 30+ days.</p><p class='records'><span class='lbl'>Records</span>D-2002, D-2011</p></div>
+<div class='finding'><div class='finding-head'><h3>Completed tours without next action</h3><div class='tags'><span class='count'>2 record(s)</span></div></div><p class='statement'>Completed tours with no recorded next step.</p><p class='records'><span class='lbl'>Records</span>T-3002, T-3003</p></div>
+<div class='finding'><div class='finding-head'><h3>Won deals without membership</h3><div class='tags'><span class='count'>1 record(s)</span></div></div><p class='statement'>Companies with a won deal but no active or pending membership; possible unstarted or unrecorded agreements.</p><p class='records'><span class='lbl'>Records</span>C-GHOSTWON</p></div>
+<div class='finding'><div class='finding-head'><h3>Active memberships without recent invoice</h3><div class='tags'><span class='count'>3 record(s)</span></div></div><p class='statement'>Active, non-complimentary memberships with no invoice issued in the last 45 days.</p><ul class="amounts"><li><strong>2,088.00</strong> per month, recurring rate at risk</li></ul><p class='records'><span class='lbl'>Records</span>M-011, M-016, M-017</p></div>
+<div class='finding'><div class='finding-head'><h3>Failed or overdue invoices</h3><div class='tags'><span class='count'>2 record(s)</span></div></div><p class='statement'>Invoices failed or past due.</p><ul class="amounts"><li><strong>2,350.00</strong> one-time balance outstanding</li></ul><p class='records'><span class='lbl'>Records</span>INV-1004, INV-1006</p></div>
+<div class='finding'><div class='finding-head'><h3>Out of service inventory</h3><div class='tags'><span class='count'>1 record(s)</span></div></div><p class='statement'>Units marked out of service; verify each is genuinely unusable rather than forgotten.</p><ul class="amounts"><li><strong>1,400.00</strong> per month of list value blocked (erosion, not cash)</li></ul><p class='records'><span class='lbl'>Records</span>OF-104</p></div>
+<div class='finding'><div class='finding-head'><h3>Active status past end date</h3><div class='tags'><span class='count'>1 record(s)</span></div></div><p class='statement'>Memberships marked active past their end date; either renewals were not recorded or billing may be wrong.</p><p class='records'><span class='lbl'>Records</span>M-011</p></div>
+<p class="callout"><strong>Amounts are never summed into one total.</strong> Amounts are sums of the listed records only; no extrapolation is applied. A recurring rate and a one-time balance describe different money, and erosion of list value is potential, not cash.</p><h3>Findings</h3><div class="findings">
+<article class="finding" id="finding-1">
+  <header>
+    <div class="finding-head">
+      <h3>3 active membership(s) with no invoice in 45 days: 2088/month at risk</h3>
+      <div class="tags"><span class="tag tag-calculation" title="Arithmetic on the exports, with the formula shown.">CALCULATION</span>
+        <span class="conf conf-low">confidence: low</span>
+        <span class="module">revenue leakage</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">No billing-frequency caveat applied to these records.</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>invoices.csv (17 rows); memberships.csv (19 rows)</dd>
+    <dt>Calculation</dt><dd>sum of contracted_rate for active, non-complimentary memberships whose membership_id has no invoice issued in the 45 days to the as-of date</dd>
+    <dt>Confidence</dt><dd>low — small denominator (3 records)</dd>
+    <dt>Limitation</dt><dd>A missing invoice is not proof of missing revenue: prepaid, annual, or partner-billed arrangements can legitimately sit outside the 45-day window. Verify each record before billing.</dd>
+  </dl>
+  
+</article>
+<article class="finding" id="finding-2">
+  <header>
+    <div class="finding-head">
+      <h3>1 unit(s) out of service, 1400/month of list value idle</h3>
+      <div class="tags"><span class="tag tag-fact" title="Quoted from the export; no calculation involved.">FACT</span>
+        <span class="conf conf-high">confidence: high</span>
+        <span class="module">revenue leakage</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">Units: OF-104</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>inventory.csv (26 rows)</dd>
+    <dt>Calculation</dt><dd>sum of list_price for units flagged out_of_service</dd>
+    <dt>Confidence</dt><dd>high — quote of the inventory export&#x27;s own out_of_service flag</dd>
+    <dt>Limitation</dt><dd>List value is potential, not lost revenue: the unit may be genuinely unusable. The finding is a question about the repair date, not a number to book.</dd>
+  </dl>
+  
+</article>
+<article class="finding" id="finding-3">
+  <header>
+    <div class="finding-head">
+      <h3>1 won deal(s) with no active or pending membership</h3>
+      <div class="tags"><span class="tag tag-fact" title="Quoted from the export; no calculation involved.">FACT</span>
+        <span class="conf conf-medium">confidence: medium</span>
+        <span class="module">revenue leakage</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">Companies: C-GHOSTWON</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>deals.csv (12 rows); memberships.csv (19 rows)</dd>
+    <dt>Calculation</dt><dd>companies with a won deal minus companies with an active/pending membership</dd>
+    <dt>Confidence</dt><dd>medium — depends on company_id being consistent across both systems</dd>
+    <dt>Limitation</dt><dd>Recorded outside the WMS, still onboarding, or a duplicate company ID; the CRM-WMS reconciliation section is the place to resolve it.</dd>
+  </dl>
+  
+</article>
+<article class="finding" id="finding-4">
+  <header>
+    <div class="finding-head">
+      <h3>CRM and WMS disagree in 2 place(s)</h3>
+      <div class="tags"><span class="tag tag-fact" title="Quoted from the export; no calculation involved.">FACT</span>
+        <span class="conf conf-medium">confidence: medium</span>
+        <span class="module">revenue leakage</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">memberships_without_won_deal: 1; won_deals_without_membership: 1</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>companies.csv (26 rows); deals.csv (12 rows); memberships.csv (19 rows)</dd>
+    <dt>Calculation</dt><dd>company_id equality is the only automatic match; name matches are probable (0.8) and queued for human review</dd>
+    <dt>Confidence</dt><dd>medium — cross-system matching depends on shared company identifiers</dd>
+    <dt>Limitation</dt><dd>Nothing is merged or corrected by this tool; conflicting records need a human decision about which system is authoritative.</dd>
+  </dl>
+  
+</article>
+<article class="finding" id="finding-5">
+  <header>
+    <div class="finding-head">
+      <h3>Virtual-office reconciliation raised 3 finding(s)</h3>
+      <div class="tags"><span class="tag tag-fact" title="Quoted from the export; no calculation involved.">FACT</span>
+        <span class="conf conf-medium">confidence: medium</span>
+        <span class="module">revenue leakage</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">direct_vo_client_never_invoiced: 1; partner_client_without_membership: 1; possible_double_billing: 1</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>invoices.csv (17 rows); memberships.csv (19 rows); virtual-office-partners.csv (3 rows)</dd>
+    <dt>Calculation</dt><dd>partner-billed clients with operator invoices, partner clients without a membership, direct clients never invoiced</dd>
+    <dt>Confidence</dt><dd>medium — matches on company_id only; fuzzy name matching is deliberately not attempted</dd>
+    <dt>Limitation</dt><dd>Double billing and unbilled fulfillment both need partner statements to confirm; the export alone cannot settle them.</dd>
+  </dl>
+  
+</article></div></section>
+<section class="report-section" id="s5"><h2>5. Sales pipeline</h2><h3>Stage mix (all deals in the export)</h3>
+<table class="grid"><thead><tr><th>Stage</th><th>Deals</th></tr></thead><tbody><tr><td>lost</td><td>2</td></tr><tr><td>negotiation</td><td>1</td></tr><tr><td>new</td><td>1</td></tr><tr><td>proposal</td><td>2</td></tr><tr><td>qualified</td><td>2</td></tr><tr><td>tour</td><td>2</td></tr><tr><td>won</td><td>2</td></tr></tbody></table>
+<h3>Hygiene rules and what they caught</h3>
+<table class="grid"><thead><tr><th>Rule</th><th>Open deals affected</th></tr></thead><tbody><tr><td>stale deals</td><td>2</td></tr><tr><td>missing next action</td><td>2</td></tr><tr><td>overdue next action</td><td>1</td></tr><tr><td>unassigned</td><td>1</td></tr><tr><td>invalid stage</td><td>0</td></tr><tr><td>duplicate open deals</td><td>1</td></tr></tbody></table>
+<h3>Stale open deals (untouched 21 days or more)</h3>
+<table class="grid"><thead><tr><th>Deal</th><th>Stage</th><th>Owner</th><th>Days since update</th></tr></thead><tbody><tr><td>D-2002</td><td>qualified</td><td>(unowned)</td><td>52</td></tr><tr><td>D-2011</td><td>qualified</td><td>riley</td><td>42</td></tr></tbody></table>
+<h3>Open deals with no owner</h3>
+<table class="grid"><thead><tr><th>Deal</th><th>Stage</th></tr></thead><tbody><tr><td>D-2002</td><td>qualified</td></tr></tbody></table>
+<h3>Duplicate open deals (same company and product)</h3>
+<table class="grid"><thead><tr><th>Company</th><th>Product</th><th>Deal IDs</th></tr></thead><tbody><tr><td>c-newco</td><td>private-office</td><td>D-2001, D-2002, D-2012</td></tr></tbody></table>
+<p class="muted">Open deals by owner: {&#x27;casey&#x27;: 5, &#x27;riley&#x27;: 2}</p><h3>Findings</h3><div class="findings">
+<article class="finding" id="finding-1">
+  <header>
+    <div class="finding-head">
+      <h3>3 record(s) in check &#x27;unfollowed_leads&#x27;</h3>
+      <div class="tags"><span class="tag tag-fact" title="Quoted from the export; no calculation involved.">FACT</span>
+        <span class="conf conf-high">confidence: high</span>
+        <span class="module">sales pipeline</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">Leads still &#x27;new&#x27; with no recorded first response.</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>deals.csv (12 rows); leads.csv (22 rows)</dd>
+    <dt>Calculation</dt><dd>count of records matching the check&#x27;s stated rule</dd>
+    <dt>Confidence</dt><dd>high — the check is a direct column comparison</dd>
+    <dt>Limitation</dt><dd>Records outside these exports (spreadsheets, inboxes, verbal promises) are invisible to every count in this report.</dd>
+  </dl>
+  
+</article>
+<article class="finding" id="finding-2">
+  <header>
+    <div class="finding-head">
+      <h3>2 record(s) in check &#x27;stale_open_deals_30d&#x27;</h3>
+      <div class="tags"><span class="tag tag-fact" title="Quoted from the export; no calculation involved.">FACT</span>
+        <span class="conf conf-high">confidence: high</span>
+        <span class="module">sales pipeline</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">Open deals untouched for 30+ days.</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>deals.csv (12 rows); leads.csv (22 rows)</dd>
+    <dt>Calculation</dt><dd>count of records matching the check&#x27;s stated rule</dd>
+    <dt>Confidence</dt><dd>high — the check is a direct column comparison</dd>
+    <dt>Limitation</dt><dd>Records outside these exports (spreadsheets, inboxes, verbal promises) are invisible to every count in this report.</dd>
+  </dl>
+  
+</article>
+<article class="finding" id="finding-3">
+  <header>
+    <div class="finding-head">
+      <h3>Pipeline hygiene: 7 issue(s) across 12 deal(s)</h3>
+      <div class="tags"><span class="tag tag-calculation" title="Arithmetic on the exports, with the formula shown.">CALCULATION</span>
+        <span class="conf conf-high">confidence: high</span>
+        <span class="module">sales pipeline</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">duplicate_open_deals: 1; missing_next_action: 2; overdue_next_action: 1; stale_deals: 2; unassigned: 1</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>deals.csv (12 rows)</dd>
+    <dt>Calculation</dt><dd>counts of open deals matching each rule at a staleness threshold of 21 days; open deals by owner: {&#x27;casey&#x27;: 5, &#x27;riley&#x27;: 2}</dd>
+    <dt>Confidence</dt><dd>high — inputs complete, mapping exact, no data-quality findings on the records used</dd>
+    <dt>Limitation</dt><dd>Hygiene only: this measures how well the pipeline is maintained, not whether the deals are winnable. Stage names must be the operator&#x27;s own.</dd>
+  </dl>
+  
+</article>
+<article class="finding" id="finding-4">
+  <header>
+    <div class="finding-head">
+      <h3>Stale and unowned open deals are the pattern most likely to hide lost revenue</h3>
+      <div class="tags"><span class="tag tag-inference" title="A reading of the facts; not itself measured.">INFERENCE</span>
+        <span class="conf conf-medium">confidence: medium</span>
+        <span class="module">sales pipeline</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">Stale deals and unassigned deals appear together in this dataset&#x27;s counts above; deals nobody touched and nobody owns cannot be forecast or chased.</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>deals.csv (12 rows)</dd>
+    <dt>Calculation</dt><dd>No calculation: this is a reading of the two counted rules together.</dd>
+    <dt>Confidence</dt><dd>medium — inference from counts, not from deal outcomes</dd>
+    <dt>Limitation</dt><dd>Deal outcomes are unknown - the export has no win/loss over time, so this is a priority signal, not a measured loss.</dd>
+  </dl>
+  
+</article></div></section>
+<section class="report-section" id="s6"><h2>6. Speed to lead</h2><table class="grid"><thead><tr><th>Measure</th><th>Value</th></tr></thead><tbody><tr><td>Median first response</td><td>30 minutes</td></tr><tr><td>90th percentile</td><td>90 minutes</td></tr><tr><td>Slowest response</td><td>220 minutes</td></tr><tr><td>Leads with a recorded response</td><td>19</td></tr><tr><td>Leads with no recorded response</td><td>3</td></tr><tr><td>Measurement basis</td><td>business minutes 09:00-17:00 Mon-Fri, location-local timestamps</td></tr></tbody></table>
+<h3>Leads with no recorded first response</h3>
+<table class="grid"><thead><tr><th>Lead</th></tr></thead><tbody><tr><td>L-1013</td></tr><tr><td>L-1017</td></tr><tr><td>L-1021</td></tr></tbody></table>
+<p class="callout">first_response_at must be the first human contact attempt, not an automated acknowledgment; verify what the source system stores.</p><h3>Findings</h3><div class="findings">
+<article class="finding" id="finding-1">
+  <header>
+    <div class="finding-head">
+      <h3>Median first response 30 business minutes 09:00-17:00 Mon-Fri, location-local timestamps, tail to 220 minutes</h3>
+      <div class="tags"><span class="tag tag-calculation" title="Arithmetic on the exports, with the formula shown.">CALCULATION</span>
+        <span class="conf conf-high">confidence: high</span>
+        <span class="module">speed to lead</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">19 lead(s) received a recorded first response; 3 lead(s) have none at all (p90 90 minutes)</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>leads.csv (22 rows)</dd>
+    <dt>Calculation</dt><dd>median/p90/max of business minutes 09:00-17:00 Mon-Fri, location-local timestamps between created_at and first_response_at; leads without a first response are excluded from the distribution and counted separately</dd>
+    <dt>Confidence</dt><dd>high — distribution is computed from the timestamps the source system stores</dd>
+    <dt>Limitation</dt><dd>first_response_at may record an automated acknowledgement rather than a human contact attempt; an unrecorded call is indistinguishable from no response.</dd>
+  </dl>
+  
+</article></div></section>
+<section class="report-section" id="s7"><h2>7. Tour conversion</h2><h3>Counts</h3>
+<table class="grid"><thead><tr><th>Gate</th><th>Count</th></tr></thead><tbody><tr><td>leads</td><td>22</td></tr><tr><td>contacted</td><td>19</td></tr><tr><td>leads with tour</td><td>9</td></tr><tr><td>tours completed</td><td>5</td></tr><tr><td>tour no shows</td><td>2</td></tr><tr><td>deals won</td><td>2</td></tr></tbody></table>
+<h3>Rates (definition printed beneath)</h3>
+<table class="grid"><thead><tr><th>Rate</th><th>Value</th></tr></thead><tbody><tr><td>lead to contact</td><td>86.4%</td></tr><tr><td>lead to tour</td><td>40.9%</td></tr><tr><td>tour show rate</td><td>71.4%</td></tr><tr><td>lead to won</td><td>9.1%</td></tr></tbody></table>
+<ul class='assumptions'><li><strong>lead_to_contact</strong>: leads with status beyond &#x27;new&#x27; / all leads</li><li><strong>lead_to_tour</strong>: distinct leads with &gt;=1 tour record / all leads</li><li><strong>tour_show_rate</strong>: completed tours / (completed + no-show tours); still-scheduled tours excluded</li><li><strong>lead_to_won</strong>: won deals / all leads (period alignment is the caller&#x27;s responsibility and can distort this rate)</li></ul>
+<h3>Where the leads came from (normalized labels)</h3>
+<table class="grid"><thead><tr><th>Source bucket</th><th>Leads</th></tr></thead><tbody><tr><td>google-ads</td><td>4</td></tr><tr><td>referral</td><td>3</td></tr><tr><td>website</td><td>3</td></tr><tr><td>unknown</td><td>3</td></tr><tr><td>walk-in</td><td>2</td></tr><tr><td>yelp</td><td>2</td></tr><tr><td>broker-marketplace</td><td>1</td></tr><tr><td>meta</td><td>1</td></tr><tr><td>event</td><td>1</td></tr><tr><td>google-business-profile</td><td>1</td></tr><tr><td>linkedin</td><td>1</td></tr></tbody></table>
+<p class='muted'>Labels the normalizer refused to guess: Yelp (2)</p><h3>Findings</h3><div class="findings">
+<article class="finding" id="finding-1">
+  <header>
+    <div class="finding-head">
+      <h3>2 completed tour(s) with no recorded next step</h3>
+      <div class="tags"><span class="tag tag-fact" title="Quoted from the export; no calculation involved.">FACT</span>
+        <span class="conf conf-high">confidence: high</span>
+        <span class="module">tour conversion</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">Tours: T-3002, T-3003</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>tours.csv (9 rows)</dd>
+    <dt>Calculation</dt><dd>status == &#x27;completed&#x27; and next_action is blank</dd>
+    <dt>Confidence</dt><dd>high — direct read of two columns</dd>
+    <dt>Limitation</dt><dd>An empty next-action field means the outcome was not recorded; the follow-up may still have happened outside the CRM.</dd>
+  </dl>
+  
+</article>
+<article class="finding" id="finding-2">
+  <header>
+    <div class="finding-head">
+      <h3>Funnel: 22 leads -&gt; 9 with a tour (40.9%) -&gt; 5 tours completed</h3>
+      <div class="tags"><span class="tag tag-calculation" title="Arithmetic on the exports, with the formula shown.">CALCULATION</span>
+        <span class="conf conf-high">confidence: high</span>
+        <span class="module">tour conversion</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">Contacted 19 (86.4%); tours completed 5; no-shows 2 (show rate 71.4%); won deals 2</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>deals.csv (12 rows); leads.csv (22 rows); tours.csv (9 rows)</dd>
+    <dt>Calculation</dt><dd>lead_to_contact = leads with status beyond &#x27;new&#x27; / all leads; lead_to_tour = distinct leads with &gt;=1 tour record / all leads; tour_show_rate = completed tours / (completed + no-show tours); still-scheduled tours excluded; lead_to_won = won deals / all leads (period alignment is the caller&#x27;s responsibility and can distort this rate)</dd>
+    <dt>Confidence</dt><dd>high — rates follow the definitions printed in the methodology section</dd>
+    <dt>Limitation</dt><dd>Counts are period-mixed unless the exports cover one period: a tour booked last quarter can appear against this quarter&#x27;s leads. </dd>
+  </dl>
+  
+</article></div></section>
+<section class="report-section" id="s8"><h2>8. Collections and churn</h2><h3>Collections</h3>
+<table class="grid"><thead><tr><th>Measure</th><th>Value</th></tr></thead><tbody><tr><td>Invoices in the worklist</td><td>2</td></tr><tr><td>Total outstanding (one-time balances)</td><td>2,350.00</td></tr></tbody></table>
+<h4>Prioritized internal worklist (oldest first, then largest)</h4>
+<table class="grid"><thead><tr><th>Invoice</th><th>Company</th><th>Amount</th><th>Days overdue</th><th>Band</th><th>History</th><th>Suggested internal step</th><th>Context</th></tr></thead><tbody><tr><td>INV-1004</td><td>C-DELTA</td><td>2,000.00</td><td>16</td><td>16-30</td><td>0 paid / 1 problem in export</td><td>Personal contact from someone the member knows; ask, don&#x27;t dun</td><td>renewal 2026-08-01 - resolve billing BEFORE renewal pricing talk; deposit held 2000</td></tr><tr><td>INV-1006</td><td>C-FERN</td><td>350.00</td><td>16</td><td>16-30</td><td>0 paid / 1 problem in export</td><td>Personal contact from someone the member knows; ask, don&#x27;t dun</td><td>deposit held 350</td></tr></tbody></table>
+<ul class='assumptions'><li>Internal worklist only: this tool sends nothing.</li><li>No legal conclusions; escalation beyond conversation is a human + professional-advice decision.</li><li>History counts come from the provided export only.</li></ul>
+<h3>Churn and retention</h3>
+<table class="grid"><thead><tr><th>Measure</th><th>Value</th></tr></thead><tbody><tr><td>Churn window</td><td>2026-06-01 to 2026-07-01 (30 days)</td></tr><tr><td>Memberships in the base at window start</td><td>17</td></tr><tr><td>Memberships that ended inside the window</td><td>1</td></tr><tr><td>Logo churn</td><td>5.9%</td></tr><tr><td>Recurring revenue churn (gross)</td><td>5.7% — 760.00 of 13,246.00</td></tr></tbody></table>
+<p class="formula"><span class="lbl">Formula</span>memberships canceled in 2026-06-01..2026-07-01 / active memberships at start of 2026-06-01..2026-07-01</p>
+<p class="formula"><span class="lbl">Formula</span>recurring revenue lost to cancellations and downgrades in 2026-06-01..2026-07-01 / recurring revenue at start of 2026-06-01..2026-07-01 (gross; expansion reported separately)</p>
+<p class="callout">Base = memberships whose start_date &lt;= window start and (no end_date or end_date &gt;= window start). Canceled = base memberships whose end_date falls inside the window with a terminal status. Churn is gross: expansion is not netted against losses. Memberships marked active past their end date are excluded and reported as a data-integrity finding.</p>
+<p class="muted">Members who both joined and left inside the window were not in the base and are excluded; notice dates are not treated as end dates.</p>
+<div class="not-measurable"><strong>Excluded from churn — data integrity problem first</strong><p>Memberships marked active past their end date: M-011. They are left out of the churn arithmetic because the export does not say whether they were renewed or have ended.</p></div>
+<h4>Agreements reaching a cliff in the next 90 days</h4>
+<table class="grid"><thead><tr><th>Membership</th><th>Company</th><th>Cliff</th><th>Days</th><th>Contracted</th><th>List</th><th>Evidence (no score attached)</th></tr></thead><tbody><tr><td>M-004</td><td>C-DELTA</td><td>2026-08-01</td><td>31</td><td>2,000.00</td><td>2,800.00</td><td>renewal-to-list jump would be 28.6% (renewal-shock risk); payment friction: INV-1004 failed</td></tr><tr><td>M-007</td><td>C-GALE</td><td>2026-08-01</td><td>31</td><td>315.00</td><td>350.00</td><td>renewal-to-list jump would be 10.0% (renewal-shock risk)</td></tr><tr><td>M-013</td><td>C-LUMA</td><td>2026-08-01</td><td>31</td><td>320.00</td><td>350.00</td><td>renewal-to-list jump would be 8.6% (renewal-shock risk)</td></tr><tr><td>M-005</td><td>C-EAST</td><td>2026-08-31</td><td>61</td><td>3,400.00</td><td>3,500.00</td><td>notice already given (2026-06-15); renewal-to-list jump would be 2.9% (renewal-shock risk)</td></tr><tr><td>M-001</td><td>C-ACME</td><td>2026-09-01</td><td>62</td><td>1,300.00</td><td>1,400.00</td><td>renewal-to-list jump would be 7.1% (renewal-shock risk); company holds multiple active memberships (expansion relationship - handle as one account)</td></tr></tbody></table>
+<p class='muted'>Month-to-month agreements (no end date recorded, listed separately): M-008</p>
+<p class="muted">Deliberately no numeric risk score: evidence lists only, per the explainability rule.</p><h3>Findings</h3><div class="findings">
+<article class="finding" id="finding-1">
+  <header>
+    <div class="finding-head">
+      <h3>2 invoice(s) failed or overdue, 2350 outstanding</h3>
+      <div class="tags"><span class="tag tag-calculation" title="Arithmetic on the exports, with the formula shown.">CALCULATION</span>
+        <span class="conf conf-low">confidence: low</span>
+        <span class="module">collections</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">Aging and the suggested internal approach per invoice are in the Collections section.</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>invoices.csv (17 rows)</dd>
+    <dt>Calculation</dt><dd>sum of the amount column for invoices with status failed or overdue</dd>
+    <dt>Confidence</dt><dd>low — small denominator (2 records)</dd>
+    <dt>Limitation</dt><dd>Export status is a snapshot: payments may have landed since the export was produced, and deposits or credits already applied are not netted off.</dd>
+  </dl>
+  
+</article>
+<article class="finding" id="finding-2">
+  <header>
+    <div class="finding-head">
+      <h3>Trailing 30-day churn: 1 of 17 memberships (5.9%), 760 MRR lost (5.7%)</h3>
+      <div class="tags"><span class="tag tag-calculation" title="Arithmetic on the exports, with the formula shown.">CALCULATION</span>
+        <span class="conf conf-high">confidence: high</span>
+        <span class="module">churn</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">Window 2026-06-01 to 2026-07-01; base MRR 13246.</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>memberships.csv (19 rows)</dd>
+    <dt>Calculation</dt><dd>Base = memberships whose start_date &lt;= window start and (no end_date or end_date &gt;= window start). Canceled = base memberships whose end_date falls inside the window with a terminal status. Churn is gross: expansion is not netted against losses. Memberships marked active past their end date are excluded and reported as a data-integrity finding.</dd>
+    <dt>Confidence</dt><dd>high — inputs complete, mapping exact, no data-quality findings on the records used</dd>
+    <dt>Limitation</dt><dd>Members who both joined and left inside the window were not in the base and are excluded; notice dates are not treated as end dates.</dd>
+  </dl>
+  
+</article>
+<article class="finding" id="finding-3">
+  <header>
+    <div class="finding-head">
+      <h3>5 agreement(s) reach a renewal or end cliff in the next 90 days (7335 monthly)</h3>
+      <div class="tags"><span class="tag tag-calculation" title="Arithmetic on the exports, with the formula shown.">CALCULATION</span>
+        <span class="conf conf-high">confidence: high</span>
+        <span class="module">churn</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">Cliffs: M-004 on 2026-08-01 (31d), M-007 on 2026-08-01 (31d), M-013 on 2026-08-01 (31d), M-005 on 2026-08-31 (61d), M-001 on 2026-09-01 (62d)</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>invoices.csv (17 rows); memberships.csv (19 rows)</dd>
+    <dt>Calculation</dt><dd>min(end_date, renewal_date) inside the window for active memberships; sum of the listed contracted rates</dd>
+    <dt>Confidence</dt><dd>high — dates and rates are read directly from the membership export</dd>
+    <dt>Limitation</dt><dd>Deliberately no risk score: the evidence lists (notice given, renewal-to-list jump, payment friction, multi-membership accounts) are attached to each agreement in the bundle for a human to weigh.</dd>
+  </dl>
+  
+</article></div></section>
+<section class="report-section" id="s9"><h2>9. Portfolio detail (locations, systems, rooms, pricing)</h2><h3>Location scorecard (normalized per sellable workstation)</h3>
+<table class="grid"><thead><tr><th>Location</th><th>Sellable capacity</th><th>Workstation occupancy</th><th>Financial occupancy</th><th>Revenue / workstation</th><th>Leads</th><th>Lead to tour</th><th>Failed/overdue</th></tr></thead><tbody><tr><td>Northstar Downtown</td><td>50</td><td>62.0%</td><td>72.5%</td><td>189.30</td><td>17</td><td>41.2%</td><td>2</td></tr><tr><td>Northstar Riverside</td><td>16</td><td>43.8%</td><td>42.6%</td><td>145.00</td><td>5</td><td>40.0%</td><td>0</td></tr></tbody></table>
+<p class="muted">Occupancies are ratios; revenue and lead volume are normalized per sellable workstation (x10 for leads) so location size does not masquerade as performance.</p>
+<h3>CRM and WMS reconciliation</h3>
+<table class="grid"><thead><tr><th>Measure</th><th>Value</th></tr></thead><tbody><tr><td>companies in crm</td><td>26</td></tr><tr><td>companies with won deals</td><td>2</td></tr><tr><td>companies with active memberships</td><td>17</td></tr><tr><td>exact id matches</td><td></td></tr><tr><td>probable name matches</td><td></td></tr></tbody></table>
+<table class="grid"><thead><tr><th>Check</th><th>Record</th><th>Detail</th></tr></thead><tbody><tr><td>won_deals_without_membership</td><td>—</td><td>CRM says sold; WMS has no active/pending membership.</td></tr><tr><td>memberships_without_won_deal</td><td>—</td><td>WMS bills these companies; CRM never recorded a won deal - history, migration gap, or untracked sale.</td></tr></tbody></table>
+<p class='muted'>Items awaiting a human decision (never merged automatically): {&#x27;type&#x27;: &#x27;duplicate_person&#x27;, &#x27;confidence&#x27;: 0.9, &#x27;contact_ids&#x27;: [&#x27;CT-9001&#x27;, &#x27;CT-9014&#x27;], &#x27;basis&#x27;: &#x27;same email ([EMAIL-728c45c1])&#x27;, &#x27;action&#x27;: &#x27;Human merge decision; do not auto-merge.&#x27;}</p>
+<p class="muted">Durable fix: one shared company_id (the WMS id is usually the better anchor - it bills) stored as an external-ID field in the CRM, plus contact email as the person-level key. Never rely on name equality.</p>
+<h3>Virtual office / partner reconciliation</h3>
+<table class="grid"><thead><tr><th>Measure</th><th>Value</th></tr></thead><tbody><tr><td>Active virtual-office memberships</td><td>4</td></tr><tr><td>Active partner-billed clients</td><td>3</td></tr></tbody></table>
+<table class="grid"><thead><tr><th>Check</th><th>Company</th><th>Partner</th><th>Detail</th></tr></thead><tbody><tr><td>partner_client_without_membership</td><td>C-PARTB</td><td>MailNation Demo</td><td>Partner bills for this client but no active virtual-office membership exists; fulfillment obligation may be untracked.</td></tr><tr><td>possible_double_billing</td><td>C-PARTC</td><td>MailNation Demo</td><td>Partner-billed client also has operator invoices; verify the operator invoices are for add-ons, not the base service.</td></tr><tr><td>direct_vo_client_never_invoiced</td><td>C-DIRECTVO</td><td>—</td><td>Active direct virtual-office membership with no invoice on record.</td></tr></tbody></table>
+<p class="muted">Reconciliation matches on company_id only; name-based fuzzy matching is deliberately not attempted. Fix IDs at the source.</p>
+<h3>Meeting and event room yield</h3>
+<table class="grid"><thead><tr><th>Room</th><th>Type</th><th>Bookings</th><th>Booked hours</th><th>Gross revenue</th><th>Revenue / hour</th><th>Utilization</th><th>Zero-charge bookings</th></tr></thead><tbody><tr><td>EV-1</td><td>event-space</td><td>1</td><td>4</td><td>900.00</td><td>225.00</td><td>not measured (no bookable hours declared)</td><td>0</td></tr><tr><td>MR-1</td><td>meeting-room</td><td>3</td><td>5</td><td>0.00</td><td>0.00</td><td>not measured (no bookable hours declared)</td><td>3</td></tr><tr><td>MR-2</td><td>meeting-room</td><td>3</td><td>12</td><td>780.00</td><td>65.00</td><td>not measured (no bookable hours declared)</td><td>0</td></tr><tr><td>MR-3</td><td>meeting-room</td><td>1</td><td>1</td><td>0.00</td><td>0.00</td><td>not measured (no bookable hours declared)</td><td>1</td></tr></tbody></table>
+<p class="muted">Utilization omitted: no bookable hours declared. Pass --open-hours-per-day to compute it; booked hours alone are reported instead.</p>
+<h3>Units priced well below list</h3>
+<table class="grid"><thead><tr><th>Unit</th><th>Product</th><th>Contracted</th><th>List</th><th>Below list</th></tr></thead><tbody><tr><td>OF-105</td><td>office</td><td>2,000.00</td><td>2,800.00</td><td>28.6%</td></tr></tbody></table>
+<ul class='assumptions'><li>Promotional expiry dates are not modeled in the schema; discount duration requires the operator&#x27;s promo records.</li><li>Deep-discount threshold: 25% (configurable).</li><li>No market-price comparison is made - that requires credible market evidence this tool does not have. Repricing decisions are human.</li></ul><h3>Findings</h3><div class="findings">
+<article class="finding" id="finding-1">
+  <header>
+    <div class="finding-head">
+      <h3>Meeting and event rooms booked 22 hours for 1680 gross</h3>
+      <div class="tags"><span class="tag tag-calculation" title="Arithmetic on the exports, with the formula shown.">CALCULATION</span>
+        <span class="conf conf-medium">confidence: medium</span>
+        <span class="module">rooms</span>
+      </div>
+    </div>
+  </header>
+  <p class="statement">Per-room yield and (when bookable hours are declared) utilization are in the bundle.</p>
+  <dl class="contract">
+    <dt>Data used</dt>
+    <dd>inventory.csv (26 rows); room-bookings.csv (8 rows)</dd>
+    <dt>Calculation</dt><dd>sum of booking durations and amounts; zero-charge bookings include both plan-included and comped bookings, which the export cannot separate</dd>
+    <dt>Confidence</dt><dd>medium — booking exports frequently omit internal or plan-included usage</dd>
+    <dt>Limitation</dt><dd>Utilization is only reported when the operator declares bookable hours per day.</dd>
+  </dl>
+  
+</article></div></section>
+<section class="report-section" id="s10"><h2>10. Top 5 opportunities</h2>
+<article class="opportunity" id="opp-departures">
+  <div class="opp-head">
+    <span class="rank">1</span>
+    <h3>Backfill or renew the contracts ending inside 90 days</h3>
+  </div>
+  <div class="opp-body">
+    <div class="opp-amount"><span class="amount">3,400.00</span><span class="amount-unit">per month of recurring revenue at risk</span></div>
+    <dl class="contract">
+      <dt>Evidence</dt><dd>Departing agreements: M-005</dd>
+      <dt>Calculation</dt><dd>sum of contracted_rate for memberships with a recorded departure inside the 90-day horizon</dd>
+      <dt>First step</dt><dd>List the releasing inventory now and open a renewal conversation per agreement.</dd>
+      <dt>Owner / window</dt><dd>sales · 30
+        days to first impact</dd>
+      <dt>Confidence</dt><dd><span class="conf conf-high">
+        high</span></dd>
+      <dt>Limitation</dt><dd>End dates are recorded intentions; a renewal can still change the picture, and MRR is only shown when the contracted rates are present.</dd>
+    </dl>
+  </div>
+</article>
+<article class="opportunity" id="opp-unbilled">
+  <div class="opp-head">
+    <span class="rank">2</span>
+    <h3>Bill or correct the active memberships with no invoice in 45 days</h3>
+  </div>
+  <div class="opp-body">
+    <div class="opp-amount"><span class="amount">2,088.00</span><span class="amount-unit">per month of recurring revenue at risk</span></div>
+    <dl class="contract">
+      <dt>Evidence</dt><dd>M-011; M-016; M-017</dd>
+      <dt>Calculation</dt><dd>sum of contracted_rate for active, non-complimentary memberships with no invoice issued in 45 days</dd>
+      <dt>First step</dt><dd>Run the billing-gap list past finance and re-issue or correct each record.</dd>
+      <dt>Owner / window</dt><dd>finance · now
+        days to first impact</dd>
+      <dt>Confidence</dt><dd><span class="conf conf-high">
+        high</span></dd>
+      <dt>Limitation</dt><dd>Includes partner-billed or prepaid arrangements that may be correct as they are; verify each record before billing.</dd>
+    </dl>
+  </div>
+</article>
+<article class="opportunity" id="opp-collections">
+  <div class="opp-head">
+    <span class="rank">3</span>
+    <h3>Work the failed and overdue invoice queue in aging order</h3>
+  </div>
+  <div class="opp-body">
+    <div class="opp-amount"><span class="amount">2,350.00</span><span class="amount-unit">one-time balance outstanding</span></div>
+    <dl class="contract">
+      <dt>Evidence</dt><dd>INV-1004; INV-1006</dd>
+      <dt>Calculation</dt><dd>sum of invoice amounts with status failed or overdue</dd>
+      <dt>First step</dt><dd>Start with the oldest band, verify the payment method, then make personal contact.</dd>
+      <dt>Owner / window</dt><dd>finance · now
+        days to first impact</dd>
+      <dt>Confidence</dt><dd><span class="conf conf-medium">
+        medium</span></dd>
+      <dt>Limitation</dt><dd>Export status is a snapshot; some invoices may already be settled or partially credited.</dd>
+    </dl>
+  </div>
+</article>
+<article class="opportunity" id="opp-churn">
+  <div class="opp-head">
+    <span class="rank">4</span>
+    <h3>Review what left in the trailing churn window</h3>
+  </div>
+  <div class="opp-body">
+    <div class="opp-amount"><span class="amount amount-soft">760.00</span><span class="amount-unit">per month of recurring revenue that has already left</span></div>
+    <dl class="contract">
+      <dt>Evidence</dt><dd>Canceled: M-014</dd>
+      <dt>Calculation</dt><dd>sum of contracted_rate for base memberships ending inside the window</dd>
+      <dt>First step</dt><dd>Interview the departing accounts for the real reason and check the pattern against onboarding and support history.</dd>
+      <dt>Owner / window</dt><dd>community · 30
+        days to first impact</dd>
+      <dt>Confidence</dt><dd><span class="conf conf-medium">
+        medium</span></dd>
+      <dt>Limitation</dt><dd>Churn is gross and rate-based; expansion is not netted off and departures may have been deliberate plan changes.</dd>
+    </dl>
+  </div>
+</article>
+<article class="opportunity" id="opp-oos">
+  <div class="opp-head">
+    <span class="rank">5</span>
+    <h3>Set a repair-or-relist date for the out-of-service units</h3>
+  </div>
+  <div class="opp-body">
+    <div class="opp-amount"><span class="amount amount-soft">1,400.00</span><span class="amount-unit">per month of list value; erosion, not cash</span></div>
+    <dl class="contract">
+      <dt>Evidence</dt><dd>Units: OF-104</dd>
+      <dt>Calculation</dt><dd>sum of list_price for units flagged out_of_service</dd>
+      <dt>First step</dt><dd>Confirm the repair date with facilities; if none exists, re-list or repurpose.</dd>
+      <dt>Owner / window</dt><dd>owner · 30
+        days to first impact</dd>
+      <dt>Confidence</dt><dd><span class="conf conf-medium">
+        medium</span></dd>
+      <dt>Limitation</dt><dd>List value, not lost revenue: the unit may be genuinely unusable.</dd>
+    </dl>
+  </div>
+</article></section>
+<section class="report-section" id="s11"><h2>11. 90-day action plan</h2><table class="grid"><thead><tr><th>Window</th><th>Action</th><th>Owner</th><th>First step</th><th>Confidence</th></tr></thead><tbody><tr><td>Next 14 days</td><td>Bill or correct the active memberships with no invoice in 45 days</td><td>finance</td><td>Run the billing-gap list past finance and re-issue or correct each record.</td><td>high</td></tr><tr><td>Next 14 days</td><td>Work the failed and overdue invoice queue in aging order</td><td>finance</td><td>Start with the oldest band, verify the payment method, then make personal contact.</td><td>medium</td></tr><tr><td>Days 15-45</td><td>Backfill or renew the contracts ending inside 90 days</td><td>sales</td><td>List the releasing inventory now and open a renewal conversation per agreement.</td><td>high</td></tr><tr><td>Days 15-45</td><td>Review what left in the trailing churn window</td><td>community</td><td>Interview the departing accounts for the real reason and check the pattern against onboarding and support history.</td><td>medium</td></tr><tr><td>Days 15-45</td><td>Set a repair-or-relist date for the out-of-service units</td><td>owner</td><td>Confirm the repair date with facilities; if none exists, re-list or repurpose.</td><td>medium</td></tr></tbody></table><p class="muted">Actions are drawn only from the ranked opportunities above, each traceable to a finding with its own evidence and limitation. Owners are role labels (owner, finance, sales, community), not names.</p></section>
+<section class="report-section" id="s12"><h2>12. Methodology and formulas</h2><h3>Engagement parameters</h3>
+<table class="grid"><thead><tr><th>Item</th><th>Value</th></tr></thead><tbody><tr><td>Service</td><td>Coworking Revenue &amp; Operations Health Check</td></tr><tr><td>Service version</td><td>1.0</td></tr><tr><td>Engine version</td><td>0.1.0</td></tr><tr><td>Client</td><td>Northstar Coworking Demo</td></tr><tr><td>As-of date (every metric is stated at this date)</td><td>2026-07-01</td></tr><tr><td>Run at</td><td>2026-07-21T00:00:00+00:00</td></tr><tr><td>Churn window</td><td>30 days</td></tr><tr><td>Renewal window</td><td>90 days</td></tr><tr><td>Staleness threshold</td><td>21 days</td></tr><tr><td>Deep-discount threshold</td><td>25%</td></tr><tr><td>Forward horizons</td><td>30, 60, 90, 180</td></tr><tr><td>Input screening policy</td><td>report</td></tr><tr><td>Currency</td><td>The exports carry no currency symbol or code, so amounts are printed as the source system supplied them (no currency was assumed and no conversion was performed).</td></tr><tr><td>Command</td><td>opencoworking health-check --input examples/health-check-engagement/client-export --output examples/health-check-engagement/reports/northstar-demo --client &quot;Northstar Coworking Demo&quot; --as-of 2026-07-01</td></tr></tbody></table>
+<h3>Formulas used (numerator / denominator / exclusions)</h3>
+<table class="grid"><thead><tr><th>Metric</th><th>Numerator</th><th>Denominator</th><th>Formula</th><th>Excludes</th></tr></thead><tbody><tr><td>office_occupancy</td><td>5</td><td>7</td><td>occupied sellable in-service offices / sellable in-service offices</td><td>out-of-service units, non-sellable units</td></tr><tr><td>workstation_occupancy</td><td>38</td><td>66</td><td>workstation capacity of occupied sellable in-service units / total sellable in-service workstation capacity</td><td>out-of-service units, non-sellable units</td></tr><tr><td>financial_occupancy</td><td>11785</td><td>18500</td><td>contracted recurring revenue of occupied priced units / list-price total of all priced sellable in-service units</td><td>out-of-service units, non-sellable units, units without a list price (both sides)</td></tr></tbody></table>
+<h3>Every finding in this engagement</h3>
+<table class="grid"><thead><tr><th>#</th><th>Class</th><th>Module</th><th>Finding</th><th>Confidence</th><th>Limitation</th></tr></thead><tbody><tr><td>1</td><td>FACT</td><td>data quality</td><td>Every input file was identified and structurally checked</td><td>high</td><td>Quality checks only cover structural problems the schema can express; business rules (correct stage names, real move-in dates) still need human verification.</td></tr><tr><td>2</td><td>CALCULATION</td><td>occupancy</td><td>Occupancy is three different numbers: 71.4% by office count, 57.6% by workstation, 63.7% financially</td><td>medium</td><td>Occupancy measures contracted inventory consumption, not attendance: no access-log data is involved, and units without a list price are excluded from the financial ratio on both sides.</td></tr><tr><td>3</td><td>CALCULATION</td><td>occupancy</td><td>Physical occupancy overstates paid occupancy by 7.7 percentage points</td><td>medium</td><td>A spread is arithmetic, not a cause: the flags name which units contribute, and attributing the gap to a strategy needs operator context.</td></tr><tr><td>4</td><td>FACT</td><td>occupancy</td><td>4 occupancy distortion flag(s) name specific units</td><td>high</td><td>Flags identify where the number is distorted; whether the distortion is intentional (comped desk, promotional rate) is an operator decision.</td></tr><tr><td>5</td><td>CALCULATION</td><td>occupancy</td><td>Contracted occupancy is 43.9% at 90 days (2026-09-29)</td><td>high</td><td>Contracted layer only: agreements with no end date are assumed to continue and no renewal probability is applied. Sales pipeline is not included.</td></tr><tr><td>6</td><td>CALCULATION</td><td>revenue leakage</td><td>3 active membership(s) with no invoice in 45 days: 2088/month at risk</td><td>low</td><td>A missing invoice is not proof of missing revenue: prepaid, annual, or partner-billed arrangements can legitimately sit outside the 45-day window. Verify each record before billing.</td></tr><tr><td>7</td><td>CALCULATION</td><td>collections</td><td>2 invoice(s) failed or overdue, 2350 outstanding</td><td>low</td><td>Export status is a snapshot: payments may have landed since the export was produced, and deposits or credits already applied are not netted off.</td></tr><tr><td>8</td><td>FACT</td><td>revenue leakage</td><td>1 unit(s) out of service, 1400/month of list value idle</td><td>high</td><td>List value is potential, not lost revenue: the unit may be genuinely unusable. The finding is a question about the repair date, not a number to book.</td></tr><tr><td>9</td><td>FACT</td><td>data quality</td><td>1 membership(s) marked active past their end date</td><td>high</td><td>Either a renewal was never recorded or billing is continuing on an expired agreement; both corrupt every occupancy and retention number until fixed.</td></tr><tr><td>10</td><td>FACT</td><td>tour conversion</td><td>2 completed tour(s) with no recorded next step</td><td>high</td><td>An empty next-action field means the outcome was not recorded; the follow-up may still have happened outside the CRM.</td></tr><tr><td>11</td><td>FACT</td><td>revenue leakage</td><td>1 won deal(s) with no active or pending membership</td><td>medium</td><td>Recorded outside the WMS, still onboarding, or a duplicate company ID; the CRM-WMS reconciliation section is the place to resolve it.</td></tr><tr><td>12</td><td>FACT</td><td>sales pipeline</td><td>3 record(s) in check &#x27;unfollowed_leads&#x27;</td><td>high</td><td>Records outside these exports (spreadsheets, inboxes, verbal promises) are invisible to every count in this report.</td></tr><tr><td>13</td><td>FACT</td><td>sales pipeline</td><td>2 record(s) in check &#x27;stale_open_deals_30d&#x27;</td><td>high</td><td>Records outside these exports (spreadsheets, inboxes, verbal promises) are invisible to every count in this report.</td></tr><tr><td>14</td><td>CALCULATION</td><td>sales pipeline</td><td>Pipeline hygiene: 7 issue(s) across 12 deal(s)</td><td>high</td><td>Hygiene only: this measures how well the pipeline is maintained, not whether the deals are winnable. Stage names must be the operator&#x27;s own.</td></tr><tr><td>15</td><td>INFERENCE</td><td>sales pipeline</td><td>Stale and unowned open deals are the pattern most likely to hide lost revenue</td><td>medium</td><td>Deal outcomes are unknown - the export has no win/loss over time, so this is a priority signal, not a measured loss.</td></tr><tr><td>16</td><td>CALCULATION</td><td>speed to lead</td><td>Median first response 30 business minutes 09:00-17:00 Mon-Fri, location-local timestamps, tail to 220 minutes</td><td>high</td><td>first_response_at may record an automated acknowledgement rather than a human contact attempt; an unrecorded call is indistinguishable from no response.</td></tr><tr><td>17</td><td>CALCULATION</td><td>tour conversion</td><td>Funnel: 22 leads -&gt; 9 with a tour (40.9%) -&gt; 5 tours completed</td><td>high</td><td>Counts are period-mixed unless the exports cover one period: a tour booked last quarter can appear against this quarter&#x27;s leads. </td></tr><tr><td>18</td><td>CALCULATION</td><td>churn</td><td>Trailing 30-day churn: 1 of 17 memberships (5.9%), 760 MRR lost (5.7%)</td><td>high</td><td>Members who both joined and left inside the window were not in the base and are excluded; notice dates are not treated as end dates.</td></tr><tr><td>19</td><td>CALCULATION</td><td>churn</td><td>5 agreement(s) reach a renewal or end cliff in the next 90 days (7335 monthly)</td><td>high</td><td>Deliberately no risk score: the evidence lists (notice given, renewal-to-list jump, payment friction, multi-membership accounts) are attached to each agreement in the bundle for a human to weigh.</td></tr><tr><td>20</td><td>FACT</td><td>revenue leakage</td><td>CRM and WMS disagree in 2 place(s)</td><td>medium</td><td>Nothing is merged or corrected by this tool; conflicting records need a human decision about which system is authoritative.</td></tr><tr><td>21</td><td>FACT</td><td>revenue leakage</td><td>Virtual-office reconciliation raised 3 finding(s)</td><td>medium</td><td>Double billing and unbilled fulfillment both need partner statements to confirm; the export alone cannot settle them.</td></tr><tr><td>22</td><td>CALCULATION</td><td>rooms</td><td>Meeting and event rooms booked 22 hours for 1680 gross</td><td>medium</td><td>Utilization is only reported when the operator declares bookable hours per day.</td></tr></tbody></table>
+<h3>Classification legend</h3>
+<ul class='assumptions'><li><strong>CALCULATION</strong> — Arithmetic on the exports, with the formula shown.</li><li><strong>FACT</strong> — Quoted from the export; no calculation involved.</li><li><strong>INFERENCE</strong> — A reading of the facts; not itself measured.</li><li><strong>RECOMMENDATION</strong> — A suggested action; a human decides.</li></ul>
+<h3>Input fingerprints (reproducibility)</h3>
+<p class='muted'>Content fingerprints are line-ending independent, so the same exports produce this report on any operating system.</p>
+<table class="grid"><thead><tr><th>File</th><th>Content fingerprint</th></tr></thead><tbody><tr><td>companies.csv</td><td>sha256:a77f82f27ff5608d (1330 normalized bytes)</td></tr><tr><td>contacts.csv</td><td>sha256:b6e7636ad9814126 (1852 normalized bytes)</td></tr><tr><td>deals.csv</td><td>sha256:433b93ecaa3f2770 (1440 normalized bytes)</td></tr><tr><td>events.csv</td><td>sha256:043b617ecdd6dc37 (223 normalized bytes)</td></tr><tr><td>inventory.csv</td><td>sha256:ff2fa5a871c3a152 (1867 normalized bytes)</td></tr><tr><td>invoices.csv</td><td>sha256:3b1501f55921e6ca (1202 normalized bytes)</td></tr><tr><td>leads.csv</td><td>sha256:cc884c228fc0c3a2 (2665 normalized bytes)</td></tr><tr><td>locations.csv</td><td>sha256:713530d794502c82 (286 normalized bytes)</td></tr><tr><td>members.csv</td><td>sha256:65f8138cf752dfad (645 normalized bytes)</td></tr><tr><td>memberships.csv</td><td>sha256:b3e34de4ab25bdd1 (2063 normalized bytes)</td></tr><tr><td>payments.csv</td><td>sha256:cd23df862db435b5 (771 normalized bytes)</td></tr><tr><td>reviews.csv</td><td>sha256:fdadfd414d08ebe2 (492 normalized bytes)</td></tr><tr><td>room-bookings.csv</td><td>sha256:75bb75d83273f544 (768 normalized bytes)</td></tr><tr><td>tours.csv</td><td>sha256:6dd6970263b10177 (968 normalized bytes)</td></tr><tr><td>virtual-office-partners.csv</td><td>sha256:4353683b735319e7 (314 normalized bytes)</td></tr></tbody></table>
+<h3>How opportunities were ranked</h3>
+<p>1) measured recurring revenue at risk, largest first; 2) measured one-time balances, largest first; 3) recurring revenue that has already left; 4) erosion of list value; 5) unquantified items ordered by severity class (data integrity, revenue leakage, churn, sales pipeline, tour conversion, speed to lead, occupancy, rooms) and then by id. Amounts are never extrapolated and never summed across different bases.</p>
+<p>Every amount is a sum of the records listed behind it, at the basis stated (recurring at risk, one-time balance, revenue already departed, or erosion of list value). Recurring and one-time amounts are deliberately not added together, and &#x27;erosion&#x27; figures are potential, not cash.</p></section>
+<section class="report-section" id="s13"><h2>13. Data limitations</h2><p class="callout">Every diagnostic whose inputs exist ran in this engagement: no module was skipped for missing data. Anything the supplied exports cannot answer is labelled NOT MEASURABLE inside the relevant section rather than estimated.</p>
+<h3>File not identified</h3>
+<ul class='assumptions'><li>events.csv matched no canonical entity from its column names, so no diagnostic used it; it is listed for human review only.</li><li>reviews.csv matched no canonical entity from its column names, so no diagnostic used it; it is listed for human review only.</li></ul>
+<h3>Context only (not analysed)</h3>
+<ul class='assumptions'><li>members.csv was identified as &#x27;members&#x27; but no diagnostic in this engagement consumes that export.</li></ul>
+<h3>Preflight warning</h3>
+<ul class='assumptions'><li>contacts.csv: contains direct identifiers in: first_name, last_name, email, phone</li><li>deals.csv: free-text columns can contain personal data and unstructured third-party content: lost_reason</li><li>inventory.csv: free-text columns can contain personal data and unstructured third-party content: notes</li><li>leads.csv: free-text columns can contain personal data and unstructured third-party content: lost_reason</li><li>locations.csv: contains direct identifiers in: address</li><li>reviews.csv: free-text columns can contain personal data and unstructured third-party content: text</li></ul>
+<h3>Engine limit</h3>
+<ul class='assumptions'><li>No market rates, benchmarks, or comparisons with other operators: every number describes this operator&#x27;s own exports only.</li><li>No attendance or utilization data is involved; occupancy is contracted inventory consumption, not physical presence.</li><li>Period alignment is the reviewer&#x27;s responsibility: exports that cover different date ranges mix periods in funnel and churn counts.</li><li>Anything living outside the supplied exports (email threads, verbal promises, off-system agreements, support history) is invisible here.</li><li>No legal, tax, or compliance conclusions; escalations beyond a conversation are for professionals.</li></ul>
+<h3>Review gate</h3>
+<ul class='assumptions'><li>This document is a draft until an operator reviews it and runs the finalize step. Nothing is sent to anyone by this tool.</li></ul></section>
+
+<footer>
+  <p><strong>Coworking Revenue &amp; Operations Health Check</strong> v1.0, engine
+  0.1.0. Produced by the open-source OpenCoworking engine —
+  the same deterministic tools the operator can run themselves, with no vendor lock-in.</p>
+  <p>Read-only analysis: this document was generated from exports supplied by the operator.
+  No client export was copied into the report directory, no personal identifier is printed,
+  and nothing was sent to anyone. Figures describe the supplied exports only; they are not
+  market benchmarks, and no revenue or retention outcome is promised.</p>
+</footer>
+</body>
+</html>

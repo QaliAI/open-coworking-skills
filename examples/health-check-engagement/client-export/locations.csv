@@ -1,0 +1,3 @@
+location_id,name,address,city,market,timezone,opened_on,status,sellable_workstations
+LOC-NOR,Northstar Downtown,100 Demo Ave,Springfield,Springfield CBD,America/Chicago,2023-04-01,open,54
+LOC-RIV,Northstar Riverside,42 Sample St,Springfield,Riverside,America/Chicago,2025-01-15,open,16

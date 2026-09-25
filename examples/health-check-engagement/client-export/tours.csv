@@ -1,0 +1,10 @@
+tour_id,lead_id,deal_id,location_id,scheduled_at,completed_at,status,toured_product,host,next_action
+T-3001,L-1001,D-2001,LOC-NOR,2026-06-05 14:00,2026-06-05 14:45,completed,private-office,casey,proposal sent 2026-06-06
+T-3002,L-1002,D-2007,LOC-NOR,2026-06-06 10:00,2026-06-06 10:40,completed,private-office,casey,
+T-3003,L-1003,D-2008,LOC-NOR,2026-06-04 11:00,2026-06-04 11:30,completed,dedicated-desk,riley,
+T-3004,L-1004,D-2009,LOC-RIV,2026-06-24 15:00,,no_show,private-office,casey,rebook
+T-3005,L-1005,D-2010,LOC-NOR,2026-05-12 10:00,,no_show,private-office,riley,
+T-3006,L-1006,D-2003,LOC-NOR,2026-07-03 13:00,,scheduled,team-suite,casey,host tour
+T-3007,L-1007,D-2011,LOC-NOR,2026-06-11 09:30,2026-06-11 09:50,completed,virtual-office,riley,follow-up call 2026-07-03
+T-3008,L-1016,,LOC-RIV,2026-06-22 16:00,,canceled,dedicated-desk,riley,
+T-3009,L-1009,D-2005,LOC-NOR,2026-06-02 15:00,2026-06-02 15:40,completed,private-office,casey,waiting on signed agreement
