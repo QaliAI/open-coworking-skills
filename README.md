@@ -63,7 +63,7 @@ core value; everything is also scriptable.
 | **Community manager** | The [daily brief](.agents/skills/coworking-daily-operator-brief/SKILL.md) (`--role community`) and [member onboarding](.agents/skills/coworking-member-onboarding/SKILL.md) | [Churn risk review](.agents/skills/coworking-churn-risk-review/SKILL.md) before renewal season |
 | **Sales manager** | [Pipeline health](.agents/skills/coworking-pipeline-health/SKILL.md) + [speed-to-lead](.agents/skills/coworking-speed-to-lead-auditor/SKILL.md) | Tour prep → follow-up → ghost recovery, in that order |
 | **Finance / bookkeeping** | [Collections prioritizer](.agents/skills/coworking-collections-prioritizer/SKILL.md) + [leakage audit](.agents/skills/coworking-revenue-leakage-audit/SKILL.md) | [VO reconciliation](.agents/skills/coworking-virtual-office-reconciliation/SKILL.md) if you have partner-billed clients |
-| **Consultant** | Run the whole toolkit on the [synthetic demos](examples/synthetic-space/README.md) first, then on a client's redacted exports | [CRM-WMS reconciliation](.agents/skills/coworking-crm-wms-reconciliation/SKILL.md) — it usually finds the engagement |
+| **Consultant** | The [Coworking Revenue & Operations Health Check](docs/HEALTH_CHECK_SERVICE.md) — one command, one reviewed deliverable. Try it on the [synthetic sample engagement](examples/health-check-engagement/README.md) first | [CRM-WMS reconciliation](.agents/skills/coworking-crm-wms-reconciliation/SKILL.md) — it usually finds the next engagement |
 | **Technical user / integrator** | [Technical quickstart](docs/getting-started/technical-quickstart.md), then the [adapter](.agents/skills/coworking-system-adapter-builder/SKILL.md) and [MCP builder](.agents/skills/coworking-mcp-builder/SKILL.md) skills | The [connector prototypes](src/opencoworking/connectors/) (mock-tested; read their status honestly) |
 
 ## The three modes, in one picture
@@ -162,6 +162,34 @@ Plus **22 planned skills** tracked in [`catalog/skills.yaml`](catalog/skills.yam
   decisions explicitly reserved for a human
 
 More: [examples/sample-requests/](examples/sample-requests/README.md).
+
+## Sell a coworking health check
+
+The repository ships one command that turns an operator's exports into a
+reviewable, print-ready engagement deliverable — the same engine the operator
+can run themselves, so there is nothing to lock anyone into:
+
+```bash
+opencoworking health-check --input ./client-export --output ./reports/client \
+  --client "Client Name" --as-of 2026-07-01
+```
+
+It screens the folder first (credentials, database dumps, card and ID data are
+refused before analysis), identifies each export from its column signatures,
+prints every column rename and every ambiguity it would not guess, runs the
+supported diagnostics, and writes a DRAFT report that a human reviews and then
+releases with `health-check-finalize`. Every finding is labelled FACT,
+CALCULATION, INFERENCE, or RECOMMENDATION with its data, formula, confidence,
+and limitation; anything the data cannot answer says NOT MEASURABLE instead of
+guessing. Nothing is emailed, uploaded, or sent to anyone by the tool.
+
+The whole path — what the client sends, the command, the review checklist, the
+released report, and the follow-on engagements each finding justifies — is
+documented in [docs/HEALTH_CHECK_SERVICE.md](docs/HEALTH_CHECK_SERVICE.md), with
+a fully synthetic worked example in
+[examples/health-check-engagement/](examples/health-check-engagement/README.md).
+Client work lives in a git-ignored `engagements/` directory
+([convention](engagements/README.md)); exports are never committed.
 
 ## Three operating modes
 

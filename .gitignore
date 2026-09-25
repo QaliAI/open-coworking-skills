@@ -14,6 +14,14 @@ real-data/
 customer-data/
 private/
 
+# Paid consulting engagements (the Coworking Revenue & Operations Health Check).
+# A client engagement holds real member data and must never be committed; the
+# directory layout convention is documented in engagements/README.md, which is
+# the only tracked file in there.
+engagements/*
+!engagements/README.md
+clients/
+
 # Temporary exports and working files
 *.tmp
 *.bak
