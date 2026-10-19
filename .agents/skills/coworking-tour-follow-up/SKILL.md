@@ -14,12 +14,12 @@ metadata:
 
 ## Purpose and operator problem
 
-The median coworking follow-up is "Great meeting you! Let me know if you
-have questions" — which transfers all the work to the prospect and creates
-zero urgency. A specific follow-up (what you saw, what it costs, what was
-promised, what happens next by when) closes materially better. This skill
-drafts it — and refuses to draft the generic version, because a required
-input is missing if only a generic version is possible.
+A generic "great meeting you, let me know" note leaves the prospect to
+reconstruct the tour, the price, and the next step. This skill drafts a
+follow-up that can only contain what the host actually showed, quoted, and
+promised, plus one dated next step. It refuses the generic version when
+those facts are missing. It does not claim a specific note closes more
+deals. The operator sends it.
 
 ## When to use
 

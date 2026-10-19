@@ -658,10 +658,43 @@ def collections_queue(invoices: Table, as_of: date, payments: Table | None = Non
 
 # --- Meeting / event yield ---------------------------------------------------
 
+_EXCLUDED_BOOKING_STATUS = {"cancelled", "canceled", "no_show", "noshow"}
+
+
+def _excluded_booking(row: Row, columns: set[str]) -> bool:
+    """True only when the export itself says the booking did not happen.
+
+    A blank status is not a no-show. Booked hours stay inclusive unless a
+    status, no_show, or cancellation column identifies the row.
+    """
+    if "status" in columns:
+        status = row.get("status", "").strip().lower().replace(" ", "_").replace("-", "_")
+        if status in _EXCLUDED_BOOKING_STATUS:
+            return True
+    for col in ("no_show", "cancelled", "canceled"):
+        if col in columns and _truthy(row.get(col, "")):
+            return True
+    return False
+
+
+def _daypart(hour: int) -> str:
+    if hour < 12:
+        return "morning"
+    if hour < 17:
+        return "afternoon"
+    return "evening"
+
+
 def room_yield(bookings: Table, inventory: Table,
                daily_open_hours: Decimal | None = None) -> dict[str, object]:
     """Per-room booked hours, revenue, and mix. Utilization only when the
-    operator declares daily bookable hours; otherwise honestly omitted."""
+    operator declares daily bookable hours; otherwise honestly omitted.
+
+    Cancelled bookings and no-shows are excluded from booked hours only when
+    the export carries a status or flag column that says so. Costs and setup
+    time are reported only when those columns exist, and a partial cost column
+    does not become a contribution margin.
+    """
     from dataclasses import dataclass
     from dataclasses import field as _field
 
@@ -674,34 +707,64 @@ def room_yield(bookings: Table, inventory: Table,
         member_bookings: int = 0
         nonmember_bookings: int = 0
         zero_charge_bookings: int = 0
+        excluded_bookings: int = 0
+        setup_minutes: Decimal = _field(default_factory=lambda: ZERO)
+        supplied_cost: Decimal = _field(default_factory=lambda: ZERO)
+        cost_rows: int = 0
 
+    columns = set(bookings.columns)
+    has_status = bool(columns & {"status", "no_show", "cancelled", "canceled"})
+    has_setup = "setup_minutes" in columns
+    has_cost = "cost" in columns
     room_types = {r.get("unit_id", "").strip(): r.get("unit_type", "").strip().lower()
                   for r in inventory.rows}
     per_room: dict[str, _RoomAgg] = {}
     dates: list[date] = []
+    dayparts = {"morning": 0, "afternoon": 0, "evening": 0}
+    unparseable = 0
+    excluded_total = 0
     for b in bookings.rows:
         start = parse_datetime(b.get("start_at", ""))
         end = parse_datetime(b.get("end_at", ""))
         if start is None or end is None or end <= start:
+            unparseable += 1
+            continue
+        rid = b.get("room_unit_id", "").strip()
+        room = per_room.setdefault(rid, _RoomAgg(room_types.get(rid, "unknown")))
+        if _excluded_booking(b, columns):
+            room.excluded_bookings += 1
+            excluded_total += 1
             continue
         dates.append(start.date())
-        rid = b.get("room_unit_id", "").strip()
         hours = Decimal(int((end - start).total_seconds())) / 3600
         amount = _money(b.get("amount", "")) or ZERO
         member = _truthy(b.get("member_booking", ""))
-        room = per_room.setdefault(rid, _RoomAgg(room_types.get(rid, "unknown")))
         room.bookings += 1
         room.booked_hours += hours
         room.revenue += amount
+        dayparts[_daypart(start.hour)] += 1
         if member:
             room.member_bookings += 1
         else:
             room.nonmember_bookings += 1
         if amount == 0:
             room.zero_charge_bookings += 1
+        if has_setup:
+            raw_setup = b.get("setup_minutes", "").strip()
+            if raw_setup:
+                try:
+                    room.setup_minutes += Decimal(raw_setup)
+                except ArithmeticError:
+                    pass
+        if has_cost:
+            parsed_cost = _money(b.get("cost", ""))
+            if parsed_cost is not None:
+                room.supplied_cost += parsed_cost
+                room.cost_rows += 1
     period = (min(dates).isoformat(), max(dates).isoformat()) if dates else (None, None)
     span_days = (max(dates) - min(dates)).days + 1 if dates else 0
     rooms_out = []
+    honored = sum(dayparts.values())
     for rid, agg in sorted(per_room.items()):
         booked = agg.booked_hours
         out: dict[str, object] = {
@@ -713,21 +776,62 @@ def room_yield(bookings: Table, inventory: Table,
             "member_bookings": agg.member_bookings,
             "nonmember_bookings": agg.nonmember_bookings,
             "zero_charge_bookings": agg.zero_charge_bookings,
+            "excluded_bookings": agg.excluded_bookings,
         }
+        if has_setup:
+            out["setup_hours"] = str((agg.setup_minutes / 60).quantize(Decimal("0.01")))
         if daily_open_hours is not None and span_days > 0:
             bookable = daily_open_hours * span_days
             out["bookable_hours_assumed"] = str(bookable)
             out["utilization"] = str((booked / bookable).quantize(Decimal("0.0001")))
+            if bookable > 0:
+                out["revenue_per_available_hour"] = str(
+                    (agg.revenue / bookable).quantize(Decimal("0.01")))
+        if has_cost:
+            if agg.cost_rows == agg.bookings and agg.bookings > 0:
+                out["operator_supplied_cost"] = str(agg.supplied_cost)
+                out["contribution"] = str(agg.revenue - agg.supplied_cost)
+            else:
+                out["contribution"] = None
+                out["contribution_note"] = (
+                    "Cost column was partial or blank; contribution margin was not "
+                    "computed. Missing costs are unknown, not zero.")
         rooms_out.append(out)
     result: dict[str, object] = {
         "observed_period": {"from": period[0], "to": period[1], "days": span_days},
         "rooms": rooms_out,
+        "excluded_bookings": excluded_total,
+        "unparseable_bookings": unparseable,
+        "dayparts": {
+            **dayparts,
+            "bookings_counted": honored,
+            "pattern_claim_allowed": honored >= 20,
+            "basis": "honored bookings with a parseable start; morning <12, "
+                     "afternoon <17, evening otherwise, in the timestamp's own clock",
+        },
         "definitions": [
-            "booked_hours = sum(end-start) of parseable bookings",
+            "booked_hours = sum(end-start) of parseable bookings that were not "
+            "identified as cancelled or no-show",
+            "booked is not used: the export does not record attendance",
             "zero_charge bookings include member-plan-included AND comped bookings - "
-            "the export cannot distinguish them; label accordingly",
-            "revenue_per_booked_hour = gross revenue / booked hours (per room)"],
+            "the export cannot distinguish them unless a cost or charge-type column "
+            "is present; label accordingly",
+            "revenue_per_booked_hour = gross revenue / booked hours (per room)",
+            "revenue_per_available_hour = gross revenue / declared bookable hours, "
+            "and only when bookable hours were declared",
+            "setup_hours are reported beside booked hours and are not added to them",
+        ],
     }
+    if has_status:
+        result["booking_status_note"] = (
+            f"{excluded_total} booking(s) were excluded from booked hours because a "
+            "status, no_show, or cancellation column marked them cancelled or no-show. "
+            "Rows with a blank status stayed in booked hours.")
+    else:
+        result["booking_status_note"] = (
+            "No status, no_show, or cancelled column was present. Cancelled bookings "
+            "and no-shows could not be separated, so every parseable booking is in "
+            "booked hours. Booked is not the same as used.")
     if daily_open_hours is None:
         result["utilization_note"] = ("Utilization omitted: no bookable hours declared. "
                                       "Pass --open-hours-per-day to compute it; booked "
@@ -735,7 +839,12 @@ def room_yield(bookings: Table, inventory: Table,
     else:
         result["utilization_note"] = (f"Utilization assumes {daily_open_hours} bookable "
                                       "hours every day of the observed period, including "
-                                      "weekends - adjust if your rooms close.")
+                                      "weekends - adjust if your rooms close. "
+                                      "revenue_per_available_hour uses that same denominator.")
+    if not has_cost:
+        result["contribution_note"] = (
+            "No cost column was supplied. Contribution margin was not computed. "
+            "Do not treat gross revenue as profit.")
     return result
 
 

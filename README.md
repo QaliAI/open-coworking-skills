@@ -63,7 +63,7 @@ core value; everything is also scriptable.
 | **Community manager** | The [daily brief](.agents/skills/coworking-daily-operator-brief/SKILL.md) (`--role community`) and [member onboarding](.agents/skills/coworking-member-onboarding/SKILL.md) | [Churn risk review](.agents/skills/coworking-churn-risk-review/SKILL.md) before renewal season |
 | **Sales manager** | [Pipeline health](.agents/skills/coworking-pipeline-health/SKILL.md) + [speed-to-lead](.agents/skills/coworking-speed-to-lead-auditor/SKILL.md) | Tour prep → follow-up → ghost recovery, in that order |
 | **Finance / bookkeeping** | [Collections prioritizer](.agents/skills/coworking-collections-prioritizer/SKILL.md) + [leakage audit](.agents/skills/coworking-revenue-leakage-audit/SKILL.md) | [VO reconciliation](.agents/skills/coworking-virtual-office-reconciliation/SKILL.md) if you have partner-billed clients |
-| **Consultant** | Run the whole toolkit on the [synthetic demos](examples/synthetic-space/README.md) first, then on a client's redacted exports | [CRM-WMS reconciliation](.agents/skills/coworking-crm-wms-reconciliation/SKILL.md) — it usually finds the engagement |
+| **Consultant** | The [Coworking Revenue & Operations Health Check](docs/HEALTH_CHECK_SERVICE.md) — one command, one reviewed deliverable. Try it on the [synthetic sample engagement](examples/health-check-engagement/README.md) first | [CRM-WMS reconciliation](.agents/skills/coworking-crm-wms-reconciliation/SKILL.md) — it usually finds the next engagement |
 | **Technical user / integrator** | [Technical quickstart](docs/getting-started/technical-quickstart.md), then the [adapter](.agents/skills/coworking-system-adapter-builder/SKILL.md) and [MCP builder](.agents/skills/coworking-mcp-builder/SKILL.md) skills | The [connector prototypes](src/opencoworking/connectors/) (mock-tested; read their status honestly) |
 
 ## The three modes, in one picture
@@ -104,8 +104,32 @@ operator — formulas, distortion flags, and all. Then try
 ## Installation into your AI tool
 
 Canonical skills live in [`.agents/skills/`](.agents/skills/) per the
-[Agent Skills open standard](https://agentskills.io/specification) — the
-directory Codex reads natively and `gh skill install` targets:
+[Agent Skills open standard](https://agentskills.io/specification).
+
+The skills CLI (npm package `skills`, tested locally on 2026-10-19 with
+Node 24.14.0) discovers this layout, including the hidden `.agents/`
+directory. It requires Node.js 22.20 or later. Project scope is the default.
+Add `-g` for a user-level install. The CLI can send anonymous usage telemetry.
+Set `DISABLE_TELEMETRY=1` to turn that off. This repository's own Python
+package does not phone home.
+
+```bash
+npx skills add QaliAI/open-coworking-skills --list
+npx skills add QaliAI/open-coworking-skills --skill coworking-pipeline-health
+npx skills add QaliAI/open-coworking-skills --all
+```
+
+`--list` prints the skills and installs nothing. `--skill` installs one.
+`--all` is the CLI's shorthand for every skill and every detected agent,
+and it skips the confirmation prompt. On 2026-10-19, `--list` against a
+local checkout of this repository found 37 skills, and installing
+`coworking-occupancy-revenue-dashboard` with `-a codex -y --copy` wrote a
+copy under `.agents/skills/` in a temporary project. The public GitHub form
+above works only after this repository is public. Until then, pass the
+local checkout path instead of `QaliAI/open-coworking-skills`.
+
+GitHub CLI remains a supported alternative. `gh` 2.92 does not see the
+hidden directory unless you pass `--allow-hidden-dirs`:
 
 ```bash
 gh skill install QaliAI/open-coworking-skills --all --allow-hidden-dirs
@@ -114,6 +138,8 @@ gh skill install QaliAI/open-coworking-skills --all --allow-hidden-dirs
 Per-host guides (Codex, Claude Code, Copilot, Cursor, Gemini CLI,
 OpenCode, Windsurf, Cline, Kiro, Antigravity, manual):
 [docs/platform-installation/](docs/platform-installation/README.md).
+Operators who do not want to pick a skill by name:
+[docs/CHOOSE_A_PLAYBOOK.md](docs/CHOOSE_A_PLAYBOOK.md).
 
 ## Production skills
 
@@ -133,7 +159,7 @@ OpenCode, Windsurf, Cline, Kiro, Antigravity, manual):
 | [`coworking-lead-source-normalizer`](.agents/skills/coworking-lead-source-normalizer/SKILL.md) | Sales and pipeline | Channel ROI decisions made on five spellings of the same source are decisions made on typos. | manual+export | R0 | stable |
 | [`coworking-lead-to-tour-diagnostic`](.agents/skills/coworking-lead-to-tour-diagnostic/SKILL.md) | Sales and pipeline | Every conversion problem gets misdiagnosed as a marketing-volume problem. | manual+export | R0 | stable |
 | [`coworking-tour-preparation`](.agents/skills/coworking-tour-preparation/SKILL.md) | Sales and pipeline | Cold-hosted tours re-ask known questions, show unavailable units, and end without a next step. | manual+export | R1 | stable |
-| [`coworking-tour-follow-up`](.agents/skills/coworking-tour-follow-up/SKILL.md) | Sales and pipeline | Generic "checking in" follow-ups transfer all work to the prospect and close poorly. | manual+export | R1 | stable |
+| [`coworking-tour-follow-up`](.agents/skills/coworking-tour-follow-up/SKILL.md) | Sales and pipeline | Generic follow-ups leave the prospect to reconstruct the price, the promise, and the next step. | manual+export | R1 | stable |
 | [`coworking-post-tour-ghost-recovery`](.agents/skills/coworking-post-tour-ghost-recovery/SKILL.md) | Sales and pipeline | Ghosted prospects get either abandoned or harassed; both lose the deal and the relationship. | manual+export | R1 | stable |
 | [`coworking-member-onboarding`](.agents/skills/coworking-member-onboarding/SKILL.md) | Community and retention | First-60-day churn traces to broken basics nobody owned - access, billing, introductions. | manual+export | R1 | stable |
 | [`coworking-churn-risk-review`](.agents/skills/coworking-churn-risk-review/SKILL.md) | Community and retention | Cancellation signals are visible weeks early but opaque scores don't tell a CM who to talk to about what. | manual+export | R0 | stable |
@@ -144,8 +170,21 @@ OpenCode, Windsurf, Cline, Kiro, Antigravity, manual):
 | [`coworking-cancellation-to-virtual-office`](.agents/skills/coworking-cancellation-to-virtual-office/SKILL.md) | Virtual office and mail | Canceling office members with continuing address/mail needs are lost entirely instead of down-sold respectfully. | manual+export | R1 | stable |
 | [`coworking-mcp-builder`](.agents/skills/coworking-mcp-builder/SKILL.md) | Integrations and adapters | Naive MCP servers over member data are PII leaks and billing incidents waiting to happen. | manual | R1 | stable |
 | [`coworking-system-adapter-builder`](.agents/skills/coworking-system-adapter-builder/SKILL.md) | Integrations and adapters | Without a disciplined adapter path every new platform request becomes "edit all skills". | manual | R1 | stable |
+| [`coworking-crm-wms-reconciliation`](.agents/skills/coworking-crm-wms-reconciliation/SKILL.md) | Business intelligence | CRM and WMS disagree about who is a customer - won deals without memberships, memberships without deals, conflicting names, values, and dates - and nobody knows which system to trust. | manual+export | R0 | beta |
+| [`coworking-daily-operator-brief`](.agents/skills/coworking-daily-operator-brief/SKILL.md) | Operations | Mornings start with ten open tabs and no prioritized list of leads awaiting response, today's tours, move-ins, renewals, and failed payments. | manual+export | R0 | beta |
+| [`coworking-occupancy-forecast`](.agents/skills/coworking-occupancy-forecast/SKILL.md) | Business intelligence | Nobody can answer "how many offices free up in the next 90 days" without spreadsheet archaeology. | manual+export | R0 | beta |
+| [`coworking-renewal-expansion-risk`](.agents/skills/coworking-renewal-expansion-risk/SKILL.md) | Community and retention | Renewals surface one by one instead of as a scanned portfolio with risk and expansion evidence. | manual+export | R0 | beta |
+| [`coworking-discount-pricing-audit`](.agents/skills/coworking-discount-pricing-audit/SKILL.md) | Finance and pricing | Discounts accrete silently until financial occupancy sags and nobody remembers why any given member pays what they pay. | manual+export | R0 | beta |
+| [`coworking-meeting-event-yield`](.agents/skills/coworking-meeting-event-yield/SKILL.md) | Business intelligence | Meeting rooms and event spaces are priced and scheduled blind without booked-hours, revenue-per-hour, and member/nonmember mix analysis. | manual+export | R0 | beta |
+| [`coworking-multi-location-benchmark`](.agents/skills/coworking-multi-location-benchmark/SKILL.md) | Business intelligence | Cross-location comparisons reward size instead of performance because nothing is normalized per sellable workstation. | manual+export | R0 | beta |
+| [`coworking-ai-concierge-knowledge-audit`](.agents/skills/coworking-ai-concierge-knowledge-audit/SKILL.md) | Foundation and governance | Member-facing chatbots and FAQ answers drift from approved pricing, capacities, and policies, and nobody audits them against source truth. | manual | R0 | beta |
+| [`coworking-data-migration-readiness`](.agents/skills/coworking-data-migration-readiness/SKILL.md) | Integrations and adapters | CRM/WMS migrations lose history, duplicate people, and break billing because nobody audits entity coverage and identifiers before cutover. | manual+export | R0 | beta |
+| [`coworking-unit-economics`](.agents/skills/coworking-unit-economics/SKILL.md) | Finance and pricing | Operators borrow a generic break-even occupancy because rent, payroll, and product margin were never computed from their own costs. | manual+export | R0 | beta |
+| [`coworking-tech-stack-integration-audit`](.agents/skills/coworking-tech-stack-integration-audit/SKILL.md) | Integrations and adapters | CRM, workspace, accounting, payments, and access systems are shallowly connected and membership data is retyped, but operators have no map of their own stack. | manual+export | R0 | beta |
+| [`coworking-operator-playbooks`](.agents/skills/coworking-operator-playbooks/SKILL.md) | Foundation and governance | Operators know the business question and should not have to know which of dozens of skills to open. | manual+export | R0 | beta |
+| [`coworking-collections-prioritizer`](.agents/skills/coworking-collections-prioritizer/SKILL.md) | Finance and pricing | Failed and overdue invoices chased in random order instead of by amount, age, and relationship risk. | manual+export | R0 | beta |
 
-Plus **22 planned skills** tracked in [`catalog/skills.yaml`](catalog/skills.yaml) and [ROADMAP.md](ROADMAP.md).
+Plus **22 planned skills** tracked in [`catalog/skills.yaml`](catalog/skills.yaml) and [ROADMAP.md](ROADMAP.md). Beta means complete and tested, not yet proven with an outside operator.
 <!-- catalog:end -->
 
 ## Example operator workflows
@@ -163,14 +202,44 @@ Plus **22 planned skills** tracked in [`catalog/skills.yaml`](catalog/skills.yam
 
 More: [examples/sample-requests/](examples/sample-requests/README.md).
 
+## Run a complete coworking health check
+
+The repository ships one command that turns an operator's exports into a
+reviewable report. An operator can run it. A consultant can use the same
+command as the engine under a paid engagement. The open-source resource
+comes first. There is nothing to lock anyone into:
+
+```bash
+opencoworking health-check --input ./client-export --output ./reports/client \
+  --client "Client Name" --as-of 2026-07-01
+```
+
+It screens the folder first (credentials, database dumps, card and ID data are
+refused before analysis), identifies each export from its column signatures,
+prints every column rename and every ambiguity it would not guess, runs the
+supported diagnostics, and writes a DRAFT report that a human reviews and then
+releases with `health-check-finalize`. Every finding is labelled FACT,
+CALCULATION, INFERENCE, or RECOMMENDATION with its data, formula, confidence,
+and limitation; anything the data cannot answer says NOT MEASURABLE instead of
+guessing. Nothing is emailed, uploaded, or sent to anyone by the tool.
+
+The whole path — what the client sends, the command, the review checklist, the
+released report, and the follow-on engagements each finding justifies — is
+documented in [docs/HEALTH_CHECK_SERVICE.md](docs/HEALTH_CHECK_SERVICE.md), with
+a fully synthetic worked example in
+[examples/health-check-engagement/](examples/health-check-engagement/README.md).
+Client work lives in a git-ignored `engagements/` directory
+([convention](engagements/README.md)); exports are never committed.
+
 ## Three operating modes
 
 1. **Guided manual** — answer questions, paste tables. No code, no
    credentials.
 2. **Export analysis** — CSV/XLSX exports through deterministic, tested
    Python (`opencoworking` CLI).
-3. **Connected** — optional future read-only connectors (MCP), never
-   required. See honest current status below.
+3. **Connected** — optional read-only connector prototypes for HubSpot and
+   OfficeRnD. They are mock-tested, not live-tested, and never required.
+   See the honest status below.
 
 Real before/after outputs from the demo data live in
 [examples/sample-outputs/](examples/sample-outputs/) — generated by
@@ -240,17 +309,18 @@ Fixtures are 100% synthetic (enforced by tests).
 
 ## Quality and evaluation
 
-Every skill has trigger evals and task evals; every computable output has
-command-based known-answer cases against **hand-computed** fixtures on
-**two** independent synthetic businesses (149 tests, 29 executed command
-evals). A 476-case trigger/collision suite exists, with two executed
-LLM-judged routing runs (476/476 on run 2) — see the
-[trigger report](docs/evals/trigger-collision-report.md) for exactly what
-"executed" means and what remains prepared-only. Maturity is transparent
-in the table above: **stable** = complete, tested, and reviewed; **beta**
-= complete and engine-tested but not yet operator-proven. Audit trail:
-[EXPERT_AUDIT.md](EXPERT_AUDIT.md) ·
-[RELEASE_READINESS.md](RELEASE_READINESS.md).
+Every installable skill has task evals. Computable outputs have
+command-based known-answer cases against hand-computed fixtures on two
+independent synthetic businesses. As of 2026-10-19 the suite collects
+**233 tests**. The eval runner executes **31 command cases** and checks
+the structure of **112 checklist cases**. The trigger file holds **518
+cases** across 37 skills (14 each). An LLM judge scored **476/476** on an
+earlier 34-skill run. That judge has not been re-run on the 42 cases added
+for unit economics, the tech-stack audit, and operator playbooks. See the
+[trigger report](docs/evals/trigger-collision-report.md). **Stable** means
+complete, tested, and reviewed. **Beta** means complete and tested, not yet
+proven with an outside operator. Current-state audit:
+[FINAL_RELEASE_AUDIT.md](FINAL_RELEASE_AUDIT.md).
 
 ## Troubleshooting (from real clean-install testing)
 
@@ -303,10 +373,17 @@ sounds like a guarantee is a bug; please report it.
 
 ## Project status
 
-Pre-release (`0.1.0-dev`), independently audited 2026-07-18
-([EXPERT_AUDIT.md](EXPERT_AUDIT.md)). 24 stable + 10 beta skills, an
-18-command tested CLI, two synthetic businesses with hand-computed
-answer keys, and mock-tested connector prototypes. No release tagged, no
-remote, no connector live-validated; CI has not yet run on GitHub. The
-release gate: [RELEASE_READINESS.md](RELEASE_READINESS.md); what's next:
+Version **0.1.0** in the package. The catalog has **24 stable**, **13 beta**,
+and **22 planned** skills (37 installable directories). The CLI has **23
+commands**, including `health-check`, `economics`, `stack-audit`, and `demo`.
+Two synthetic businesses carry hand-computed answer keys. HubSpot and
+OfficeRnD connectors are read-only prototypes tested against mocks, not
+against live or sandbox accounts. The repository is
+[QaliAI/open-coworking-skills](https://github.com/QaliAI/open-coworking-skills).
+GitHub Actions has run on `main` and on pull requests. Dependency Review
+fails when the dependency graph and GitHub Advanced Security are off. That
+failure is a repository setting, not a vulnerable dependency identified by
+the job. Older audits that say "no remote" or "CI has not run" describe
+July 2026 and are superseded by
+[FINAL_RELEASE_AUDIT.md](FINAL_RELEASE_AUDIT.md). What's next:
 [ROADMAP.md](ROADMAP.md).

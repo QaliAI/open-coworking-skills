@@ -1,0 +1,4 @@
+partner_id,partner_name,billing_model,client_company_id,monthly_fee,revenue_share_pct,active,start_date,end_date
+P-01,MailNation Demo,partner_billed,C-PARTA,89,30,true,2026-02-01,
+P-02,MailNation Demo,partner_billed,C-PARTB,89,30,true,2026-03-01,
+P-03,MailNation Demo,partner_billed,C-PARTC,89,30,true,2026-03-15,

@@ -1,0 +1,47 @@
+skill: coworking-unit-economics
+triggers:
+  positive:
+    - "What occupancy do we need to break even?"
+    - "Which products actually make money after rent?"
+    - "Are we full but underpriced against our own costs?"
+  negative:
+    - prompt: "What's our workstation occupancy this month?"
+      better_skill: coworking-occupancy-revenue-dashboard
+    - prompt: "Are discounts deeper than 25%?"
+      better_skill: coworking-discount-pricing-audit
+  ambiguous:
+    - prompt: "Is this location profitable?"
+      note: "Ask whether a monthly cost file exists. Without it, refuse a profit number and offer occupancy plus the list of missing cost categories."
+tasks:
+  - id: known-answer-coverage
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "economics",
+              "--costs", "tests/fixtures/unit-economics/costs.csv",
+              "--inventory", "tests/fixtures/unit-economics/inventory.csv",
+              "--memberships", "tests/fixtures/unit-economics/memberships.csv",
+              "--meeting-revenue", "300",
+              "--as-of", "2026-07-01", "--format", "json"]
+    expect_contains:
+      - '"fixed_monthly": "1600"'
+      - '"workstations_to_cover_fixed_costs": "4.00"'
+      - '"occupancy_to_cover_fixed_costs": "1.0000"'
+      - "unknown, not zero"
+      - "not an industry benchmark"
+  - id: refuses-typical-costs
+    kind: checklist
+    prompt: >
+      We don't have the P&L handy. Use a typical coworking rent and tell me
+      the break-even occupancy.
+    expected:
+      - Refuses to invent rent, payroll, CAM, or software
+      - Asks for the operator's monthly cost rows or stops
+      - Does not quote a universal occupancy percentage
+  - id: does-not-sum-unlike-products
+    kind: checklist
+    prompt: >
+      Add office profit, meeting-room profit, and virtual-office profit into
+      one number for the landlord.
+    expected:
+      - Refuses a single profit total when the bases differ or costs are unassigned
+      - Reports each measured product separately
+      - Says meeting contribution is not measured unless meeting revenue and a meeting cost row both exist

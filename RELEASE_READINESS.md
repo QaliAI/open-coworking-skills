@@ -1,3 +1,5 @@
+> Current state is [FINAL_RELEASE_AUDIT.md](FINAL_RELEASE_AUDIT.md), dated 2026-10-19. This file records the July 2026 readiness review. Do not quote its skill counts or CI statements as the present repository.
+
 # Release readiness
 
 Audit session 2026-07-18. This file records the CLEAN CONSUMER and HOST

@@ -134,9 +134,9 @@ and churn is basically zero thanks to our events program.'"
 
 | Statement | Class | Status | Fix |
 |---|---|---|---|
-| "Occupancy hit 92%" | calculation | MISMATCH — workstation occupancy from the June export is 76.0% (38/50); 92% matches unit-count office occupancy only if OOS units are included | State which occupancy: "Office occupancy (count) was 92% including one out-of-service office; workstation occupancy was 76%." |
-| "churn is basically zero" | calculation | UNSUPPORTED — one cancellation on 18 memberships in June = 5.6% logo churn | Report the number: "Logo churn was 5.6% (1 of 18)." |
-| "thanks to our events program" | hypothesis | UNLABELED CAUSAL CLAIM | "We hypothesize events help retention; we have not measured attendance vs churn." |
+| "Occupancy hit 92%" | calculation | MISMATCH — as of 2026-07-01 the Northstar export is office occupancy 0.7143 (5/7 sellable offices), workstation occupancy 0.5758 (38/66), financial occupancy 0.6370 (11785/18500). 92% matches none of the three. | Name the variant and the counts: "Workstation occupancy was 0.5758 (38/66). Office occupancy was 0.7143 (5/7). Financial occupancy was 0.6370." |
+| "churn is basically zero" | calculation | MISMATCH — logo churn for the window ending 2026-07-01 is 0.0588 (1 canceled membership, M-014, over 17 memberships active at the start of the window). Join-and-cancel inside the window stays out of the denominator. | "Logo churn was 0.0588 (1 of 17)." |
+| "thanks to our events program" | hypothesis | UNLABELED CAUSAL CLAIM | "Hypothesis: events help retention. Attendance versus churn was not measured." |
 
 ## Evals
 

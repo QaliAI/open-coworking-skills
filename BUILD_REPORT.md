@@ -1,3 +1,5 @@
+> Current state is [FINAL_RELEASE_AUDIT.md](FINAL_RELEASE_AUDIT.md), dated 2026-10-19. Sentences below that say there is no remote, or that CI has never run on GitHub, were true for this July 2026 build and are not true now.
+
 # Build report — initial OpenCoworking Skills build
 
 Build completed: 2026-07-18. Environment: Windows 11, git 2.49, Python

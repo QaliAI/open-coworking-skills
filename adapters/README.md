@@ -22,7 +22,7 @@ verify, not exact strings to trust blindly.
 
 ## Adapter contract
 
-A future connector (API or MCP server) must expose read-only accessors that
+Any additional connector (API or MCP server) must expose read-only accessors that
 emit rows in the canonical schema for: contacts, companies, leads, deals,
 tours, memberships, members, inventory, bookings, invoices, payments,
 check-ins, events. Requirements:

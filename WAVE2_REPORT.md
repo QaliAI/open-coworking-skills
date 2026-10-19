@@ -1,3 +1,5 @@
+> Current state is [FINAL_RELEASE_AUDIT.md](FINAL_RELEASE_AUDIT.md), dated 2026-10-19. The test total, command count, and "CI never executed on GitHub" line below describe 2026-07-18.
+
 # Wave 2 report
 
 Branch `expert-audit-wave-2`, 2026-07-18. Companion documents:

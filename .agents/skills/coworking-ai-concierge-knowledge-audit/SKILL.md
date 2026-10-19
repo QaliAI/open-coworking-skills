@@ -89,6 +89,21 @@ Verdicts, exactly one primary per answer:
    its expected answer, to re-run after each bot/knowledge update.
 6. High-risk answers (pricing, access promises, anything
    safety/legal-adjacent) get priority ordering in the fix list.
+7. List the channels the operator says the bot uses (site chat, email,
+   WhatsApp, voice, member app). The verdict is about the claim, not
+   the channel. Each channel still needs a named human escalation path.
+   A channel with no path is a finding.
+8. List the actions the bot is allowed to take: answer, recommend a
+   product, offer a tour, book a room, book a day pass, change a
+   membership, touch an invoice, or provision access. Knowledge audit
+   does not execute those actions. Any action beyond answering is
+   reported as a permission boundary. Writes require a separate human
+   approval design (`coworking-mcp-builder`). Do not test them by
+   booking a real room.
+9. Check intent coverage against the questions a front desk actually
+   gets: price by product, tour, day pass, room booking, invoice or
+   payment status, Wi-Fi, access, mail, and "talk to a person." A
+   missing intent is a gap. Do not invent the answer that should fill it.
 
 ## Decision logic
 

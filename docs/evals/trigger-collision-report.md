@@ -1,3 +1,5 @@
+> On 2026-10-19 the file holds 37 skills and 518 cases. The LLM-judged results below cover the earlier 476-case run. The 42 cases for unit economics, the tech-stack audit, and operator playbooks have not been judged by an LLM.
+
 # Trigger and collision evaluation report
 
 Audit session 2026-07-18, branch `expert-audit-wave-2`.

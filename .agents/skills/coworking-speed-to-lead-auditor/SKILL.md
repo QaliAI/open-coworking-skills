@@ -15,11 +15,12 @@ metadata:
 
 ## Purpose and operator problem
 
-Coworking demand is local and time-sensitive: someone touring spaces this
-week contacts several operators, and the one who answers first usually hosts
-the first tour. Teams believe they respond "within the hour"; the data
-usually disagrees. This skill measures the reality, in business time, and
-names the leads nobody ever touched.
+Coworking inquiries are local and time-stamped. Teams often believe they
+respond "within the hour". This skill measures first human contact in
+business minutes, keeps automated acknowledgments off that clock, and names
+every lead nobody contacted. It does not claim that a faster reply wins the
+tour. That is a separate question for the funnel, and only if the export
+contains both response times and tour outcomes.
 
 ## When to use
 

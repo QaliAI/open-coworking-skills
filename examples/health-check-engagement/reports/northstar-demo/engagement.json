@@ -1,0 +1,394 @@
+{
+  "service": {
+    "name": "Coworking Revenue & Operations Health Check",
+    "version": "1.0",
+    "engine_version": "0.1.0",
+    "status": "draft",
+    "review_required": true,
+    "status_label": "DRAFT REPORT - REVIEW REQUIRED"
+  },
+  "engagement": {
+    "client": "Northstar Coworking Demo",
+    "as_of": "2026-07-01",
+    "generated_at": "2026-07-21T00:00:00+00:00",
+    "input_root": "examples/health-check-engagement/client-export",
+    "churn_window_days": 30,
+    "renewal_window_days": 90,
+    "stale_days": 21,
+    "discount_pct": 25,
+    "horizons": [
+      30,
+      60,
+      90,
+      180
+    ],
+    "allow_unsafe": false,
+    "pii_policy": "report"
+  },
+  "command": "opencoworking health-check --input examples/health-check-engagement/client-export --output examples/health-check-engagement/reports/northstar-demo --client \"Northstar Coworking Demo\" --as-of 2026-07-01",
+  "status": "draft",
+  "review_required": true,
+  "inputs": {
+    "file_count": 15,
+    "ambiguities": [],
+    "context_only": [
+      "events.csv",
+      "members.csv",
+      "reviews.csv"
+    ],
+    "unusable": [],
+    "fingerprints": {
+      "companies.csv": "sha256:a77f82f27ff5608d (1330 normalized bytes)",
+      "contacts.csv": "sha256:b6e7636ad9814126 (1852 normalized bytes)",
+      "deals.csv": "sha256:433b93ecaa3f2770 (1440 normalized bytes)",
+      "events.csv": "sha256:043b617ecdd6dc37 (223 normalized bytes)",
+      "inventory.csv": "sha256:ff2fa5a871c3a152 (1867 normalized bytes)",
+      "invoices.csv": "sha256:3b1501f55921e6ca (1202 normalized bytes)",
+      "leads.csv": "sha256:cc884c228fc0c3a2 (2665 normalized bytes)",
+      "locations.csv": "sha256:713530d794502c82 (286 normalized bytes)",
+      "members.csv": "sha256:65f8138cf752dfad (645 normalized bytes)",
+      "memberships.csv": "sha256:b3e34de4ab25bdd1 (2063 normalized bytes)",
+      "payments.csv": "sha256:cd23df862db435b5 (771 normalized bytes)",
+      "reviews.csv": "sha256:fdadfd414d08ebe2 (492 normalized bytes)",
+      "room-bookings.csv": "sha256:75bb75d83273f544 (768 normalized bytes)",
+      "tours.csv": "sha256:6dd6970263b10177 (968 normalized bytes)",
+      "virtual-office-partners.csv": "sha256:4353683b735319e7 (314 normalized bytes)"
+    }
+  },
+  "input_files": [
+    {
+      "source": "companies.csv",
+      "role": "companies",
+      "rows": 26,
+      "entity_confidence": 1.0
+    },
+    {
+      "source": "contacts.csv",
+      "role": "contacts",
+      "rows": 22,
+      "entity_confidence": 1.0
+    },
+    {
+      "source": "deals.csv",
+      "role": "deals",
+      "rows": 12,
+      "entity_confidence": 1.0
+    },
+    {
+      "source": "events.csv",
+      "role": "(unidentified)",
+      "rows": 3,
+      "entity_confidence": 0.0
+    },
+    {
+      "source": "inventory.csv",
+      "role": "inventory",
+      "rows": 26,
+      "entity_confidence": 1.0
+    },
+    {
+      "source": "invoices.csv",
+      "role": "invoices",
+      "rows": 17,
+      "entity_confidence": 1.0
+    },
+    {
+      "source": "leads.csv",
+      "role": "leads",
+      "rows": 22,
+      "entity_confidence": 1.0
+    },
+    {
+      "source": "locations.csv",
+      "role": "locations",
+      "rows": 2,
+      "entity_confidence": 1.0
+    },
+    {
+      "source": "members.csv",
+      "role": "members",
+      "rows": 13,
+      "entity_confidence": 1.0
+    },
+    {
+      "source": "memberships.csv",
+      "role": "memberships",
+      "rows": 19,
+      "entity_confidence": 1.0
+    },
+    {
+      "source": "payments.csv",
+      "role": "payments",
+      "rows": 15,
+      "entity_confidence": 1.0
+    },
+    {
+      "source": "reviews.csv",
+      "role": "(unidentified)",
+      "rows": 4,
+      "entity_confidence": 0.0
+    },
+    {
+      "source": "room-bookings.csv",
+      "role": "room_bookings",
+      "rows": 8,
+      "entity_confidence": 1.0
+    },
+    {
+      "source": "tours.csv",
+      "role": "tours",
+      "rows": 9,
+      "entity_confidence": 1.0
+    },
+    {
+      "source": "virtual-office-partners.csv",
+      "role": "virtual_office_partners",
+      "rows": 3,
+      "entity_confidence": 1.0
+    }
+  ],
+  "metrics": {
+    "occupancy.office.value": "0.7143",
+    "occupancy.office.numerator": "5",
+    "occupancy.office.denominator": "7",
+    "occupancy.workstation.value": "0.5758",
+    "occupancy.workstation.numerator": "38",
+    "occupancy.workstation.denominator": "66",
+    "occupancy.financial.value": "0.6370",
+    "occupancy.financial.numerator": "11785",
+    "occupancy.financial.denominator": "18500",
+    "occupancy.flag_count": "4",
+    "leakage.unfollowed_leads.count": "3",
+    "leakage.stale_open_deals_30d.count": "2",
+    "leakage.completed_tours_without_next_action.count": "2",
+    "leakage.won_deals_without_membership.count": "1",
+    "leakage.active_memberships_without_recent_invoice.count": "3",
+    "leakage.active_memberships_without_recent_invoice.monthly_amount_at_risk": "2088",
+    "leakage.failed_or_overdue_invoices.count": "2",
+    "leakage.failed_or_overdue_invoices.amount_outstanding": "2350",
+    "leakage.out_of_service_inventory.count": "1",
+    "leakage.out_of_service_inventory.monthly_list_value_blocked": "1400",
+    "leakage.active_status_past_end_date.count": "1",
+    "pipeline.deal_count": "12",
+    "pipeline.stale_deals.count": "2",
+    "pipeline.missing_next_action.count": "2",
+    "pipeline.overdue_next_action.count": "1",
+    "pipeline.unassigned.count": "1",
+    "pipeline.invalid_stage.count": "0",
+    "pipeline.duplicate_open_deals.count": "1",
+    "speed_to_lead.responded_leads": "19",
+    "speed_to_lead.leads_without_response": "3",
+    "speed_to_lead.median_minutes": "30",
+    "speed_to_lead.p90_minutes": "90",
+    "speed_to_lead.max_minutes": "220",
+    "funnel.counts.leads": "22",
+    "funnel.counts.contacted": "19",
+    "funnel.counts.leads_with_tour": "9",
+    "funnel.counts.tours_completed": "5",
+    "funnel.counts.tour_no_shows": "2",
+    "funnel.counts.deals_won": "2",
+    "funnel.rates.lead_to_contact": "0.8636",
+    "funnel.rates.lead_to_tour": "0.4091",
+    "funnel.rates.tour_show_rate": "0.7143",
+    "funnel.rates.lead_to_won": "0.0909",
+    "collections.outstanding_total": "2350",
+    "collections.queue_size": "2",
+    "churn.base_memberships": "17",
+    "churn.canceled_memberships": "1",
+    "churn.base_mrr": "13246",
+    "churn.lost_mrr": "760",
+    "churn.logo_churn": "0.0588",
+    "churn.revenue_churn": "0.0574",
+    "renewals.agreements_in_window": "5",
+    "renewals.month_to_month": "1",
+    "forecast.h30.occupied": "39",
+    "forecast.h30.capacity": "66",
+    "forecast.h30.occupancy": "0.5909",
+    "forecast.h60.occupied": "39",
+    "forecast.h60.capacity": "66",
+    "forecast.h60.occupancy": "0.5909",
+    "forecast.h90.occupied": "29",
+    "forecast.h90.capacity": "66",
+    "forecast.h90.occupancy": "0.4394",
+    "forecast.departures_by_90d": "M-005",
+    "forecast.h180.occupied": "29",
+    "forecast.h180.capacity": "66",
+    "forecast.h180.occupancy": "0.4394",
+    "pricing.deep_discount_count": "1",
+    "locations.count": "2",
+    "inputs.file_count": "15",
+    "inputs.mapped_roles": "companies,contacts,deals,inventory,invoices,leads,locations,members,memberships,payments,room_bookings,tours,virtual_office_partners",
+    "findings.count": "22",
+    "metrics.count": "71"
+  },
+  "findings": [
+    {
+      "id": "dq-001",
+      "kind": "fact",
+      "module": "data quality",
+      "title": "Every input file was identified and structurally checked",
+      "confidence": "high"
+    },
+    {
+      "id": "occ-001",
+      "kind": "calculation",
+      "module": "occupancy",
+      "title": "Occupancy is three different numbers: 71.4% by office count, 57.6% by workstation, 63.7% financially",
+      "confidence": "medium"
+    },
+    {
+      "id": "occ-002",
+      "kind": "calculation",
+      "module": "occupancy",
+      "title": "Physical occupancy overstates paid occupancy by 7.7 percentage points",
+      "confidence": "medium"
+    },
+    {
+      "id": "occ-003",
+      "kind": "fact",
+      "module": "occupancy",
+      "title": "4 occupancy distortion flag(s) name specific units",
+      "confidence": "high"
+    },
+    {
+      "id": "rev-001",
+      "kind": "calculation",
+      "module": "occupancy",
+      "title": "Contracted occupancy is 43.9% at 90 days (2026-09-29)",
+      "confidence": "high"
+    },
+    {
+      "id": "rev-002",
+      "kind": "calculation",
+      "module": "revenue leakage",
+      "title": "3 active membership(s) with no invoice in 45 days: 2088/month at risk",
+      "confidence": "low"
+    },
+    {
+      "id": "rev-003",
+      "kind": "calculation",
+      "module": "collections",
+      "title": "2 invoice(s) failed or overdue, 2350 outstanding",
+      "confidence": "low"
+    },
+    {
+      "id": "rev-004",
+      "kind": "fact",
+      "module": "revenue leakage",
+      "title": "1 unit(s) out of service, 1400/month of list value idle",
+      "confidence": "high"
+    },
+    {
+      "id": "dq-002",
+      "kind": "fact",
+      "module": "data quality",
+      "title": "1 membership(s) marked active past their end date",
+      "confidence": "high"
+    },
+    {
+      "id": "conv-001",
+      "kind": "fact",
+      "module": "tour conversion",
+      "title": "2 completed tour(s) with no recorded next step",
+      "confidence": "high"
+    },
+    {
+      "id": "rev-005",
+      "kind": "fact",
+      "module": "revenue leakage",
+      "title": "1 won deal(s) with no active or pending membership",
+      "confidence": "medium"
+    },
+    {
+      "id": "pipe-unfollowed_leads",
+      "kind": "fact",
+      "module": "sales pipeline",
+      "title": "3 record(s) in check 'unfollowed_leads'",
+      "confidence": "high"
+    },
+    {
+      "id": "pipe-stale_open_deals_30d",
+      "kind": "fact",
+      "module": "sales pipeline",
+      "title": "2 record(s) in check 'stale_open_deals_30d'",
+      "confidence": "high"
+    },
+    {
+      "id": "pipe-001",
+      "kind": "calculation",
+      "module": "sales pipeline",
+      "title": "Pipeline hygiene: 7 issue(s) across 12 deal(s)",
+      "confidence": "high"
+    },
+    {
+      "id": "pipe-002",
+      "kind": "inference",
+      "module": "sales pipeline",
+      "title": "Stale and unowned open deals are the pattern most likely to hide lost revenue",
+      "confidence": "medium"
+    },
+    {
+      "id": "speed-001",
+      "kind": "calculation",
+      "module": "speed to lead",
+      "title": "Median first response 30 business minutes 09:00-17:00 Mon-Fri, location-local timestamps, tail to 220 minutes",
+      "confidence": "high"
+    },
+    {
+      "id": "conv-002",
+      "kind": "calculation",
+      "module": "tour conversion",
+      "title": "Funnel: 22 leads -> 9 with a tour (40.9%) -> 5 tours completed",
+      "confidence": "high"
+    },
+    {
+      "id": "churn-001",
+      "kind": "calculation",
+      "module": "churn",
+      "title": "Trailing 30-day churn: 1 of 17 memberships (5.9%), 760 MRR lost (5.7%)",
+      "confidence": "high"
+    },
+    {
+      "id": "churn-002",
+      "kind": "calculation",
+      "module": "churn",
+      "title": "5 agreement(s) reach a renewal or end cliff in the next 90 days (7335 monthly)",
+      "confidence": "high"
+    },
+    {
+      "id": "rev-006",
+      "kind": "fact",
+      "module": "revenue leakage",
+      "title": "CRM and WMS disagree in 2 place(s)",
+      "confidence": "medium"
+    },
+    {
+      "id": "rev-007",
+      "kind": "fact",
+      "module": "revenue leakage",
+      "title": "Virtual-office reconciliation raised 3 finding(s)",
+      "confidence": "medium"
+    },
+    {
+      "id": "rooms-001",
+      "kind": "calculation",
+      "module": "rooms",
+      "title": "Meeting and event rooms booked 22 hours for 1680 gross",
+      "confidence": "medium"
+    }
+  ],
+  "not_measured": [],
+  "artifacts": {
+    "report": "report.html",
+    "bundle": "bundle.json",
+    "preflight": "preflight.json",
+    "checklist": "REVIEW_CHECKLIST.md",
+    "manifest": "engagement.json"
+  },
+  "data_handling": {
+    "client_exports_copied": false,
+    "report_contains_personal_identifiers": false,
+    "identifiers_redacted": 1,
+    "note": "Only aggregate metrics, record identifiers, and column names are written to this directory. Raw export rows are never copied, and every string is passed through the engine's deterministic redactor."
+  }
+}

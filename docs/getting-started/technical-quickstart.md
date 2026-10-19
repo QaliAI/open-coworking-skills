@@ -18,7 +18,7 @@ python -m pip install -e ".[dev]"
 
 ```bash
 python -m pytest                          # unit + integration tests
-python scripts/validate_skills.py         # 24 skills pass
+python scripts/validate_skills.py         # every installable skill must pass
 python scripts/run_evals.py               # deterministic eval cases pass
 ```
 
@@ -49,6 +49,25 @@ python -m opencoworking.cli redact examples/synthetic-space/data/contacts.csv --
 Every command: reads inputs, never modifies them, writes only to stdout
 or an explicit `--output`, makes zero network calls, `--format json` for
 machine-readable output.
+
+## Run a full engagement (the paid-workflow command)
+
+`health-check` composes the analyses above into one reviewed deliverable:
+
+```bash
+python -m opencoworking.cli health-check `
+  --input examples/health-check-engagement/client-export `
+  --output examples/health-check-engagement/reports/northstar-demo `
+  --client "Northstar Coworking Demo" --as-of 2026-07-01 --force
+```
+
+It screens the input folder (refusing credentials, database dumps, card and ID
+data), identifies each export from its column signatures, prints every rename
+and refused ambiguity, runs every diagnostic whose inputs exist, and writes
+`report.html` labelled **DRAFT REPORT — REVIEW REQUIRED** plus
+`REVIEW_CHECKLIST.md` and `engagement.json`. After review:
+`python -m opencoworking.cli health-check-finalize --engagement <dir> --reviewer "<name>"`.
+Full service documentation: [docs/HEALTH_CHECK_SERVICE.md](../HEALTH_CHECK_SERVICE.md).
 
 ## Use with your own data
 

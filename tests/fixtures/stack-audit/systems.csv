@@ -1,0 +1,5 @@
+system,category,system_of_record,connected_to,id_quality,manual_reentry,write_enabled
+HubSpot,crm,true,OfficeRnD,weak,true,false
+OfficeRnD,wms,true,HubSpot;Stripe,strong,false,true
+Stripe,payments,true,,strong,false,false
+Salto,access,false,,unknown,true,false

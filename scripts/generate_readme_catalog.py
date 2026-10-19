@@ -25,14 +25,15 @@ def build_table() -> str:
     catalog = yaml.safe_load((REPO / "catalog" / "skills.yaml").read_text(encoding="utf-8"))
     categories = yaml.safe_load((REPO / "catalog" / "categories.yaml").read_text(encoding="utf-8"))
     cat_titles = {k: v["title"] for k, v in (categories.get("categories") or {}).items()}
-    stable = [e for e in catalog.get("skills", []) if e.get("status") == "stable"]
+    shipped = [e for e in catalog.get("skills", [])
+               if e.get("status") in {"stable", "beta"}]
     planned = [e for e in catalog.get("skills", []) if e.get("status") == "planned"]
 
     lines = [
         "| Skill | Category | What it does | Modes | Risk | Maturity |",
         "|---|---|---|---|---|---|",
     ]
-    for e in stable:
+    for e in shipped:
         modes = "+".join(e.get("modes", []))
         lines.append(
             f"| [`{e['name']}`](.agents/skills/{e['name']}/SKILL.md) "
@@ -41,7 +42,8 @@ def build_table() -> str:
             f"| {modes} | {e['risk'].upper()} | {e['status']} |")
     lines.append("")
     lines.append(f"Plus **{len(planned)} planned skills** tracked in "
-                 f"[`catalog/skills.yaml`](catalog/skills.yaml) and [ROADMAP.md](ROADMAP.md).")
+                 f"[`catalog/skills.yaml`](catalog/skills.yaml) and [ROADMAP.md](ROADMAP.md). "
+                 "Beta means complete and tested, not yet proven with an outside operator.")
     return "\n".join(lines)
 
 

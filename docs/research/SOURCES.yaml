@@ -245,3 +245,88 @@ sources:
     attribution_required: no
     restrictions: resolve the token endpoint and confirm field names against
       the live API reference before any live use
+
+# --- 2026-10-19 release research -------------------------------------------
+# The July comments above that say "no connector has been built" are stale.
+# HubSpot and OfficeRnD read-only prototypes exist and are mock-tested only.
+# Nothing below was copied into a skill. Figures are cited, not treated as
+# universal coworking standards.
+
+  - name: OfficeRnD 2026 Flex Space Tech Stack Report (Volume 2 landing page)
+    location: https://www.officernd.com/campaign/flex-space-tech-stack-report/
+    maintainer: OfficeRnD
+    date_accessed: "2026-10-19"
+    license: vendor marketing page; facts cited, no text copied into skills
+    knowledge_used: >-
+      Landing page fetched 2026-10-19. 334 operators surveyed, responses
+      collected 2024 through mid-2026 and de-duplicated. The page states
+      $5.4M combined ARR on the OfficeRnD platform, so this is a
+      vendor-platform sample, not an independent census. 68% name
+      integration gaps as the top technology challenge. 18% are using AI.
+      66% want easier integration over vendor consolidation. Time sinks on
+      the page: invoicing and billing 27%, member communication 21%,
+      contracts and quotes 20%. Connection data from 1,276 OfficeRnD
+      accounts: average 1.65 of five core systems connected; 14% connected
+      nothing; 1 of 1,276 has all five. Category leaders shown as 2025 to
+      2026: Stripe 77% to 85%, HubSpot 53% to 54%, QuickBooks 43% to 38%,
+      Xero 29% to 29%, Salto 37% to 36%. The page names the five categories
+      as payments, accounting, CRM, door access, and Wi-Fi. Used to justify
+      coworking-tech-stack-integration-audit. Not used as a benchmark inside
+      any metric.
+    usage: studied
+    attribution_required: yes, when a number from this page is repeated
+    restrictions: >-
+      Do not treat the percentages as an industry census. Do not imply
+      OfficeRnD endorses this repository.
+
+  - name: Daily Office News summary of the OfficeRnD integration survey
+    location: https://www.dailyofficenews.com/flex-operators-have-more-software-than-ever-so-why-is-the-admin-still-manual/
+    maintainer: Daily Office News (byline Rozenn)
+    date_accessed: "2026-10-19"
+    license: publisher terms; facts cited, article text not copied
+    knowledge_used: >-
+      Published 2026-10-07. Secondary report of the same OfficeRnD survey.
+      States integration concern rose from 61% to 68%, implementation cost
+      second at 52%, accounting essential 57% versus connected 40%, door
+      access essential 54% versus connected 30%, lack of real-time data 27%
+      up from 17%. Also states AI use fell from 26% to 18% and that OfficeRnD
+      cautions the AI comparison because the later survey asked about
+      specific functions. Used as a secondary reading of the vendor survey,
+      not as an independent dataset.
+    usage: studied
+    attribution_required: yes, when a number from this article is repeated
+    restrictions: secondary source; prefer the OfficeRnD landing page when the two differ
+
+  - name: Agent Skills specification, re-read for the 0.1.0 release
+    location: https://agentskills.io/specification
+    maintainer: Agent Skills open specification
+    date_accessed: "2026-10-19"
+    license: open specification; site terms apply; format followed, text not copied
+    knowledge_used: >-
+      Reconfirmed name, description, license, compatibility, metadata, and
+      allowed-tools; SKILL.md under 500 lines; progressive disclosure. No
+      change to the frontmatter contract already recorded on 2026-07-17.
+    usage: studied
+    attribution_required: no
+    restrictions: none identified
+
+  - name: npm package "skills" (skills CLI)
+    location: https://www.npmjs.com/package/skills
+    maintainer: skills CLI publishers (package page credits the open agent skills ecosystem and skills.sh)
+    date_accessed: "2026-10-19"
+    license: MIT, per the package page fetched that day
+    knowledge_used: >-
+      Package page showed version 1.7.4. Install form is `npx skills add
+      owner/repo`. Node.js 22.20 or later. Project install is the default.
+      `-g` is user-level. The local CLI help (same day) documents `--list`,
+      `--skill`, and `--all` (`--all` means `--skill '*' --agent '*' -y`).
+      The CLI states it collects anonymous usage data unless
+      DISABLE_TELEMETRY=1 or DO_NOT_TRACK=1. Local test: `--list` on this
+      checkout found 37 skills; one skill installed into a temporary project
+      for the codex agent with `--copy`. The public GitHub URL was not
+      fetched because the repository was still private during the test.
+    usage: studied
+    attribution_required: no
+    restrictions: >-
+      Do not claim the public GitHub install succeeded until it is re-run
+      after publication. Disclose the CLI telemetry.

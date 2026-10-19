@@ -22,8 +22,17 @@ which wins over anything written here.
 | Antigravity | community-documented | [antigravity.md](antigravity.md) |
 | Anything else | manual | [manual.md](manual.md) |
 
-Fastest cross-host path where GitHub CLI ≥ the version shipping `gh skill`
-is installed:
+The skills CLI discovers `.agents/skills/` without an extra hidden-directory flag. Tested 2026-10-19 on Node 24.14.0 against a local checkout: `npx skills add <path> --list` found 37 skills, and `--skill coworking-occupancy-revenue-dashboard -a codex -y --copy` installed one skill into a temporary project. The public commands are:
+
+```bash
+npx skills add QaliAI/open-coworking-skills --list
+npx skills add QaliAI/open-coworking-skills --skill coworking-pipeline-health
+npx skills add QaliAI/open-coworking-skills --all
+```
+
+Those three GitHub forms require a public repository. The npm package can send anonymous telemetry. Set `DISABLE_TELEMETRY=1` to disable it. Node.js 22.20 or later is required. `-g` installs for the user instead of the project.
+
+GitHub CLI remains supported. It needs the hidden-directory flag:
 
 ```bash
 gh skill install QaliAI/open-coworking-skills --all --allow-hidden-dirs           # project scope, .agents/skills/

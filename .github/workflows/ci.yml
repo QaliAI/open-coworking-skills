@@ -29,6 +29,10 @@ jobs:
         run: python scripts/generate_readme_catalog.py --check
       - name: Run deterministic evals
         run: python scripts/run_evals.py
+      - name: Trigger-suite structure
+        run: python scripts/run_trigger_evals.py
+      - name: Generated operator docs
+        run: python scripts/generate_operator_docs.py --check
 
   test:
     name: Tests (${{ matrix.os }} / py${{ matrix.python }})
@@ -66,6 +70,12 @@ jobs:
   secrets:
     name: Secret scan
     runs-on: ubuntu-latest
+    # gitleaks-action enumerates the pull request's commits to scan the diff, so
+    # it needs pull-requests: read. With only contents: read it fails with
+    # "Resource not accessible by integration" (403) before scanning anything.
+    permissions:
+      contents: read
+      pull-requests: read
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:

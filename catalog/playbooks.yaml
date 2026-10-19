@@ -1,0 +1,81 @@
+# Operator playbooks. docs/CHOOSE_A_PLAYBOOK.md is generated from this file.
+# Procedures live in .agents/skills/coworking-operator-playbooks/references/.
+
+playbooks:
+  - id: revenue-recovery
+    question: Where are we losing money?
+    audience: owner, billing, GM
+    reference: .agents/skills/coworking-operator-playbooks/references/revenue-recovery.md
+    skills:
+      - coworking-wms-export-analyzer
+      - coworking-data-dictionary
+      - coworking-crm-wms-reconciliation
+      - coworking-revenue-leakage-audit
+      - coworking-collections-prioritizer
+      - coworking-discount-pricing-audit
+      - coworking-unit-economics
+  - id: sales-conversion
+    question: Why aren't our leads converting?
+    audience: sales manager, owner
+    reference: .agents/skills/coworking-operator-playbooks/references/sales-conversion.md
+    skills:
+      - coworking-wms-export-analyzer
+      - coworking-data-dictionary
+      - coworking-speed-to-lead-auditor
+      - coworking-pipeline-health
+      - coworking-lead-source-normalizer
+      - coworking-lead-to-tour-diagnostic
+      - coworking-tour-follow-up
+      - coworking-post-tour-ghost-recovery
+  - id: occupancy-90-day
+    question: What will be vacant, and what do we need to sell?
+    audience: owner, sales
+    reference: .agents/skills/coworking-operator-playbooks/references/occupancy-90-day.md
+    skills:
+      - coworking-occupancy-revenue-dashboard
+      - coworking-occupancy-forecast
+      - coworking-renewal-expansion-risk
+      - coworking-cancellation-to-virtual-office
+  - id: retention
+    question: Who should we talk to before they leave?
+    audience: community manager, owner
+    reference: .agents/skills/coworking-operator-playbooks/references/retention.md
+    skills:
+      - coworking-churn-risk-review
+      - coworking-renewal-expansion-risk
+      - coworking-renewal-preparation
+      - coworking-cancellation-to-virtual-office
+  - id: virtual-office-audit
+    question: Do our virtual-office numbers match?
+    audience: owner, billing
+    reference: .agents/skills/coworking-operator-playbooks/references/virtual-office-audit.md
+    skills:
+      - coworking-wms-export-analyzer
+      - coworking-data-dictionary
+      - coworking-virtual-office-reconciliation
+      - coworking-cancellation-to-virtual-office
+  - id: monthly-owner
+    question: What belongs in this month's owner or landlord pack?
+    audience: owner, GM, landlord partner
+    reference: .agents/skills/coworking-operator-playbooks/references/monthly-owner.md
+    skills:
+      - coworking-monthly-owner-report
+      - coworking-source-verifier
+  - id: ai-front-desk
+    question: Is our AI front desk safe to leave on?
+    audience: owner, community manager
+    reference: .agents/skills/coworking-operator-playbooks/references/ai-front-desk.md
+    skills:
+      - coworking-ai-concierge-knowledge-audit
+      - coworking-mcp-builder
+      - coworking-source-verifier
+  - id: tech-stack
+    question: Why don't our systems agree?
+    audience: owner, operator
+    reference: .agents/skills/coworking-operator-playbooks/references/tech-stack.md
+    skills:
+      - coworking-tech-stack-integration-audit
+      - coworking-crm-wms-reconciliation
+      - coworking-data-migration-readiness
+      - coworking-system-adapter-builder
+      - coworking-mcp-builder
