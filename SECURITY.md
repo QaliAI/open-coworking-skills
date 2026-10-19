@@ -48,7 +48,8 @@ Key protections built into this repository:
 1. Run analyses locally on exports; you never need to give this project
    credentials to get value (Modes 1-2).
 2. Redact member PII before sharing any export with anyone.
-3. Treat any future connector (Mode 3) as read-only, environment-variable
-   credentialed, and minimally scoped — see `adapters/README.md`.
+3. Treat connectors as read-only, environment-variable credentialed, and
+   minimally scoped. The HubSpot and OfficeRnD clients are prototypes
+   tested against mocked HTTP, not live accounts. See `adapters/README.md`.
 4. Review agent-generated drafts before sending; nothing in this repo is
    designed to act on members directly.

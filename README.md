@@ -380,10 +380,12 @@ Two synthetic businesses carry hand-computed answer keys. HubSpot and
 OfficeRnD connectors are read-only prototypes tested against mocks, not
 against live or sandbox accounts. The repository is
 [QaliAI/open-coworking-skills](https://github.com/QaliAI/open-coworking-skills).
-GitHub Actions has run on `main` and on pull requests. Dependency Review
-fails when the dependency graph and GitHub Advanced Security are off. That
-failure is a repository setting, not a vulnerable dependency identified by
-the job. Older audits that say "no remote" or "CI has not run" describe
-July 2026 and are superseded by
-[FINAL_RELEASE_AUDIT.md](FINAL_RELEASE_AUDIT.md). What's next:
+The repository is public. GitHub Actions has run on `main` and on pull
+requests. Dependency Review now passes on pull requests. An earlier run,
+while the repository was private, failed that job because the dependency
+graph was not available. The log did not name a vulnerable package. Secret
+scanning and push protection are on. Older audits that say "no remote" or
+"CI has not run" describe July 2026 and are superseded by
+[FINAL_RELEASE_AUDIT.md](FINAL_RELEASE_AUDIT.md) and
+[LAUNCH_REPORT.md](LAUNCH_REPORT.md). What's next:
 [ROADMAP.md](ROADMAP.md).

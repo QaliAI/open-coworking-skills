@@ -1,6 +1,6 @@
 # Threat model
 
-Scope: this repository's skills, scripts, fixtures, and future connectors,
+Scope: this repository's skills, scripts, fixtures, and connectors,
 as used by AI agents over coworking business data.
 
 ## Assets

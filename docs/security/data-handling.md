@@ -25,7 +25,7 @@ access logs and payment data are restricted.
    every redacted artifact requires human review before leaving the
    operator's control.
 4. **Logging** — scripts write outputs only where told; no telemetry, no
-   background copies. Audit logs for future connectors must exclude PII
+   background copies. Audit logs for connectors must exclude PII
    values (log field names and counts, not contents).
 5. **Retention** — analysis outputs inherit the sensitivity of their most
    sensitive input. Recommend operators delete working copies of exports

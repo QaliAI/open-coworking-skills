@@ -321,12 +321,42 @@ sources:
       `-g` is user-level. The local CLI help (same day) documents `--list`,
       `--skill`, and `--all` (`--all` means `--skill '*' --agent '*' -y`).
       The CLI states it collects anonymous usage data unless
-      DISABLE_TELEMETRY=1 or DO_NOT_TRACK=1. Local test: `--list` on this
-      checkout found 37 skills; one skill installed into a temporary project
-      for the codex agent with `--copy`. The public GitHub URL was not
-      fetched because the repository was still private during the test.
+      DISABLE_TELEMETRY=1 or DO_NOT_TRACK=1. Local test: `--list` on a
+      checkout found 37 skills. After the repository was public, the same
+      command against QaliAI/open-coworking-skills found 37 skills, and
+      `--skill coworking-pipeline-health -a codex -y --copy` copied that
+      skill into a temporary project. Both public tests set
+      DISABLE_TELEMETRY=1. `--all` was not executed.
     usage: studied
     attribution_required: no
-    restrictions: >-
-      Do not claim the public GitHub install succeeded until it is re-run
-      after publication. Disclose the CLI telemetry.
+    restrictions: Disclose the CLI telemetry. Do not claim `--all` was run.
+
+  - name: skills.sh directory FAQ and About page
+    location: https://www.skills.sh/docs/faq
+    maintainer: Vercel (skills.sh)
+    date_accessed: "2026-10-19"
+    license: site terms; facts cited, page text not copied
+    knowledge_used: >-
+      FAQ says a skill appears on the leaderboard when users run
+      `npx skills add owner/repo` and the CLI's anonymous telemetry records
+      the install. The About page says skills.sh indexes public skills that
+      ship through that CLI. Packs are created in a signed-in Vercel flow.
+      No pack was created and telemetry was left off for the release test.
+    usage: studied
+    attribution_required: no
+    restrictions: Do not claim this repository is listed on skills.sh.
+
+  - name: agentskill.sh creators page
+    location: https://agentskill.sh/creators
+    maintainer: agentskill.sh
+    date_accessed: "2026-10-19"
+    license: site terms; facts cited, page text not copied
+    knowledge_used: >-
+      The page says publishing is claimed by connecting a GitHub account,
+      and that a push webhook to https://agentskill.sh/api/webhooks/github
+      syncs SKILL.md files. No account was connected and no webhook was
+      added, because that would send repository push events to a third
+      party without an owner account to claim the skills.
+    usage: studied
+    attribution_required: no
+    restrictions: Do not claim the repository is listed on agentskill.sh.
