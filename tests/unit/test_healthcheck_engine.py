@@ -160,10 +160,12 @@ class TestReportSafety:
         assert "health-check-finalize" in draft
         final = render_health_check(bundle, finalized=True, reviewer="A. Reviewer",
                                     finalized_at="2026-07-22T09:00:00+00:00",
-                                    notes="checked")
+                                    notes="checked",
+                                    attestation="I completed the human review checklist.")
         assert "DRAFT REPORT" not in final
         assert "REVIEWED &amp; FINALIZED" in final
         assert "A. Reviewer" in final
+        assert "I completed the human review checklist." in final
 
     def test_client_values_are_escaped_and_identifiers_redacted(self, tmp_path):
         (tmp_path / "locations.csv").write_text(
@@ -230,11 +232,14 @@ class TestEngagementFiles:
         assert '"client_exports_copied": false' in manifest
 
         final = finalize_engagement(out, reviewer="A. Reviewer", notes="ok",
-                                    finalized_at="2026-07-22T09:00:00+00:00")
+                                    finalized_at="2026-07-22T09:00:00+00:00",
+                                    attestation="I completed the human review checklist.")
         final_html = Path(final["report"]).read_text(encoding="utf-8")
         assert "DRAFT REPORT" not in final_html and "A. Reviewer" in final_html
         record = (out / "finalized.json").read_text(encoding="utf-8")
         assert '"sent_to_client": false' in record
+        assert '"checklist_completed": true' in record
+        assert "I completed the human review checklist." in record
         # The draft is kept as the audit trail.
         assert (out / "report.html").exists()
 
@@ -248,14 +253,17 @@ class TestEngagementFiles:
 
     def test_finalize_requires_a_draft(self, tmp_path):
         with pytest.raises(FileNotFoundError):
-            finalize_engagement(tmp_path, reviewer="A", notes=None, finalized_at="now")
+            finalize_engagement(tmp_path, reviewer="A", notes=None, finalized_at="now",
+                                attestation="I completed the human review checklist.")
 
     def test_reviewing_twice_needs_force(self, tmp_path):
         out = tmp_path / "engagement"
         write_engagement(out, demo_bundle(), command_line="cmd")
-        finalize_engagement(out, reviewer="A", notes=None, finalized_at="now")
+        finalize_engagement(out, reviewer="A", notes=None, finalized_at="now",
+                            attestation="I completed the human review checklist.")
         with pytest.raises(FileExistsError):
-            finalize_engagement(out, reviewer="B", notes=None, finalized_at="later")
+            finalize_engagement(out, reviewer="B", notes=None, finalized_at="later",
+                                attestation="I completed the human review checklist.")
 
     def test_input_fingerprints_ignore_line_endings(self, tmp_path):
         """A Windows checkout (CRLF) and a Linux checkout (LF) must agree.

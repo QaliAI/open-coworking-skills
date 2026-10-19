@@ -89,9 +89,23 @@ declared, with the every-day-including-weekends assumption stated.
   where bookings are dense AND per-hour revenue is below the
   operator's own other rooms — internal comparison, never market
   claims.
-- Cancellations/no-shows: not in the canonical booking schema; when
-  the operator's export carries them, they're analyzed; otherwise the
-  omission is stated.
+- Cancellations and no-shows are removed from booked hours only when a
+  `status`, `no_show`, or `cancelled` column says so (`cancelled`,
+  `canceled`, `no_show`, `noshow`). A blank status stays in booked hours.
+  If those columns are absent, the report says so and does not guess.
+  Booked is not used: attendance is not in the export.
+- `revenue_per_available_hour` is gross revenue divided by declared
+  bookable hours. It exists only when `--open-hours-per-day` is set.
+  The denominator includes every day in the observed span, weekends
+  included, and the note says that.
+- Daypart counts (morning before 12:00, afternoon before 17:00, evening
+  after, on the timestamp's own clock) are always counts. A peak-pricing
+  claim requires at least 20 honored bookings. The engine sets
+  `pattern_claim_allowed` for that gate.
+- Setup minutes, when the column exists, are reported as setup hours and
+  are not added to booked hours.
+- Contribution margin is computed only when every honored booking in the
+  room has a parseable `cost`. A blank cost is unknown, not zero.
 
 ## Data-quality checks
 

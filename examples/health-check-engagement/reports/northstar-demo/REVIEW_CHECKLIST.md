@@ -32,7 +32,7 @@ This report is not sent anywhere by the tool. A human releases it.
 ## Release
 
 - [ ] Record your notes and any edits the report needs.
-- [ ] Run `opencoworking health-check-finalize --engagement <dir> --reviewer "<your name>"` to produce report.final.html.
+- [ ] Run `opencoworking health-check-finalize --engagement <dir> --reviewer "<your name>" --attest "I completed this checklist"` to produce report.final.html. The attestation is stored with the reviewer.
 - [ ] Confirm the finalized report still carries the data limitations section.
 - [ ] Send the report to the client only through your own agreed channel.
 

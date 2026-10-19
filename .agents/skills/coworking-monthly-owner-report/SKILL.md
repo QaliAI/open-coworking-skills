@@ -30,14 +30,25 @@ prioritized actions with owners.
 - A single metric question (use the dashboard)
 - Verifying someone else's report (`coworking-source-verifier`)
 - No data at all — offer Mode 1's minimal interview, not an invented report
+- A landlord pack is not a different skill. It is this report with the audience rules below. Do not write a second set of numbers.
+
+## Audience
+
+Ask who will read the report before assembling it.
+
+- **Operating owner or GM.** Full section list, including pipeline hygiene, internal leakage categories, and staff follow-up.
+- **Landlord, building owner, or management-agreement partner.** Include the three occupancy figures with formulas, contracted recurring revenue, meeting and event gross revenue, notices and contracted move-outs inside the reporting window, and the data limitations. Omit staff performance, individual discount negotiations, and sales-coaching notes. Include collections only when the operator confirms the management agreement requires it. If they have not confirmed, write "collections omitted — agreement scope not confirmed" instead of guessing.
+- Do not claim the landlord pack is legal advice or that counsel reviewed it.
 
 ## Operating modes
 
 - **Mode 1** — operator supplies headline numbers by interview; report is
   produced with an explicit "operator-reported, not recomputed" banner.
 - **Mode 2** — full: run the deterministic analyses over exports:
-  occupancy, funnel, pipeline, speed-to-lead, sources, leakage, quality
-  (commands below), then assemble.
+  quality, occupancy, funnel, pipeline, speed-to-lead, sources, leakage,
+  and, when the required files exist, forecast, renewals, collections, and
+  rooms (commands below), then assemble. A section whose command did not
+  run is omitted with a named gap. It is not filled from memory.
 - **Mode 3** — not supported.
 
 ## Required inputs
@@ -64,26 +75,43 @@ finding with a plausible near-term revenue or member impact; a
 1. Confirm the month and locate inputs; run
    `opencoworking quality` on each file — data problems go in the report,
    not under the rug.
-2. Run the calculations (Mode 2):
+2. Run the calculations (Mode 2). Skip a command when its required file is
+   absent and name that skip in the methodology appendix:
    - `opencoworking occupancy --inventory ... --memberships ... --as-of <month-end>`
    - `opencoworking funnel --leads ... --tours ... --deals ...`
    - `opencoworking pipeline --deals ... --as-of <month-end>`
    - `opencoworking speed-to-lead --leads ...`
    - `opencoworking sources --leads ...`
    - `opencoworking leakage --as-of <month-end> [all available files]`
-3. Assemble sections in this order:
+   - `opencoworking forecast --inventory ... --memberships ... --as-of <month-end> --horizons 30,60,90`
+   - `opencoworking renewals --memberships ... --invoices ... --as-of <month-end> --window-days 60`
+   - `opencoworking collections --invoices ... --payments ... --memberships ... --as-of <month-end>`
+   - `opencoworking rooms --bookings ... --inventory ... --as-of <month-end>`
+     Add `--open-hours-per-day` only when the operator states bookable hours.
+     Booked hours are not used hours. With no cost column, say contribution
+     was not computed. Do not treat room gross revenue as profit.
+3. Assemble sections in this order. Drop a numbered section when its command
+   was skipped, and say which file was missing:
    1. **Executive summary** — 5 sentences max; only facts and calculations.
    2. **KPI scorecard** — metric, value, formula reference, prior-month delta
       (only if prior data provided), target (only if operator-set).
    3. **Sales funnel** — counts and rates with definitions; speed-to-lead.
    4. **Occupancy** — three variants + flags (from the dashboard contract).
    5. **Revenue** — recurring vs one-time (bookings, events) split.
-   6. **Churn and renewals** — cancellations, notices given, renewals due
-      next 60 days with names of at-risk agreements.
-   7. **Collections** — failed/overdue invoices, amounts.
-   8. **Meeting and event performance** — booked revenue, member vs
-      nonmember; event cost vs revenue (events are often deliberate loss
-      leaders — report the number without editorializing).
+   6. **Churn and renewals** — from `renewals` and `forecast` only: notices,
+      contracted move-outs, and agreements inside the 60-day window, with
+      agreement IDs. There is no standalone churn command. Do not print a
+      logo-churn rate unless the operator supplies both the start-of-period
+      active membership count and the cancellations in the period. The
+      formula is cancellations in the period divided by memberships active
+      at the start, excluding memberships that both started and ended inside
+      the period. An occupancy snapshot is not a churn rate.
+   7. **Collections** — failed and overdue invoices from `collections`, with
+      amounts. Omit the section when invoices were not provided.
+   8. **Meeting and event performance** — from `rooms`: honored bookings,
+      booked hours, gross revenue, and revenue per booked hour. Utilization
+      only when bookable hours were declared. Zero-charge bookings stay in
+      the count and out of revenue. Do not call booked hours "used".
    9. **Data-quality warnings** — from step 1.
    10. **Key risks** — each tied to a finding.
    11. **Prioritized actions** — ≤7, each: action, owner role, evidence

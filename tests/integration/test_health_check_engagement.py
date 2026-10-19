@@ -32,6 +32,7 @@ AS_OF = "2026-07-01"
 GENERATED_AT = "2026-07-21T00:00:00+00:00"
 REVIEWER = "Sample Reviewer (open-source demo)"
 FINALIZED_AT = "2026-07-22T09:00:00+00:00"
+ATTESTATION = "I completed the human review checklist on the synthetic Northstar demo."
 
 # Hand-computed from the literal rows in the sample export (see the answer key
 # for occupancy/leakage/funnel/speed values; the churn and forecast numbers are
@@ -176,8 +177,9 @@ class TestCommittedSampleIsReproducible:
         assert _run_health_check(tmp_path, "--force").returncode == 0
         cmd = [sys.executable, "-m", "opencoworking.cli", "health-check-finalize",
                "--engagement", str(tmp_path), "--reviewer", REVIEWER,
+               "--attest", ATTESTATION,
                "--notes", "Synthetic dataset; checklist walked through to demonstrate "
-                          "release.", "--at", FINALIZED_AT]
+                          "release.", "--at", FINALIZED_AT, "--force"]
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO)
         assert result.returncode == 0, result.stderr
         fresh = (tmp_path / "report.final.html").read_text(encoding="utf-8")

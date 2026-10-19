@@ -1,3 +1,5 @@
+> Current state is [FINAL_RELEASE_AUDIT.md](../../FINAL_RELEASE_AUDIT.md), dated 2026-10-19. The sentence below that CI has never executed on GitHub was true on 2026-07-18 and is not true now.
+
 # Adversarial security test report
 
 Audit session 2026-07-18, branch `expert-audit-wave-2`. Probes were

@@ -1661,6 +1661,7 @@ def _fingerprint(path: Path) -> str:
 def run_health_check(input_dir: str | Path, *, client: str, as_of: date,
                      generated_at: str, policy: str = "report",
                      allow_unsafe: bool = False,
+                     unsafe_reason: str | None = None,
                      overrides: dict[str, str] | None = None,
                      stale_days: int = 21, discount_pct: int = 25,
                      churn_window_days: int = 30, renewal_window_days: int = 90,
@@ -1670,8 +1671,15 @@ def run_health_check(input_dir: str | Path, *, client: str, as_of: date,
     """Run one health check and return the full engagement bundle.
 
     Raises PreflightBlocked when the screening refuses the folder and
-    ``allow_unsafe`` was not passed.
+    ``allow_unsafe`` was not passed. An override without a non-empty
+    ``unsafe_reason`` is refused: the reason is part of the record.
     """
+    reason = (unsafe_reason or "").strip()
+    if allow_unsafe and not reason:
+        raise ValueError(
+            "--allow-unsafe requires unsafe_reason: who accepted the folder and why")
+    if reason and not allow_unsafe:
+        raise ValueError("unsafe_reason is only valid together with allow_unsafe")
     preflight, mapped, ambiguities = discover_inputs(
         input_dir, overrides=overrides, policy=policy, max_file_bytes=max_file_bytes)
     if not preflight.ok and not allow_unsafe:
@@ -1685,7 +1693,7 @@ def run_health_check(input_dir: str | Path, *, client: str, as_of: date,
                       open_hours=open_hours)
     quality = quality_section(mapped, tables)
 
-    context = _context_section(tables, as_of, preflight, allow_unsafe, policy)
+    context = _context_section(tables, as_of, preflight, allow_unsafe, reason, policy)
     context["currency"] = detect_engagement_currency(tables)
     bundle: dict[str, Any] = {
         "service": {"name": SERVICE_NAME, "version": SERVICE_VERSION,
@@ -1704,6 +1712,7 @@ def run_health_check(input_dir: str | Path, *, client: str, as_of: date,
             "horizons": list(horizons),
             "allow_unsafe": allow_unsafe,
             "pii_policy": policy,
+            **({"unsafe_reason": reason} if allow_unsafe else {}),
         },
         "preflight": preflight.as_dict(),
         "inputs": {
@@ -1768,7 +1777,7 @@ def sanitize_bundle(bundle: dict[str, Any],
 
 
 def _context_section(tables: dict[str, Table], as_of: date, preflight: PreflightResult,
-                     allow_unsafe: bool, policy: str) -> dict[str, object]:
+                     allow_unsafe: bool, unsafe_reason: str, policy: str) -> dict[str, object]:
     locations = tables.get("locations")
     names = []
     if locations is not None:
@@ -1791,6 +1800,7 @@ def _context_section(tables: dict[str, Table], as_of: date, preflight: Preflight
         "input_root": preflight.root,
         "pii_policy": policy,
         "unsafe_override_used": allow_unsafe,
+        **({"unsafe_reason": unsafe_reason} if allow_unsafe else {}),
         "pii_handling": (
             "Direct identifiers in the exports are never printed in this report, and no "
             "client export is copied into the report directory. Any identifier that has to "

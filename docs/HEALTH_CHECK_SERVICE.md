@@ -1,17 +1,17 @@
 # Coworking Revenue & Operations Health Check
 
-**A repeatable, human-reviewed paid engagement run on an operator's own
-exports — with the open-source engine underneath it.**
+**One command that turns an operator's own exports into a reviewable health
+check. The same engine is free to run. A consultant can use it as a paid
+engagement. The repository is the industry resource first.**
 
-This page is the commercial handoff: what the client supplies, what is
-delivered, what is deliberately *not* claimed, and how to run the engagement
-twice in a row without improvising. It is written for the consultant or
-operator delivering the engagement, not for the client.
+This page is the operating handoff: what the operator supplies, what the
+draft contains, what a human must attest before anything is called reviewed,
+and how to run the same folder twice without improvising.
 
-Nothing here is proprietary. The analysis runs on the same deterministic,
-Apache-2.0 tooling in this repository, which the client is free to run
-themselves — that is the point. What you are selling is the scoping, the
-analysis, the review, and the recommendations, not a locked box.
+Nothing here is proprietary. The analysis is the Apache-2.0 tooling in this
+repository. An operator can run it. A service provider who later sells the
+scoping, the review, and the recommendations is selling that work, not a
+locked box.
 
 ```bash
 opencoworking health-check \
@@ -28,11 +28,16 @@ gets wrong:
 opencoworking health-check-finalize \
   --engagement ./engagements/<client-slug>/reports/2026-07 \
   --reviewer "Your Name" \
+  --attest "I completed the human review checklist." \
   --notes "What you checked and what you changed"
 ```
 
+`--attest` is required. `report.final.html` prints the reviewer and that
+statement. The tool refuses a reviewed banner when either is missing. The
+banner records the attestation. It does not prove the checklist was followed.
+
 The output is `report.html` (draft), reviewed into `report.final.html` — a
-print-ready document with `@page` A4 rules, so "print to PDF" gives a client
+print-ready document with `@page` A4 rules, so "print to PDF" gives a
 deliverable without a second tool.
 
 A worked, fully synthetic example of every artifact:

@@ -219,9 +219,11 @@ def _preflight_block(bundle: dict[str, Any], redactor: Redactor | None) -> str:
                      findings or "—"])
     body = _table(["File", "Preflight", "Rows", "Identifier columns found", "Notes"],
                   rows, redactor)
+    reason = bundle.get("engagement", {}).get("unsafe_reason")
     override = ("<p class='callout callout-warn'><strong>Unsafe override in effect.</strong> "
-                "This run proceeded past a blocking preflight finding with --allow-unsafe. "
-                "The override is recorded in the engagement manifest.</p>"
+                "This run proceeded past a blocking preflight finding because "
+                f"{_esc(reason, redactor)}. The reason is recorded in the engagement "
+                "manifest. A boolean override without a reason is not accepted.</p>"
                 if pre.get("blocking_count") and bundle.get("engagement", {}).get(
                     "allow_unsafe") else "")
     return body + override + f'<p class="muted">{_esc(pre.get("guarantee_note"))}</p>'
@@ -648,14 +650,17 @@ def _extra_sections(bundle: dict[str, Any], redactor: Redactor | None) -> str:
     if isinstance(rooms, dict):
         out.append("<h3>Meeting and event room yield</h3>")
         rows = [[r.get("room"), r.get("unit_type"), r.get("bookings"),
+                 r.get("excluded_bookings", 0),
                  r.get("booked_hours"), _money(r.get("gross_revenue")),
                  _money(r.get("revenue_per_booked_hour")),
                  r.get("utilization", "not measured (no bookable hours declared)"),
                  r.get("zero_charge_bookings")]
                 for r in rooms.get("rooms", [])]
-        out.append(_table(["Room", "Type", "Bookings", "Booked hours", "Gross revenue",
-                           "Revenue / hour", "Utilization", "Zero-charge bookings"],
+        out.append(_table(["Room", "Type", "Honored", "Excluded", "Booked hours",
+                           "Gross revenue", "Revenue / booked hour", "Utilization",
+                           "Zero-charge bookings"],
                           rows, redactor))
+        out.append(f'<p class="muted">{_esc(rooms.get("booking_status_note"), redactor)}</p>')
         out.append(f'<p class="muted">{_esc(rooms.get("utilization_note"), redactor)}</p>')
 
     pricing = modules.get("pricing")
@@ -909,7 +914,8 @@ def render_review_checklist(bundle: dict[str, Any]) -> str:
         "",
         "- [ ] Record your notes and any edits the report needs.",
         "- [ ] Run `opencoworking health-check-finalize --engagement <dir> "
-        "--reviewer \"<your name>\"` to produce report.final.html.",
+        "--reviewer \"<your name>\" --attest \"I completed this checklist\"` "
+        "to produce report.final.html. The attestation is stored with the reviewer.",
         "- [ ] Confirm the finalized report still carries the data limitations section.",
         "- [ ] Send the report to the client only through your own agreed channel.",
         "",
@@ -987,8 +993,21 @@ def write_engagement(output_dir: str | Path, bundle: dict[str, Any], *,
 
 
 def finalize_engagement(output_dir: str | Path, *, reviewer: str, notes: str | None,
-                        finalized_at: str, force: bool = False) -> dict[str, str]:
-    """Produce the released report from a reviewed draft. Nothing is sent."""
+                        finalized_at: str, attestation: str, force: bool = False
+                        ) -> dict[str, str]:
+    """Produce the released report from a reviewed draft. Nothing is sent.
+
+    ``attestation`` is the reviewer's own statement that the human checklist
+    was completed. A reviewer name alone does not make the report final.
+    """
+    reviewer_name = (reviewer or "").strip()
+    attested = (attestation or "").strip()
+    if not reviewer_name:
+        raise ValueError("finalizing requires a reviewer name")
+    if not attested:
+        raise ValueError(
+            "finalizing requires an attestation that the human review checklist "
+            "was completed")
     out = Path(output_dir)
     bundle_path = out / "bundle.json"
     if not bundle_path.is_file():
@@ -1000,19 +1019,23 @@ def finalize_engagement(output_dir: str | Path, *, reviewer: str, notes: str | N
         raise FileExistsError(
             f"{out} is already finalized; pass --force to re-finalize")
     report.write_text(
-        render_health_check(bundle, finalized=True, reviewer=reviewer, notes=notes,
-                            finalized_at=finalized_at), encoding="utf-8")
+        render_health_check(bundle, finalized=True, reviewer=reviewer_name, notes=notes,
+                            finalized_at=finalized_at, attestation=attested),
+        encoding="utf-8")
     record.write_text(json.dumps({
         "status": "finalized",
         "review_required": False,
-        "reviewer": reviewer,
+        "reviewer": reviewer_name,
+        "checklist_attestation": attested,
+        "checklist_completed": True,
         "reviewer_notes": notes,
         "finalized_at": finalized_at,
         "final_report": report.name,
         "draft_report": "report.html",
         "sent_to_client": False,
         "note": "The tool does not deliver reports. Sending to the client is a human, "
-                "manual step outside this tool.",
+                "manual step outside this tool. checklist_completed is the reviewer's "
+                "attestation, not an inference by the tool.",
     }, indent=2, ensure_ascii=False), encoding="utf-8")
     return {"report": str(report), "record": str(record)}
 
@@ -1126,6 +1149,7 @@ break-inside:avoid}
 def render_health_check(bundle: dict[str, Any], *, finalized: bool = False,
                         reviewer: str | None = None, finalized_at: str | None = None,
                         notes: str | None = None,
+                        attestation: str | None = None,
                         command_line: str | None = None) -> str:
     """Render the bundle as one self-contained HTML document."""
     global _CURRENCY_SYMBOL
@@ -1138,17 +1162,25 @@ def render_health_check(bundle: dict[str, Any], *, finalized: bool = False,
     not_measured = {str(m["module"]): m for m in bundle.get("not_measured", [])}
 
     if finalized:
+        reviewer_name = (reviewer or "").strip()
+        attested = (attestation or "").strip()
+        if not reviewer_name or not attested:
+            raise ValueError(
+                "a finalized report requires both a reviewer and a checklist attestation")
         banner = (
             '<div class="banner banner-final">REVIEWED &amp; FINALIZED'
-            f'<ul><li>Reviewed by: {_esc(reviewer)}</li>'
+            f'<ul><li>Reviewed by: {_esc(reviewer_name)}</li>'
+            f'<li>Checklist attestation: {_esc(attested)}</li>'
             f'<li>Finalized at: {_esc(finalized_at)}</li>'
             '<li>This report was read and released by a human. The tool never sends '
-            'anything to anyone.</li></ul></div>')
+            'anything to anyone. The green banner records an attestation; it does not '
+            'prove the checklist was followed.</li></ul></div>')
         signature = f"""
 <section class="signature">
   <h3>Reviewer sign-off</h3>
-  <p><strong>{_esc(reviewer)}</strong> reviewed the draft against the data limitations and
-  release checklist and released this report at {_esc(finalized_at)}.</p>
+  <p><strong>{_esc(reviewer_name)}</strong> attested: {_esc(attested)}</p>
+  <p>Released at {_esc(finalized_at)}. The tool stored this statement. It did not
+  verify that each checklist box was ticked.</p>
   {f'<p><span class="lbl">Reviewer notes</span>{_esc(notes)}</p>' if notes else ''}
 </section>"""
     else:

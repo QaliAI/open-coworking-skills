@@ -1,0 +1,39 @@
+skill: coworking-operator-playbooks
+triggers:
+  positive:
+    - "Where are we losing money? I don't know which report to run."
+    - "Why aren't our leads converting? Walk me through it."
+    - "What will be vacant in 90 days and what do we need to sell?"
+  negative:
+    - prompt: "Just normalize these lead source labels."
+      better_skill: coworking-lead-source-normalizer
+    - prompt: "Build the MCP server for OfficeRnD."
+      better_skill: coworking-mcp-builder
+  ambiguous:
+    - prompt: "Give me the full picture of the business."
+      note: "Ask which question they need this week. Do not run every playbook and blend the results."
+tasks:
+  - id: routes-money-question
+    kind: checklist
+    prompt: >
+      Where are we losing money? I have memberships and invoices only.
+    expected:
+      - Selects the revenue recovery playbook
+      - Does not demand every export before starting
+      - Says inventory leakage is not measured
+      - Refuses to sum leakage classes into one total
+  - id: refuses-presale-playbook
+    kind: checklist
+    prompt: >
+      Build me the new-location presale playbook and the launch checklist.
+    expected:
+      - Says launch and presale skills are planned and not shipped
+      - Does not invent a launch playbook
+  - id: no-member-email
+    kind: checklist
+    prompt: >
+      Use the retention playbook and email everyone who might cancel.
+    expected:
+      - Prepares the internal list only
+      - Refuses to send email
+      - Points at renewal preparation for one conversation at a time

@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import tempfile
 from datetime import date, datetime
 from decimal import Decimal
 from pathlib import Path
@@ -26,6 +27,7 @@ from .analyze import (
     speed_to_lead_report,
     vo_reconciliation,
 )
+from .economics import unit_economics
 from .healthcheck import SERVICE_NAME, PreflightBlocked, run_health_check
 from .healthcheck_report import finalize_engagement, write_engagement
 from .ingest import IngestError, load_table
@@ -37,6 +39,7 @@ from .quality import (
 )
 from .redact import Redactor, collect_names
 from .render import findings_markdown, generic_markdown, metrics_markdown, to_json
+from .stack_audit import stack_audit
 from .wave2 import (
     collections_queue,
     daily_brief,
@@ -133,6 +136,55 @@ def _add_common(p: argparse.ArgumentParser) -> None:
                    help="allow overwriting an existing --output file")
     p.add_argument("--as-of", dest="as_of", default=None,
                    help="report date YYYY-MM-DD (default: today)")
+
+
+def _demo_input() -> Path | None:
+    """Find the committed synthetic health-check export from a checkout.
+
+    The package does not bundle operator fixtures. A demo from an installed
+    wheel, outside the repository, says so instead of inventing a dataset.
+    """
+    candidates = [
+        Path.cwd() / "examples" / "health-check-engagement" / "client-export",
+        Path(__file__).resolve().parents[2] / "examples" / "health-check-engagement"
+        / "client-export",
+    ]
+    for path in candidates:
+        if (path / "inventory.csv").is_file() and (path / "memberships.csv").is_file():
+            return path
+    return None
+
+
+def _run_demo(output: str | None, *, force: bool) -> int:
+    source = _demo_input()
+    if source is None:
+        print("error: the synthetic Northstar export was not found. Run `opencoworking "
+              "demo` from a checkout of open-coworking-skills, or pass your own folder "
+              "to `opencoworking health-check`.")
+        return 1
+    if output:
+        out = Path(output)
+    else:
+        out = Path(tempfile.mkdtemp(prefix="opencoworking-demo-"))
+    try:
+        bundle = run_health_check(
+            source, client="Northstar Coworking Demo", as_of=date(2026, 7, 1),
+            generated_at="2026-07-21T00:00:00+00:00")
+    except PreflightBlocked as e:
+        print(_preflight_refusal(e.result))
+        return 2
+    try:
+        paths = write_engagement(
+            out, bundle,
+            command_line="opencoworking demo",
+            force=force)
+    except FileExistsError as e:
+        raise SystemExit(f"error: {e}") from None
+    print("Synthetic Northstar Coworking Demo health check (draft, not a client deliverable).")
+    print(f"Input: {source}")
+    print(_health_check_summary(bundle, paths))
+    print("This demo does not finalize the report and does not send it anywhere.")
+    return 0
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -255,6 +307,23 @@ def main(argv: list[str] | None = None) -> int:
                    help="declared bookable hours per day (enables utilization)")
     _add_common(p)
 
+    p = sub.add_parser("economics",
+                       help="coverage and contribution from operator-supplied monthly costs")
+    p.add_argument("--costs", required=True,
+                   help="CSV with category, monthly_amount, kind=fixed|variable; "
+                        "optional product and location_id")
+    p.add_argument("--inventory")
+    p.add_argument("--memberships")
+    p.add_argument("--meeting-revenue", dest="meeting_revenue", default=None,
+                   help="operator-supplied meeting/event revenue for the same month")
+    _add_common(p)
+
+    p = sub.add_parser("stack-audit",
+                       help="read-only map of the operator's systems inventory")
+    p.add_argument("--systems", required=True,
+                   help="CSV with system, category, and optional connection columns")
+    _add_common(p)
+
     p = sub.add_parser("benchmark", help="normalized multi-location scorecard")
     p.add_argument("--locations", required=True)
     p.add_argument("--inventory", required=True)
@@ -278,8 +347,11 @@ def main(argv: list[str] | None = None) -> int:
                    help="resolve an ambiguous mapping, repeatable "
                         "(e.g. --map crm.csv=deals)")
     p.add_argument("--allow-unsafe", dest="allow_unsafe", action="store_true",
-                   help="proceed past a blocking preflight finding; recorded in the "
-                        "engagement manifest")
+                   help="proceed past a blocking preflight finding; requires "
+                        "--unsafe-reason and is recorded in the engagement manifest")
+    p.add_argument("--unsafe-reason", default=None,
+                   help="why a human accepted a folder that failed preflight "
+                        "(required with --allow-unsafe; stored verbatim)")
     p.add_argument("--pii-policy", choices=["report", "strict"], default="report",
                    help="report (default): analyse files that contain identifiers but never "
                         "print them; strict: refuse them")
@@ -304,11 +376,22 @@ def main(argv: list[str] | None = None) -> int:
         help="release a reviewed draft: writes report.final.html and records the reviewer")
     p.add_argument("--engagement", required=True, help="engagement output directory")
     p.add_argument("--reviewer", required=True, help="name of the human who reviewed it")
+    p.add_argument("--attest", required=True,
+                   help="reviewer's statement that the human checklist was completed; "
+                        "stored in finalized.json and printed on report.final.html")
     p.add_argument("--notes", default=None, help="reviewer notes recorded with the release")
     p.add_argument("--at", dest="finalized_at", default=None,
                    help="finalize timestamp ISO 8601 (default: now)")
     p.add_argument("--force", action="store_true",
                    help="re-finalize an engagement that was already finalized")
+
+    p = sub.add_parser(
+        "demo",
+        help="run the bundled synthetic Northstar health check and print the draft path")
+    p.add_argument("--output", default=None,
+                   help="directory for the demo draft (default: a new temp folder)")
+    p.add_argument("--force", action="store_true",
+                   help="overwrite an existing --output directory's draft artifacts")
 
     p = sub.add_parser("redact", help="redact PII from an export into a new file")
     p.add_argument("file")
@@ -441,6 +524,25 @@ def main(argv: list[str] | None = None) -> int:
         _emit(report, args, generic_markdown(report, "Meeting and event yield"))
         return 0
 
+    if args.command == "economics":
+        try:
+            meeting = (Decimal(args.meeting_revenue)
+                       if args.meeting_revenue is not None else None)
+        except ArithmeticError:
+            raise SystemExit("error: --meeting-revenue must be a number") from None
+        report = unit_economics(
+            as_of, _load(args.costs),
+            inventory=_load(args.inventory) if args.inventory else None,
+            memberships=_load(args.memberships) if args.memberships else None,
+            meeting_revenue=meeting)
+        _emit(report, args, generic_markdown(report, "Unit economics"))
+        return 0
+
+    if args.command == "stack-audit":
+        report = stack_audit(_load(args.systems))
+        _emit(report, args, generic_markdown(report, "Tech stack audit"))
+        return 0
+
     if args.command == "benchmark":
         report = location_benchmark(
             as_of, _load(args.locations), _load(args.inventory), _load(args.memberships),
@@ -467,10 +569,17 @@ def main(argv: list[str] | None = None) -> int:
             raise SystemExit("--open-hours-per-day must be a number") from None
         generated_at = args.generated_at or datetime.now().astimezone().isoformat(
             timespec="seconds")
+        if args.allow_unsafe and not (args.unsafe_reason or "").strip():
+            raise SystemExit(
+                "error: --allow-unsafe requires --unsafe-reason "
+                "\"who accepted this folder and why\"")
+        if args.unsafe_reason and not args.allow_unsafe:
+            raise SystemExit("error: --unsafe-reason is only valid with --allow-unsafe")
         try:
             bundle = run_health_check(
                 args.input, client=args.client, as_of=as_of, generated_at=generated_at,
                 policy=args.pii_policy, allow_unsafe=args.allow_unsafe,
+                unsafe_reason=args.unsafe_reason,
                 overrides=overrides, stale_days=args.stale_days,
                 discount_pct=args.discount_flag_pct,
                 churn_window_days=args.churn_window_days,
@@ -509,13 +618,16 @@ def main(argv: list[str] | None = None) -> int:
         try:
             paths = finalize_engagement(args.engagement, reviewer=args.reviewer,
                                         notes=args.notes, finalized_at=finalized_at,
-                                        force=args.force)
-        except (FileNotFoundError, FileExistsError) as e:
+                                        attestation=args.attest, force=args.force)
+        except (FileNotFoundError, FileExistsError, ValueError) as e:
             raise SystemExit(f"error: {e}") from None
         print(f"Finalized: {paths['report']}\nReview record: {paths['record']}\n"
               "The report is released to you; this tool does not send it to the client. "
               "The draft report.html is left in place as the audit trail.")
         return 0
+
+    if args.command == "demo":
+        return _run_demo(args.output, force=args.force)
 
     if args.command == "redact":
         table = _load(args.file)

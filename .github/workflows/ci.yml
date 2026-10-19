@@ -29,6 +29,10 @@ jobs:
         run: python scripts/generate_readme_catalog.py --check
       - name: Run deterministic evals
         run: python scripts/run_evals.py
+      - name: Trigger-suite structure
+        run: python scripts/run_trigger_evals.py
+      - name: Generated operator docs
+        run: python scripts/generate_operator_docs.py --check
 
   test:
     name: Tests (${{ matrix.os }} / py${{ matrix.python }})

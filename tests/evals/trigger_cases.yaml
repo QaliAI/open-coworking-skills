@@ -1,8 +1,10 @@
-# Trigger and collision eval suite (audit addition, 2026-07-18).
-# Per stable skill: 4 direct positives, 3 indirect positives (natural
+# Trigger and collision eval suite.
+# Every installable skill: 4 direct positives, 3 indirect positives (natural
 # operator language, no skill names), 3 negatives (belong to another named
 # skill), 2 ambiguous (any of `acceptable` is fine), 2 collisions
 # (`acceptable` = correct set; `unacceptable` = activation failure).
+# 34 skills / 476 cases were LLM-judged. The three skills added 2026-10-19
+# have structural cases only. Do not describe the new cases as judge-passed.
 # Run: python scripts/run_trigger_evals.py  (see the script header for
 # what is executed deterministically vs LLM-graded).
 
@@ -1037,3 +1039,93 @@ skills:
       - prompt: "Did everything arrive in the new system?"
         acceptable: [coworking-data-migration-readiness, coworking-crm-wms-reconciliation]
         unacceptable: [coworking-monthly-owner-report]
+
+  coworking-unit-economics:
+    direct_positive:
+      - "What occupancy do we need to cover rent and payroll?"
+      - "Run unit economics on the costs I supplied"
+      - "Which products actually contribute after fixed costs?"
+      - "Are we full but underpriced on private offices?"
+    indirect_positive:
+      - "We look busy and still miss the rent"
+      - "How much revenue per workstation do we need before this location covers its fixed costs?"
+      - "Meeting rooms might be busy and still not pay for themselves"
+    negative:
+      - prompt: "What's our occupancy right now?"
+        expected: coworking-occupancy-revenue-dashboard
+      - prompt: "Are discounts hiding weak revenue?"
+        expected: coworking-discount-pricing-audit
+      - prompt: "Where are we leaking money between systems?"
+        expected: coworking-revenue-leakage-audit
+    ambiguous:
+      - prompt: "Are we making money on this location?"
+        acceptable: [coworking-unit-economics, coworking-occupancy-revenue-dashboard]
+      - prompt: "What does a full office actually earn?"
+        acceptable: [coworking-unit-economics, coworking-discount-pricing-audit]
+    collision:
+      - prompt: "What occupancy covers the rent I typed in?"
+        acceptable: [coworking-unit-economics]
+        unacceptable: [coworking-occupancy-revenue-dashboard]
+      - prompt: "Do not invent payroll. Use only the cost file."
+        acceptable: [coworking-unit-economics]
+        unacceptable: [coworking-monthly-owner-report]
+
+  coworking-tech-stack-integration-audit:
+    direct_positive:
+      - "Map our coworking tech stack and the gaps between systems"
+      - "Audit how CRM, OfficeRnD, QuickBooks, Stripe, and access control connect"
+      - "Which of our core systems is disconnected?"
+      - "Run an integration audit on this systems inventory"
+    indirect_positive:
+      - "Our tools do not talk to each other and staff retype memberships"
+      - "Nobody knows which system owns the member record"
+      - "We have too many logins and the handoffs between them break"
+    negative:
+      - prompt: "Reconcile this month's HubSpot deals against memberships"
+        expected: coworking-crm-wms-reconciliation
+      - prompt: "Build an MCP server for our workspace system"
+        expected: coworking-mcp-builder
+      - prompt: "Are we ready to migrate off Cobot?"
+        expected: coworking-data-migration-readiness
+    ambiguous:
+      - prompt: "Our software stack is a mess"
+        acceptable: [coworking-tech-stack-integration-audit, coworking-crm-wms-reconciliation]
+      - prompt: "How should we connect the new access system?"
+        acceptable: [coworking-tech-stack-integration-audit, coworking-system-adapter-builder]
+    collision:
+      - prompt: "HubSpot and the workspace system disagree about who moved in"
+        acceptable: [coworking-crm-wms-reconciliation]
+        unacceptable: [coworking-tech-stack-integration-audit]
+      - prompt: "Draw the map of systems before you reconcile one month of deals"
+        acceptable: [coworking-tech-stack-integration-audit]
+        unacceptable: [coworking-revenue-leakage-audit]
+
+  coworking-operator-playbooks:
+    direct_positive:
+      - "Where are we losing money? Use the operator playbook."
+      - "Which playbook answers why our leads are not converting?"
+      - "Run the 90-day occupancy playbook"
+      - "I have a business question and I do not know which skill to open"
+    indirect_positive:
+      - "Who should we talk to before they leave?"
+      - "Is the AI front desk ready to talk to prospects?"
+      - "Give me the monthly pack for the landlord"
+    negative:
+      - prompt: "What's our occupancy as of today?"
+        expected: coworking-occupancy-revenue-dashboard
+      - prompt: "Write the follow-up for this morning's tour"
+        expected: coworking-tour-follow-up
+      - prompt: "Redact the emails in this export"
+        expected: coworking-pii-redactor
+    ambiguous:
+      - prompt: "Help me with renewals"
+        acceptable: [coworking-operator-playbooks, coworking-renewal-expansion-risk]
+      - prompt: "Something is wrong with virtual offices"
+        acceptable: [coworking-operator-playbooks, coworking-virtual-office-reconciliation]
+    collision:
+      - prompt: "Where is the money leaking across the whole business?"
+        acceptable: [coworking-operator-playbooks, coworking-revenue-leakage-audit]
+        unacceptable: [coworking-collections-prioritizer]
+      - prompt: "We are opening a second city next quarter. Build the presale playbook."
+        acceptable: [coworking-operator-playbooks]
+        unacceptable: [coworking-occupancy-forecast]

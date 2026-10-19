@@ -18,7 +18,7 @@ python -m pip install -e ".[dev]"
 
 ```bash
 python -m pytest                          # unit + integration tests
-python scripts/validate_skills.py         # 24 skills pass
+python scripts/validate_skills.py         # every installable skill must pass
 python scripts/run_evals.py               # deterministic eval cases pass
 ```
 

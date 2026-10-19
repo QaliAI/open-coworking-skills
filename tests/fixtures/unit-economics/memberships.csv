@@ -1,0 +1,2 @@
+membership_id,company_id,location_id,product,unit_id,start_date,status,contracted_rate,complimentary
+M-1,C-1,LOC-1,private-office,OF-1,2026-01-01,active,800,false

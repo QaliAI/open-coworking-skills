@@ -18,8 +18,8 @@ test before any label above mock-tested.
 
 | Item | Why next | What it needs |
 |---|---|---|
-| Operator validation program for the 10 betas | The only path from beta to stable | 2-3 operators running skills on redacted real exports; feedback issues |
-| Live-host routing runs | Trigger suite has the manifest/grade interface ready | Claude Code/Codex sessions executing the 476-case manifest |
+| Operator validation program for the 13 betas | The only path from beta to stable | Operators running skills on redacted real exports; feedback issues. See [docs/OPERATOR_VALIDATION.md](docs/OPERATOR_VALIDATION.md). |
+| Live-host routing runs | Trigger suite has the manifest/grade interface ready | Claude Code/Codex sessions. 476 cases were judged. 42 newer cases have not been. |
 | Connector sandbox tests | Prototypes are mock-tested only | HubSpot developer sandbox + OfficeRnD trial org; record in SOURCES.yaml |
 | `coworking-proposal-builder` | Every won deal passes through a proposal; dispute-causing omissions are preventable | Terms checklist vetted against common disputes; legal-boundary evals |
 | `coworking-booking-flow-audit` | Complements the SEO audit's conversion findings | Friction rubric + application cases |

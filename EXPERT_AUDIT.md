@@ -1,3 +1,5 @@
+> Current state is [FINAL_RELEASE_AUDIT.md](FINAL_RELEASE_AUDIT.md), dated 2026-10-19. The "no remote" and "CI has never executed on GitHub" rows below were true on 2026-07-18. The repository now has a remote, and GitHub Actions has run.
+
 # Expert audit — OpenCoworking Skills
 
 Independent adversarial audit of the repository as built by the previous

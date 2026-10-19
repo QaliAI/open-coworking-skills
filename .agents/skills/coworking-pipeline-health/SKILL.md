@@ -1,6 +1,6 @@
 ---
 name: coworking-pipeline-health
-description: Audits a coworking sales pipeline for stale deals, missing or overdue next actions, unassigned records, duplicate open deals, invalid stages, conversion bottlenecks, and per-owner workload. Use when an operator provides CRM deal data or asks why leads, tours, proposals, or memberships are not converting, or wants a pipeline review or sales hygiene check.
+description: Audits a coworking sales pipeline for stale deals, missing or overdue next actions, unassigned records, duplicate open deals, invalid stages, and per-owner workload. Use when an operator provides a deals export and asks for a pipeline review, a sales hygiene check, or which open deals are stuck. Use coworking-lead-to-tour-diagnostic when the question is why inquiries are not becoming tours.
 license: Apache-2.0
 compatibility: Mode 2 requires Python 3.11+ with the opencoworking package.
 metadata:
@@ -22,9 +22,9 @@ row-level findings a sales manager can act on today.
 
 ## When to use
 
-- "Review our pipeline" / "why aren't deals closing"
+- "Review our pipeline" / "which open deals are stuck"
 - Weekly sales hygiene check on a deals export
-- Before forecasting (a dirty pipeline forecasts nothing)
+- Before a forecast that would otherwise treat a neglected pipeline as demand
 
 ## When not to use
 

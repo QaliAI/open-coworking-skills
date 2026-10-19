@@ -168,7 +168,7 @@ skills:
     risk: r1
     modes: [manual, export]
     primary_user: tour host
-    problem: Generic "checking in" follow-ups transfer all work to the prospect and close poorly.
+    problem: Generic follow-ups leave the prospect to reconstruct the price, the promise, and the next step.
     inputs: Five-question tour debrief.
     outputs: Specific follow-up draft, CRM log line, promised-items list. Drafts only.
     dependencies: [coworking-tour-preparation]
@@ -424,6 +424,48 @@ skills:
     outputs: Coverage audit, source-to-target mapping, dedup rules, validation plan, cutover and rollback checklists, post-migration reconciliation plan.
     evidence_needed: Coverage checklist grounded in the canonical model; fixtures.
     planned_evals: Coverage-gap detection cases on synthetic exports.
+
+  - name: coworking-unit-economics
+    category: finance-pricing
+    status: beta
+    version: "0.1.0"
+    priority: p1
+    risk: r0
+    modes: [manual, export]
+    primary_user: owner / GM
+    problem: Operators borrow a generic break-even occupancy because rent, payroll, and product margin were never computed from their own costs.
+    inputs: Operator-supplied monthly cost rows; optional inventory, memberships, and a meeting-revenue figure.
+    outputs: Fixed and variable totals, workstation coverage count with formula, product contribution only where costs were tagged, explicit not-measured lines.
+    evidence_needed: Hand-computed coverage fixture; refusal to invent missing expenses.
+    planned_evals: Known-answer coverage; refusal to use typical costs.
+
+  - name: coworking-tech-stack-integration-audit
+    category: integration-development
+    status: beta
+    version: "0.1.0"
+    priority: p1
+    risk: r0
+    modes: [manual, export]
+    primary_user: owner / operator
+    problem: CRM, workspace, accounting, payments, and access systems are shallowly connected and membership data is retyped, but operators have no map of their own stack.
+    inputs: Systems inventory with category, system of record, connections, ID quality, manual re-entry, and write access.
+    outputs: Findings for absent categories, missing systems of record, weak IDs, disconnected core systems, and write access that was not exercised.
+    evidence_needed: OfficeRnD 2026 stack report as context only; fixture that does not call a vendor.
+    planned_evals: Known-answer map; refusal to accept an API key.
+
+  - name: coworking-operator-playbooks
+    category: foundation
+    status: beta
+    version: "0.1.0"
+    priority: p1
+    risk: r0
+    modes: [manual, export]
+    primary_user: owner / GM
+    problem: Operators know the business question and should not have to know which of dozens of skills to open.
+    inputs: The business question and the minimum exports that question needs.
+    outputs: One playbook, the skill sequence, the minimum files, and the refusal rules for that question.
+    evidence_needed: Each playbook names existing skills and does not invent a metric.
+    planned_evals: Routing questions to the right playbook; refusal to sum unlike leakage totals.
 
   - name: coworking-cohort-retention
     category: business-intelligence

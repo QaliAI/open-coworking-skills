@@ -174,8 +174,15 @@ class TestPreflightGateOnARun:
                "name,password\nsvc," + FAKE_SESSION_VALUE + "\n")
         bundle = run_health_check(tmp_path, client="C", as_of=date(2026, 7, 1),
                                   generated_at="2026-07-01T00:00:00+00:00",
-                                  allow_unsafe=True)
+                                  allow_unsafe=True,
+                                  unsafe_reason="Operator confirmed the file is a fixture")
         assert bundle["engagement"]["allow_unsafe"] is True
+        assert bundle["engagement"]["unsafe_reason"] == (
+            "Operator confirmed the file is a fixture")
+        with pytest.raises(ValueError):
+            run_health_check(tmp_path, client="C", as_of=date(2026, 7, 1),
+                             generated_at="2026-07-01T00:00:00+00:00",
+                             allow_unsafe=True)
         assert bundle["preflight"]["blocking_count"] == 1
         assert any(item["type"] == "preflight_blocked" for item in bundle["limitations"])
 
