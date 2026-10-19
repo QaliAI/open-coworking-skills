@@ -15,11 +15,11 @@ Human steps. Do not check a box from memory.
 - [x] Pull request #5 merged to `main` as `07e7d0e` on 2026-10-19.
 - [x] QaliAI/open-coworking-skills is public.
 - [x] Dependency graph answers the SBOM API. Vulnerability alerts, secret scanning, and push protection are enabled.
-- [ ] Add a ruleset on `main`: no force-push, no deletion, require the test, lint, validator, secret-scan, and Dependency Review checks. Do this after the launch-report commit is on main. A required approving review would lock a one-maintainer repository, so do not add one.
+- [x] Ruleset `protect-main` (id 25436995) is active on `main`. It blocks force-push and deletion and requires secret scan, skill validators, lint, the four test jobs, and Dependency Review. There is no required approving review, so a one-maintainer repository is not locked to a second account. Direct pushes can still be rejected until those checks exist on the commit.
 - [x] Discussions are enabled. The public API no longer exposes a mutation to create categories, so the six GitHub defaults remain: Announcements, General, Ideas, Polls, Q&A, Show and tell. Rename them in the GitHub UI if you want Operator Questions, Help / Installation, New Skill Ideas, Integrations, Show & Tell, and Operator Feedback. Issues stay for bugs, features, and data-model changes.
 - [x] Topics set: coworking, flex-space, flexible-workspace, agent-skills, ai-agents, claude-code, codex, github-copilot, cursor, workspace-management, officernd, nexudus, hubspot, proptech, coworking-operators, open-source. Host and vendor names are discovery labels. The README still says the connectors are mock-tested.
 - [x] Deleted `expert-audit-wave-2` after confirming it was an ancestor of `main`. Dependabot branches stay.
-- [ ] Tag v0.1.0 on the public `main` commit after the launch-report CI is green. Release notes separate stable, beta, playbooks, CLI, connectors, limitations, install, privacy, and what is next.
+- [x] Tagged v0.1.0 on `7f81c0f` after CI run 39332439973 passed. https://github.com/QaliAI/open-coworking-skills/releases/tag/v0.1.0
 - [x] Cloned the public URL and ran `opencoworking demo`. Workstation occupancy 0.5758, office 0.7143, financial 0.6370, logo churn 0.0588 on 1 of 17. Draft only.
 
 ## After the tag
