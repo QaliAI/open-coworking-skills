@@ -90,7 +90,8 @@ by a second demo command.
 - Deleted remote branch `expert-audit-wave-2` after confirming it was an ancestor of `main`. Dependabot branches were left in place.
 - Public install tests, telemetry disabled: `--list` found 37 skills; `--skill coworking-pipeline-health` copied into a temporary Codex project. `--all` was not run.
 - Social preview is GitHub's generated card. No custom image was uploaded.
-- Release tag and the main ruleset are applied after this file is on `main` and its CI is green. See the release URL below once that tag exists. The ruleset blocks force-push and deletion and requires the CI checks on pull requests. It does not require an approving review.
+- Tagged v0.1.0 on `7f81c0f` after CI run 39332439973 passed.
+- Ruleset `protect-main` (id 25436995) is active. It blocks force-push and deletion of `main` and requires Secret scan, Skills/catalog/references/evals, Lint and type-check, the four test jobs, and Dependency review. It does not require an approving review. The current admin cannot bypass it.
 
 Release: https://github.com/QaliAI/open-coworking-skills/releases/tag/v0.1.0
 
