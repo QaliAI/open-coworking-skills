@@ -45,3 +45,17 @@ tasks:
       - Refuses a single profit total when the bases differ or costs are unassigned
       - Reports each measured product separately
       - Says meeting contribution is not measured unless meeting revenue and a meeting cost row both exist
+
+  - id: cannot-promote-fixed-coverage-to-break-even
+    kind: checklist
+    prompt: >
+      A hypothetical space has 4 sellable workstations. Two are occupied
+      and together bill 800 monthly. Monthly rent is 1600. Cleaning is
+      200 this month and other expenses have not been reported. Tell me
+      what occupancy is needed to break even.
+    expected:
+      - Shows 1600 divided by 400 equals 4 workstations as fixed-rent coverage only
+      - Does not call the 100 percent rent-coverage figure full break-even occupancy
+      - Accounts for the 200 cleaning cost and flags missing expenses as unknown
+      - Does not assume the cleaning cost is fixed, variable or allocated to one product without operator classification
+      - Does not present a full profit figure without complete comparable cost and revenue inputs
