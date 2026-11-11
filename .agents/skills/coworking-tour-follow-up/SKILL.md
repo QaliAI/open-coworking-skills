@@ -41,7 +41,9 @@ deals. The operator sends it.
   replace it — CRMs don't capture what was discussed).
 - **Mode 3** — not supported.
 
-## Required inputs (the five-question debrief for a personalized, send-ready draft)
+## Required inputs
+
+For a personalized, send-ready **draft**, ask the five debrief questions below. When an answer is unavailable, produce a clearly labeled fill-in worksheet rather than inventing the missing facts.
 
 1. What was discussed (needs, concerns, anything personal-professional the
    prospect volunteered)
