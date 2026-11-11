@@ -88,6 +88,7 @@ the next, and every step works before any of the others exist.
 ## Start without code (for operators)
 
 **New to AI or GitHub?** Begin with the [no-code operator quickstart](docs/getting-started/operator-quickstart.md): it includes a fictional lead-pipeline exercise, a copyable starter request, expected findings, and privacy guidance. It needs no login to this repository, software installation or real member data. The short chat demonstration is **not** equivalent to installing the complete tested agent skill.
+For five short exercises spanning sales, occupancy, front-desk priorities, response speed and local marketing, see [five first wins](docs/getting-started/five-first-wins.md).
 
 ## Five-minute quick start
 
