@@ -85,6 +85,10 @@ analyzer → data dictionary → occupancy dashboard → leakage audit →
 daily brief every morning → owner report every month — each output feeds
 the next, and every step works before any of the others exist.
 
+## Start without code (for operators)
+
+**New to AI or GitHub?** Begin with the [no-code operator quickstart](docs/getting-started/operator-quickstart.md): it includes a fictional lead-pipeline exercise, a copyable starter request, expected findings, and privacy guidance. It needs no login to this repository, software installation or real member data. The short chat demonstration is **not** equivalent to installing the complete tested agent skill.
+
 ## Five-minute quick start
 
 With Python 3.11+ and git (Windows PowerShell and bash both work):
@@ -124,9 +128,9 @@ npx skills add QaliAI/open-coworking-skills --all
 and it skips the confirmation prompt. On 2026-10-19, `--list` against a
 local checkout of this repository found 37 skills, and installing
 `coworking-occupancy-revenue-dashboard` with `-a codex -y --copy` wrote a
-copy under `.agents/skills/` in a temporary project. The public GitHub form
-above works only after this repository is public. Until then, pass the
-local checkout path instead of `QaliAI/open-coworking-skills`.
+copy under `.agents/skills/` in a temporary project. This repository is public; the commands above use its GitHub URL. If your
+agent cannot install skills, use the no-code [operator quickstart](docs/getting-started/operator-quickstart.md)
+and paste the appropriate full skill instructions instead.
 
 GitHub CLI remains a supported alternative. `gh` 2.92 does not see the
 hidden directory unless you pass `--allow-hidden-dirs`:
