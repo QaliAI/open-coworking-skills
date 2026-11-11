@@ -41,7 +41,7 @@ deals. The operator sends it.
   replace it — CRMs don't capture what was discussed).
 - **Mode 3** — not supported.
 
-## Required inputs (the debrief — all five, or the draft is refused)
+## Required inputs (the five-question debrief for a personalized, send-ready draft)
 
 1. What was discussed (needs, concerns, anything personal-professional the
    prospect volunteered)
@@ -66,15 +66,20 @@ send — its absence from the follow-up is a trust leak.
 
 1. Collect the debrief; push back on vague answers ("what specifically did
    they object to?"). If items 1-2 can't be answered at all, say the
-   follow-up would be generic and decline until at least those exist.
+   follow-up would be generic. Offer a **fill-in worksheet** with clearly
+   labeled missing fields instead of writing invented tour details. Do not
+   label that worksheet send-ready. Ask only for the missing facts needed
+   to complete a truthful personalized message.
 2. Draft the package for the chosen channel:
    - Subject: specific (unit + name), not "Following up"
    - Recap: 1-2 lines naming what they saw and liked (from debrief only)
    - The promised items, attached/linked or dated
    - Objection handling: address each raised objection honestly — real
      constraints stated, no invented scarcity or urgency
-   - The next step with date, phrased as a confirmation, plus one
-     alternative slot
+   - The next step with a confirmed date, if provided. When no agreed
+     date or availability is supplied, mark **[confirm next-step date]**
+     and **[offer a verified alternative]** for the operator to fill in;
+     never invent calendar availability.
 3. Include the price of the recommended option in writing (prospects
    compare; making them ask re-opens the loop).
 4. Produce a CRM log line (next_action + next_action_date) so the deal
@@ -118,7 +123,8 @@ didn't say is not in the draft.
 - Broker-introduced prospect: follow-up may need to route via the broker —
   ask; going direct can breach the broker agreement.
 - No-show (not a completed tour): that's a rebook message — shorter,
-  no recap; offer two concrete new slots, no guilt language.
+  no recap; ask the operator for two genuinely available slots or leave
+  labeled slot placeholders for review; no guilt language.
 
 ## Privacy and security
 
@@ -135,35 +141,47 @@ voice-note checklist and wait; do not fill gaps with plausible content.
 
 ## Example
 
-**Request:** "Write the follow-up for this morning's Bravo Insurance tour.
-Debrief: saw OF-102 at 2,100 and OF-105 at 2,000; worried about parking for
-8 staff; CFO decides with them; want to move by 1 Sep; I promised the
-parking-garage rates and a floor plan."
+**Request (fictional):** "Write the follow-up for this morning's Bravo
+Insurance tour. Debrief: showed OF-102 at $2,100/month and OF-105 at
+$2,000/month; prospect asked about parking for eight staff; their CFO is
+involved in the decision; desired move-in is September 1; I promised
+parking-garage rates and a floor plan. I haven't checked garage prices,
+what either office seats, calendar availability, or the prospect's name."
 
-**Output (excerpt):**
+**Output (excerpt — draft requiring operator review):**
 
+```text
+Subject: Bravo Insurance — office options, floor plan and parking follow-up
+
+Hello [prospect name — confirm],
+
+Thanks for visiting today. We reviewed office OF-102 at $2,100/month and
+OF-105 at $2,000/month. You asked about parking for eight team members;
+I still need to confirm garage availability and pricing.
+
+As promised, I will send:
+- [Attach or link the correct office floor plan after verifying it]
+- [Confirm parking capacity, terms and actual rates before quoting]
+
+You mentioned your CFO will be involved and that September 1 is your
+target move-in. Would you be open to a short review call together?
+[Operator: insert two genuinely available date/time options after checking
+your calendar, or ask the prospect for their preferred time.]
+
+[Operator name]
+
+CRM note (draft): toured OF-102 / OF-105; parking question unresolved;
+CFO part of decision; target move-in 1 Sep (year unconfirmed).
+Next action: verify parking rates + floor plan; then schedule review call.
+Next action date: NOT CONFIRMED — operator must set.
+Promised items: floor plan (not attached); garage rates (not verified).
 ```
-Subject: Office 105 for Bravo Insurance — floor plan + parking rates
 
-Hi Felix,
-
-Good to show you around this morning. Office 105 (8 workstations, 2,000/mo)
-matched what you described for the team better than 102 did.
-
-Attached: the floor plan and the garage's monthly rates — 8 unreserved
-passes run [rate from operator]; the lot next door is cheaper if three of
-your staff carpool as you mentioned.
-
-You mentioned your CFO is part of this decision and a 1 Sep move — shall we
-hold a 20-minute call with them both Thursday at 10:00? If Thursday's out,
-Friday 14:00 also works.
-
-[operator name]
-
-CRM log: D-2007 next_action="CFO call re OF-105" next_action_date=2026-07-23
-Promised: floor plan (attach), garage rates (operator to supply — flagged)
-```
-
+**Why this is correct:** The debrief did not provide a prospect name,
+office capacities, parking rates, actual attachments, a calendar slot or
+the year of the move-in. The draft must not fabricate any of them. A
+placeholder is an internal editing cue, **not** permission to send a
+message with missing facts.
 ## Evals
 
 See [evals/cases.yaml](evals/cases.yaml).
