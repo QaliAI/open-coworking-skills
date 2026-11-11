@@ -62,6 +62,11 @@ Printed on every run:
 
 This is coverage math at the current average contracted rate. It is not a marginal contribution model and it is not an industry break-even.
 
+**Never label fixed-cost coverage as full break-even.** If variable expenses or
+other overhead are present, the fixed-only ratio can understate required
+revenue. State excluded cost classes and explain that the unknown total
+prevents a defensible all-in break-even claim.
+
 ## Workflow
 
 1. Refuse to start if the operator asks you to "use typical coworking costs." Ask for their figures or stop.
@@ -109,9 +114,34 @@ Missing rent is a stop for any lease-coverage sentence. Offer the revenue-per-wo
 
 ## Example
 
-**Request:** "What occupancy covers our costs? Rent is 1600 and cleaning is 200. One office is occupied at 800 for two desks. The other two desks are empty."
+**Request (fictional):** "How much of our monthly cost can occupancy cover?
+We have $1,600/month of fixed rent and $200/month of cleaning, explicitly
+classified by our bookkeeper as a variable expense **for this month** and
+allocated to the office product. Our occupied office earns $800/month for
+two workstations. Two other workstations are sellable but vacant."
 
-**Output (excerpt):** Fixed monthly 1600 (rent). Variable monthly 200 (cleaning). Contracted MRR 800 on 2 occupied workstations of 4 sellable, average 400. Workstations to cover fixed costs = 1600 / 400 = 4.00, which is 100% of sellable capacity at today's rate. Office contribution = 800 − 1800 = −1000 because cleaning was tagged to office. Categories not in the file (payroll, CAM, software, internet) are unknown, not zero. No market benchmark used.
+**Output (excerpt):**
+
+- **Fixed costs provided:** $1,600 rent. **Variable expenses provided:** $200
+  cleaning this month; do not extrapolate its rate to future occupancy.
+- **Contracted MRR from occupied workstations:** $800 / 2 = $400 per
+  occupied workstation per month; **sellable capacity:** 4 workstations.
+- **Fixed-cost coverage only:** $1,600 / $400 = 4 workstations,
+  **100% of the four sellable workstations** at the present average rate.
+- **Not total break-even:** $1,600 + $200 = $1,800 stated costs, while
+  four workstations at $400 would yield $1,600 under the *illustrative*
+  unchanged-rate assumption—$200 below the **listed** costs. The
+  $200 cleaning cost could change with utilization. Payroll, CAM,
+  internet, marketing and other missing expenses remain **unknown**.
+  A complete break-even occupancy is **not measurable**.
+- **Current office contribution under the stated allocation:** $800 −
+  $1,600 − $200 = −$1,000 for this illustrative month. This is not
+  company profit and should not be extrapolated across products.
+
+**Critical interpretation:** A 100% *fixed-cost coverage* figure must
+never be described as "break-even occupancy". Confirm cost classifications,
+product allocations and missing expenses with the operator before
+recommending a pricing or lease decision.
 
 ## Evals
 
