@@ -62,7 +62,7 @@ own fix family:
 
 1. **Volume** — leads created in period (vs the operator's own history, not
    industry numbers)
-2. **Contact rate** — leads with any human response / leads
+2. **Contact evidence** — human first-response timestamps / leads where timestamps are reliable. The `funnel` command's `contacted` counter is only a **CRM-status-progressed proxy** (status not `new` or blank), not confirmed human contact. Never call that proxy a verified contact rate; reconcile it with `speed-to-lead`.
 3. **Speed** — business-minute response stats (from the speed skill)
 4. **Qualification** — contacted → qualified share
 5. **Tour ask** — qualified leads with a tour proposed/booked (needs tour
@@ -77,6 +77,10 @@ own fix family:
 
 1. Compute every checkpoint the data supports (run the three commands);
    mark unsupported checkpoints "no data" rather than skipping silently.
+   **Before diagnosing contact failure, compare** `funnel.contacted`
+   (status progression) with timestamp-backed human responses from
+   `speed-to-lead`. If they disagree, report both definitions and stop
+   short of a verified contact-rate claim.
 2. Localize: find the FIRST checkpoint in causal order where the number is
    materially below the operator's own recent baseline (ask for baseline;
    without one, report levels without "low/high" judgments and say why).
@@ -149,15 +153,19 @@ breaking?" (synthetic demo)
 
 ```
 Checkpoints (June): volume 22 leads (baseline: none provided —
-level-only). Contact rate 19/22 (86%). Speed: median 30 business min, but
+level-only). CRM status progression 19/22 (86%, **not** verified human
+contact). Speed: median 30 business min, but
 3 leads never touched (2 after-hours website). Leads with a tour: 9/22
 (41%). Show rate 5/7 (71%). Product mix: 9 office inquiries vs 1 office
 currently sellable-vacant (OF-103) at LOC-NOR.
 
-Diagnosis: the funnel's biggest break is not marketing — volume and contact
-are healthy. Two findings:
-1. Tour-ask gap: 6 qualified/contacted leads have no tour record and no
-   next action containing a proposed time.
+Diagnosis: no historical baseline is supplied, so **neither volume nor
+contact can be called healthy or unhealthy**. The status-based count is
+not proof of human contact. Two investigation candidates:
+1. Tour-ask gap (hypothesis): 6 CRM-status-progressed leads lack an
+   associated tour record and proposed-time next action. Confirm against
+   actual responses, tour notes and the booking system before calling
+   these qualified, contacted leads or assigning a cause.
 2. Hypothesis - product mismatch: office inquiries outnumber sellable
    vacant offices 9:1; some "non-converting" leads may have had nothing to
    tour. Confirm by comparing inquiry_product against availability dates.
