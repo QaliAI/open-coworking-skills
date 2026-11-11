@@ -4,6 +4,8 @@ You do **not** need to install software, know GitHub, connect an account, or pay
 
 > **Important distinction:** A copied prompt in a general chat assistant is a *guided, manual version* of a skill. It does not automatically install the full skill, run the tested Python calculations, or connect to your workspace system. For verified calculations on exports, use the full skill plus its deterministic tools or ask a qualified analyst to check the math.
 
+For more examples after the first exercise, see [five no-code first wins](five-first-wins.md): sales follow-up, occupancy, front-desk priorities, lead response and local marketing.
+
 ## Start here: pick one problem
 
 | Your role or question | Start with | What you should get |
