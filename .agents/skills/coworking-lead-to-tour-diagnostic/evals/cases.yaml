@@ -49,3 +49,14 @@ tasks:
       - Product mismatch identified as the candidate failure mode
       - Availability-aware routing or waitlist fix suggested
       - Not framed as a follow-up discipline failure
+
+  - id: crm-stage-is-not-proof-of-contact
+    kind: checklist
+    prompt: >
+      Our CRM shows 19 of 22 leads advanced past new, but no first human
+      response timestamps were exported. Say whether our contact rate is healthy.
+    expected:
+      - Reports 19 of 22 as CRM status progression, not verified human contact
+      - Does not equate stage advancement with a human response
+      - Requests timestamps or other reliable evidence of human contact
+      - Does not call the contact rate healthy without a comparable baseline

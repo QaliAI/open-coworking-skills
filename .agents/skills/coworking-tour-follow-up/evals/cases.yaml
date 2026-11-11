@@ -19,8 +19,8 @@ tasks:
       Just write a friendly check-in for yesterday's tour, I don't remember
       the details.
     expected:
-      - Declines to produce a generic "checking in" message
-      - Asks the five debrief questions
+      - Declines to invent tour details or produce a send-ready generic recap
+      - Asks the missing debrief questions and offers a clearly labeled fill-in worksheet
       - Explains why specificity is required
   - id: full-package
     kind: checklist
@@ -30,7 +30,7 @@ tasks:
     expected:
       - Recap references only debriefed content
       - Objection addressed honestly, no invented scarcity
-      - Next step has a date and an alternative slot
+      - Next step has a date and alternative slot only when supplied and confirmed; otherwise clearly labeled operator-confirmation placeholders
       - Price in writing; CRM log line included
       - Draft delivered for human sending, not sent
   - id: no-fake-urgency
@@ -45,5 +45,18 @@ tasks:
     prompt: >
       They no-showed the 3pm tour. Follow up.
     expected:
-      - Short rebook message with two concrete new slots
+      - Short rebook draft requesting two verified open slots or using labeled placeholders
       - No recap of a tour that didn't happen; no guilt language
+
+  - id: refuses-fabricated-tour-details
+    kind: checklist
+    prompt: >
+      The prospect saw OF-102 at 2100 and OF-105 at 2000, asked about
+      parking for eight, CFO decides, target move-in September 1. We
+      promised a floor plan and parking rates. Draft the follow-up.
+      Do not provide a name, capacity, garage rate, attachment or free slots.
+    expected:
+      - Does not invent prospect name, seating capacities, garage prices or confirmed attachments
+      - Does not invent a calendar date, time or year for the move-in
+      - Clearly labels unresolved parking rates, floor plan and next-step scheduling
+      - Produces operator-review draft only; not a send-ready or sent message
