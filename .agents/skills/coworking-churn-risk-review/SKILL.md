@@ -2,11 +2,11 @@
 name: coworking-churn-risk-review
 description: Reviews coworking memberships for cancellation risk using explainable indicators - approaching end dates without renewal, failed payments, unresolved complaints, declining usage, downgrade requests, cancellation language in notes - never an opaque score, and produces a per-member evidence list with a recommended human conversation. Use when an operator asks who might cancel, wants a churn risk review, retention check, or "which members should I worry about".
 license: Apache-2.0
-compatibility: Mode 2 requires Python 3.11+ with the opencoworking package.
+compatibility: Mode 2 requires Python 3.11+ with the opencoworking package; the date, pricing and payment signals come from `opencoworking renewals`.
 metadata:
   opencoworking.category: community-retention
   opencoworking.version: "0.1.0"
-  opencoworking.maturity: stable
+  opencoworking.maturity: beta
   opencoworking.risk: r0
   opencoworking.data-sensitivity: confidential
 ---
@@ -15,9 +15,9 @@ metadata:
 
 ## Purpose and operator problem
 
-By the time a cancellation notice arrives, the decision was made weeks ago.
-The signals were visible — the failed payment, the complaint nobody closed,
-the team that stopped coming in. Opaque "churn scores" don't help a
+A cancellation is the end of a sequence: a failed payment, a complaint
+nobody closed, a team that stopped coming in. Those signals are visible
+before the notice if anyone looks. Opaque "churn scores" don't help a
 community manager act; a named member with three cited pieces of evidence
 and a suggested conversation does.
 
@@ -29,18 +29,25 @@ and a suggested conversation does.
 
 ## When not to use
 
-- A member already gave notice (`coworking-renewal-preparation` for saves
-  at renewal; `coworking-cancellation-to-virtual-office` for downgrade
-  retention)
-- First-60-day problems (`coworking-member-onboarding` audit)
+- A member already gave notice or has a recorded end date
+  (`coworking-member-offboarding` owns the departure; this skill does not
+  predict a decision that has already been made)
+- An approaching renewal that needs an offer
+  (`coworking-renewal-preparation`)
+- A member who is downsizing rather than leaving
+  (`coworking-cancellation-to-virtual-office`)
+- Early onboarding gaps (`coworking-member-onboarding` audit)
 
 ## Operating modes
 
 - **Mode 1** — operator walks through their member list against the
   indicator checklist.
-- **Mode 2** — from exports: memberships (end/renewal/notice dates,
-  discounts), invoices/payments (failures), plus whatever activity or
-  support data exists. Missing data classes are reported as blind spots.
+- **Mode 2** — `opencoworking renewals --memberships "<memberships.csv>"
+  [--invoices "<invoices.csv>"] --as-of YYYY-MM-DD [--window-days 90]`,
+  then this review's state and indicator rules applied to its output. It
+  computes dates, pricing exposure, payment friction, multi-membership
+  structure and month-to-month exposure. Usage and complaint indicators
+  still need their own data.
 - **Mode 3** — not supported.
 
 ## Required inputs
@@ -54,19 +61,31 @@ member feedback/reviews, team-size changes the operator knows about.
 
 ## Definitions
 
-Indicators (each cited with its evidence; no composite score):
+### Four states that must not be conflated
 
-| Indicator | Evidence rule |
-|---|---|
-| Renewal cliff | end_date or renewal_date within 60 days, no renewal recorded |
-| Notice given | notice_date set |
-| Payment friction | failed payment or overdue invoice within 90 days |
-| Unresolved complaints | support/feedback item open >14 days, or repeated same-topic complaints |
-| Declining usage | usage in recent 30 days materially below that member's own prior baseline (needs activity data; absence of data ≠ absence of usage) |
-| Shrinking team | member count on the agreement decreased; downgrade request |
-| Pricing exposure | discount expiring, or contracted rate far below current list (renewal shock ahead) |
-| Cancellation language | notes contain moving/downsizing/cancellation phrasing (flag verbatim with date) |
-| Unused inventory | assigned unit with no observed use (needs access data) |
+| State | Definition | Correct handling |
+|---|---|---|
+| Confirmed departure | Notice served and an end date recorded | Offboarding, not retention. Route to `coworking-member-offboarding`. |
+| Known movement | notice_date recorded, end date in the future | Transition management. Not a churn prediction; excluded from the risk tiers. |
+| Renewal approaching | end_date or renewal_date inside the review window, no notice | Retention conversation. |
+| At risk | Predictive indicators only; no notice and no cliff inside the window | Watch list. |
+
+### Indicators (each cited with its evidence; no composite score)
+
+| Indicator | Evidence rule | Status |
+|---|---|---|
+| Payment friction | failed payment or overdue invoice inside the payment window (default 90 days) | Repo default |
+| Unresolved complaints | support/feedback item open beyond the complaint window (default 14 days), or repeated same-topic complaints | Repo default |
+| Declining usage | usage in the recent window below that member's own prior baseline (needs activity data; absence of data ≠ absence of usage) | Repo default; the operator sets the window |
+| Shrinking team | member count on the agreement decreased; downgrade request | Observed fact |
+| Pricing exposure | discount expiring, or contracted rate far below current list (renewal shock ahead) | Observed fact |
+| Cancellation language | notes contain moving/downsizing/cancellation phrasing (flag verbatim with date) | Observed fact |
+| Unused inventory | assigned unit with no observed use (needs access data) | Observed fact |
+
+**The default windows are this repository's choices, not industry rules.**
+60, 90 and 14 days, and any "several members share a cause" threshold, are
+heuristics. Print them as defaults and let the operator change them for the
+location.
 
 **Explicitly not an indicator by itself**: low event attendance. Many
 healthy members never attend events; it only corroborates other signals.
@@ -77,11 +96,14 @@ healthy members never attend events; it only corroborates other signals.
    as blind spots up front.
 2. Evaluate every active membership against supported indicators; a member
    enters the review with ≥1 indicator.
-3. Tier by evidence, not arithmetic:
-   - **Act now**: notice given, renewal cliff, or failed payment + any
-     second indicator
-   - **Talk soon**: any two indicators
-   - **Watch**: single soft indicator
+3. Assign each member a state first, then tier only the predictive cases:
+   - **Confirmed departure** — already leaving; not a retention tier
+   - **Known movement** — notice recorded with a future end date; a
+     transition, excluded from the risk tiers
+   - **Renewal approaching** — inside the window, no notice
+   - **Act now** — a predictive indicator plus a second indicator
+   - **Talk soon** — any two predictive indicators
+   - **Watch** — a single soft indicator
 4. Per member: the evidence lines (verbatim, dated), what is NOT known
    (e.g. "no usage data — attendance unknown"), and a suggested opening
    for a human conversation that names the member's situation without
@@ -96,8 +118,11 @@ healthy members never attend events; it only corroborates other signals.
   an indicator only with a dated example.
 - One giant member at risk outweighs five small "watch" entries — order by
   MRR within tiers.
-- Systemic pattern (≥3 members share a cause) → one systemic
-  recommendation, not three identical member conversations.
+- When several members share a cause, report the count and the grouped
+  evidence. Whether that is systemic is the operator's call; this skill does
+  not apply a member-count threshold.
+- Notice given is never scored as predicted churn. It is a recorded fact
+  with a recorded end date, so it belongs in the state table.
 
 ## Data-quality checks
 
@@ -152,11 +177,14 @@ say exactly that rather than padding with speculation.
 Blind spots: no check-in/usage data, no support tickets provided —
 usage-based and complaint-based indicators unavailable.
 
-ACT NOW
+KNOWN MOVEMENT (not predicted churn)
 - C-EAST (M-005, 3,400/mo): notice_date 15 Jun recorded; end 31 Aug.
-  Largest single MRR at risk. Unknown: reason for notice. Opener: exit
+  Largest single MRR leaving. Unknown: reason for notice. Opener: exit
   conversation to learn the driver + explore the 8-cap OF-105 if size is
-  the issue, or VO continuity if they're going remote.
+  the issue, or VO continuity if they're going remote. Route to
+  coworking-member-offboarding for the end-date and credential work.
+
+ACT NOW
 - C-DELTA (M-004, 2,000/mo): payment failed 1 Jun (INV-1004, 2,000) +
   28.6% discount expiring at renewal 1 Aug — compounding: a payment
   problem meeting a price jump. Opener: fix the card this week, discuss
@@ -173,4 +201,6 @@ See [evals/cases.yaml](evals/cases.yaml).
 
 ## Version
 
-0.1.0 (stable).
+0.1.0 (beta). Downgraded from stable: the indicator windows are repo
+defaults rather than sourced industry rules, and no outside operator has run
+the review on real data.

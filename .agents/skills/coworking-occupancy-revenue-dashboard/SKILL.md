@@ -15,7 +15,7 @@ metadata:
 
 ## Purpose and operator problem
 
-"We're 90% full but the bank account disagrees" is the most common coworking
+"We're 90% full but the bank account disagrees" is a familiar coworking
 confusion. It happens because unit-count occupancy, workstation occupancy,
 and financial occupancy are different numbers, and comped units, discounts,
 and out-of-service inventory quietly widen the gaps. This dashboard computes

@@ -6,7 +6,7 @@ compatibility: For developers; assumes ability to run a language toolchain (Pyth
 metadata:
   opencoworking.category: integration-development
   opencoworking.version: "0.1.0"
-  opencoworking.maturity: stable
+  opencoworking.maturity: beta
   opencoworking.risk: r1
   opencoworking.data-sensitivity: confidential
 ---
@@ -121,9 +121,13 @@ validation as the generic CSV adapter).
 
 ## Output contract
 
-Design doc (tool table with contracts + sensitivity), scaffolded code
-with the auth/pagination/audit/redaction concerns implemented, fixture-
-based tests, operator README. Vendor docs cited with access dates into
+A design deliverable: tool table with contracts and sensitivity, the
+least-privilege scope list, the auth/pagination/audit/redaction decisions,
+a fixture-test plan, and an operator README. Any code produced is a
+scaffold for the developer to review and test, not a verified connector.
+The only connectors shipped in this repository
+(`src/opencoworking/connectors/`) are read-only, mock-tested prototypes and
+are labelled that way. Vendor docs cited with access dates into
 `docs/research/SOURCES.yaml`.
 
 ## Evidence and confidence
@@ -186,4 +190,5 @@ See [evals/cases.yaml](evals/cases.yaml).
 
 ## Version
 
-0.1.0 (stable).
+0.1.0 (beta). The deliverable is a design and scaffold, not a verified
+integration; beta until a connector is sandbox-tested.

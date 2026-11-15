@@ -462,6 +462,7 @@ def renewal_scan(memberships: Table, as_of: date, invoices: Table | None = None,
 
     in_window: list[dict[str, object]] = []
     month_to_month: list[str] = []
+    month_to_month_rows: list[dict[str, object]] = []
     for m in memberships.rows:
         if m.get("status", "").strip().lower() != "active":
             continue
@@ -472,6 +473,11 @@ def renewal_scan(memberships: Table, as_of: date, invoices: Table | None = None,
         if cliff is None:
             if not (m.get("term_months", "") or "").strip():
                 month_to_month.append(mid)
+                m2m_rate = _money(m.get("contracted_rate", ""))
+                month_to_month_rows.append({
+                    "membership_id": mid,
+                    "company_id": m.get("company_id", "?"),
+                    "contracted_rate": None if m2m_rate is None else str(m2m_rate)})
             continue
         if not (as_of <= cliff <= horizon):
             continue
@@ -500,9 +506,25 @@ def renewal_scan(memberships: Table, as_of: date, invoices: Table | None = None,
             "next_step": "coworking-renewal-preparation brief" if evidence
             else "standard renewal confirmation"})
     in_window.sort(key=lambda i: int(str(i["days_to_cliff"])))
+    m2m_priced = [Decimal(str(r["contracted_rate"])) for r in month_to_month_rows
+                  if r["contracted_rate"] is not None]
+    m2m_exposure = {
+        "count": len(month_to_month_rows),
+        "contracted_mrr": str(sum(m2m_priced, ZERO)),
+        "memberships_with_unknown_rate": [r["membership_id"] for r in month_to_month_rows
+                                          if r["contracted_rate"] is None],
+        "memberships": month_to_month_rows,
+        "period": f"active as of {as_of.isoformat()}",
+        "exclusions": ["memberships with an end or renewal date are not counted here",
+                       "inactive memberships"],
+        "note": "Rolling exposure, not a forecast. Each of these can give notice at "
+                "any time; the operator's notice period is not in the canonical export, "
+                "so the number whose window closes inside it cannot be derived here.",
+    }
     return {"as_of": as_of.isoformat(), "window_days": window_days,
             "agreements_in_window": in_window,
             "month_to_month_active": month_to_month,
+            "month_to_month_exposure": m2m_exposure,
             "caveats": [
                 "Usage, support history, and team-size changes are not in these "
                 "exports; evidence lists cover only dates, pricing, payments, and "

@@ -160,8 +160,9 @@ C. Continuity: VO + meeting credits (~99-250/mo) — if going remote;
    keeps address, mail, and the relationship.
 
 Human judgment required: any discount beyond list-policy; whether to
-waive the notice if they re-sign; suite re-listing timing (60 days to
-fill 3,500/mo — start marketing regardless, quietly).
+waive the notice if they re-sign; when to start re-listing the suite.
+No fill-time statistic is asserted — ask the operator for their own
+observed re-let time, or say it is unknown.
 
 Conversation: open with the reason question, not an offer. "Your notice
 came through — before paperwork, what changed?"

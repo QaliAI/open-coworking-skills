@@ -14,6 +14,21 @@ mock-tested HubSpot/OfficeRnD connector prototypes; see
 validation on real (redacted) data, and for the connectors a sandbox
 test before any label above mock-tested.
 
+## Delivered 2026-11-15
+
+Three gaps from [docs/audits/GAP_RESEARCH_2026.md](docs/audits/GAP_RESEARCH_2026.md)
+are now built and eval-tested:
+
+- `coworking-member-offboarding` (experimental - needs an operator-supplied
+  notice table)
+- `coworking-mail-operations` (beta - needs one operator run and a real
+  mail log)
+- `coworking-broker-channel-manager` (beta - needs one operator's own channel
+  terms file)
+
+`coworking-location-feasibility` and `coworking-acquisition-cost-review`
+remain deferred for the reasons in that document.
+
 ## Wave 3 (next) — highest operator value per effort
 
 | Item | Why next | What it needs |

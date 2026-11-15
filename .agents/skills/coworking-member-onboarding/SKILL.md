@@ -14,11 +14,11 @@ metadata:
 
 ## Purpose and operator problem
 
-Churn risk is highest in the first 60 days, and most early cancellations
-trace to broken basics: access card never worked, invoice surprised them,
-nobody introduced them to anyone. Onboarding is a checklist problem
-masquerading as a hospitality problem. This skill produces the checklist —
-dated, owned, and auditable.
+A broken first month — a badge that never worked, an invoice that surprised
+them, nobody they met — is exactly the failure this checklist exists to
+prevent. Onboarding is a checklist problem masquerading as a hospitality
+problem: the basics fail because no single person owned them. This skill
+produces the checklist — dated, owned, and auditable.
 
 ## When to use
 
@@ -35,9 +35,10 @@ dated, owned, and auditable.
 
 - **Mode 1** — operator answers: who's joining, product, start date, team
   size; plan is generated from the template.
-- **Mode 2** — audit mode: from memberships/members exports, list members
-  with recent start dates and missing `onboarded_on`, cross-check first
-  invoices; produce per-member gap lists.
+- **Mode 2** — audit mode, run by hand from memberships/member exports:
+  list members with recent start dates and missing `onboarded_on`,
+  cross-check first invoices, and produce per-member gap lists. There is no
+  `opencoworking` command for this audit; do not imply one.
 - **Mode 3** — not supported.
 
 ## Required inputs
@@ -90,8 +91,11 @@ ordered").
 
 ## Decision logic
 
-- Team joins (5+ people): add a team-lead sync task and stagger access
-  setup; day-1 tasks scale by headcount.
+- Team joins at or above the operator's team threshold (default 5 people,
+  set in the operator profile): add a team-lead sync task and stagger
+  access setup; day-1 tasks scale by headcount. The default is a repo
+  choice, not an industry rule — real operators draw the line at 5, 15 or
+  20 people.
 - Virtual-office members: the physical tasks drop; mail setup, address-use
   guidance, and booking credits become the core; day-1 becomes a call.
 - Transfers between locations keep tenure — don't rerun day-1 basics,
@@ -154,8 +158,8 @@ Day 1
 [ ] Walkthrough + written building rules — Riley
 [ ] Booking-app demo, first room booking made together — Riley
 Week 1
-[ ] Intro: Kai (film) ↔ Grace at Charlie Content (media adjacency, from
-    sales notes) — Riley — by 5 Jun
+[ ] Intro: general community-channel welcome (no interests were supplied,
+    so no specific match is asserted) — Riley — by 5 Jun
 [ ] Check-in: "what's not working yet?" — Riley — 5 Jun
 Month 1
 [ ] 30-day check-in vs stated goal (edit suite access) — Riley — 1 Jul

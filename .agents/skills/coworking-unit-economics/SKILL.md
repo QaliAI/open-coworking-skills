@@ -1,6 +1,6 @@
 ---
 name: coworking-unit-economics
-description: Answers what occupancy a coworking location needs to cover the fixed costs the operator actually supplied, and what each product contributes, without inventing rent, payroll, or CAM. Use when an operator asks "what occupancy do we need to break even", "which products make money", "are we full but underpriced", or "what revenue per workstation do we need".
+description: Computes fixed-cost coverage and, when the operator supplies a per-workstation variable cost, break-even occupancy for a coworking location, plus product contribution from the costs actually typed in - never invented rent, payroll, or CAM. Use when an operator asks "what occupancy do we need to break even", "what occupancy covers rent and payroll", "which products make money", "are we full but underpriced", or "what revenue per workstation do we need".
 license: Apache-2.0
 compatibility: Mode 2 requires Python 3.11+ with the opencoworking package.
 metadata:
@@ -16,9 +16,15 @@ metadata:
 ## Purpose and operator problem
 
 A full room can still miss the rent. Operators ask for "the break-even
-occupancy" and get a borrowed 70% from a blog. That number is someone
-else's lease. This skill computes a coverage count from the fixed costs
-the operator types in and the contracted rates already on the memberships.
+occupancy" and are often handed a number built on someone else's lease.
+This skill computes two different things and keeps them apart:
+
+1. **Fixed-cost coverage** from the fixed costs the operator types in and
+the contracted rates already on the memberships.
+2. **Break-even occupancy**, only when the operator also supplies a
+variable cost **per workstation**. Coverage omits variable costs, so it is
+always the lower — and wrong — answer to a break-even question.
+
 Categories that are not in the file stay unknown. They are not entered as zero.
 
 ## When to use
@@ -38,12 +44,12 @@ Categories that are not in the file stay unknown. They are not entered as zero.
 ## Operating modes
 
 - **Mode 1** — the operator lists monthly costs and current recurring revenue by product on paper. Apply the same formulas. Leave every missing line blank.
-- **Mode 2** — `opencoworking economics --costs costs.csv [--inventory inv.csv --memberships mem.csv] [--meeting-revenue N] --as-of YYYY-MM-DD`
+- **Mode 2** — `opencoworking economics --costs costs.csv [--inventory inv.csv --memberships mem.csv] [--meeting-revenue N] --as-of YYYY-MM-DD`. Cost rows carry `kind` of `fixed`, `variable` or `variable_per_workstation`.
 - **Mode 3** — not supported. Do not pull rent from an accounting API inside this skill.
 
 ## Required inputs
 
-A cost table with `category`, `monthly_amount`, and `kind` (`fixed` or `variable`). Amounts are already monthly. An annual figure must be converted by the operator, and the conversion is stated. Do not divide by 12 silently.
+A cost table with `category`, `monthly_amount`, and `kind` (`fixed`, `variable`, or `variable_per_workstation`). Amounts are already monthly. An annual figure must be converted by the operator, and the conversion is stated. Do not divide by 12 silently. For a break-even answer, a `variable_per_workstation` row is required; without it the skill reports coverage only.
 
 ## Optional inputs
 
@@ -57,10 +63,21 @@ Printed on every run:
 - variable monthly = sum of rows with kind `variable` (this month's total, not a per-desk rate)
 - workstations to cover fixed costs = fixed monthly / (contracted MRR / occupied sellable workstations)
 - occupancy to cover fixed costs = that workstation count / sellable workstation capacity
+- contribution per workstation = average contracted revenue per occupied workstation − variable cost per workstation
+- workstations to break even = fixed monthly / contribution per workstation
+- break-even occupancy = that workstation count / sellable workstation capacity
+
 - Exclusions match the occupancy dashboard: out-of-service units and non-sellable units are out of the pool. Complimentary contracted revenue is excluded from MRR. The workstation still counts as occupied, which pulls the average rate down. Say that when it happens.
 - Period: the as-of date's active memberships, and costs as supplied for one month. Do not annualize.
 
-This is coverage math at the current average contracted rate. It is not a marginal contribution model and it is not an industry break-even.
+Both blocks print their own `formula`, `period` and `exclusions`. The
+coverage block carries `metric_kind: fixed_cost_coverage` and a
+`not_a_break_even` statement inside the output, not only in this prose.
+
+Coverage is arithmetic at the current average contracted rate. Break-even on
+contribution assumes the next workstation earns the current average rate and
+costs the supplied variable cost per workstation. Neither is an industry
+benchmark, and neither is a forecast.
 
 **Never label fixed-cost coverage as full break-even.** If variable expenses or
 other overhead are present, the fixed-only ratio can understate required
@@ -83,6 +100,8 @@ prevents a defensible all-in break-even claim.
 - Zero fixed costs means coverage is not measured, even if the building is full.
 - Zero occupied workstations or zero MRR means the average rate does not exist. Do not divide.
 - Do not compare the coverage occupancy to 70%, 80%, or any published benchmark.
+- Never call the coverage figure break-even. If the operator asked for break-even and no `variable_per_workstation` row exists, say so in the first sentence, give coverage, and name the missing row.
+- If the supplied variable cost per workstation is at or above the average contracted rate, no positive contribution exists: report that and do not divide.
 - "Full but underpriced" is allowed only as an internal statement: contracted MRR is below the fixed costs at the current occupancy, or a product's contribution is negative. It is not a statement about the market.
 
 ## Data-quality checks
@@ -91,7 +110,7 @@ Kind must be fixed or variable. Amounts must parse. Inventory and membership joi
 
 ## Output contract
 
-Category totals, coverage block or an explicit not-measured reason, product contribution only when both sides exist, meeting block labeled operator-supplied or not measured, and the assumption sentence. No single "profit" number that mixes rooms, offices, and virtual office on different bases.
+Category totals, the coverage block or an explicit not-measured reason, `break_even_on_contribution` with either a measured figure or a named reason it was not computed, product contribution only when both sides exist (with any unmapped product labels listed), meeting block labeled operator-supplied or not measured, and the assumption sentence. No single "profit" number that mixes rooms, offices, and virtual office on different bases.
 
 ## Evidence and confidence
 
@@ -130,10 +149,15 @@ two workstations. Two other workstations are sellable but vacant."
   **100% of the four sellable workstations** at the present average rate.
 - **Not total break-even:** $1,600 + $200 = $1,800 stated costs, while
   four workstations at $400 would yield $1,600 under the *illustrative*
-  unchanged-rate assumption—$200 below the **listed** costs. The
+  unchanged-rate assumption — $200 below the **listed** costs. The
   $200 cleaning cost could change with utilization. Payroll, CAM,
   internet, marketing and other missing expenses remain **unknown**.
   A complete break-even occupancy is **not measurable**.
+- **Break-even not computed:** no `variable_per_workstation` row was
+  supplied, and the $200 cleaning total is this month's cost, not a cost per
+  workstation. If the operator supplies consumables at $50 per workstation,
+  contribution is $400 − $50 = $350 and break-even is $1,600 / $350 = 4.57
+  workstations (114% of capacity) — the coverage figure was too low.
 - **Current office contribution under the stated allocation:** $800 −
   $1,600 − $200 = −$1,000 for this illustrative month. This is not
   company profit and should not be extrapolated across products.

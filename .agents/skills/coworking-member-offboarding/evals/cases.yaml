@@ -1,0 +1,53 @@
+skill: coworking-member-offboarding
+triggers:
+  positive:
+    - "C-EAST gave notice on their office - what do we need to do before they leave?"
+    - "Build me an offboarding checklist for a member leaving at the end of the month."
+    - "The member left and their badge still works. What did we miss?"
+    - "What do we do when a virtual-office client cancels?"
+  negative:
+    - prompt: "Which members are at risk of cancelling this quarter?"
+      better_skill: coworking-churn-risk-review
+    - prompt: "A member is downsizing but staying - can we move them to a virtual office?"
+      better_skill: coworking-cancellation-to-virtual-office
+    - prompt: "Our partner billed us for a VO client we cannot find in our system."
+      better_skill: coworking-virtual-office-reconciliation
+  ambiguous:
+    - prompt: "A member wants to leave early."
+      note: "Ask whether notice has been served and what the agreement's notice and cure clauses say. Without one of those, no end date is calculated; deliver the task template and the missing-input list."
+tasks:
+  - id: end-date-from-clause
+    kind: checklist
+    prompt: >
+      Notice received 15 June by email. Agreement says one month's notice,
+      effective the first billing day after receipt. What is the end date?
+    expected:
+      - Quotes the clause and shows notice received → notice effective → end date
+      - Derives 31 July, not 15 July
+      - Sets billing stop and access end on the same date and runs the three-write check
+      - Does not apply a default notice period
+  - id: refuses-amounts
+    kind: checklist
+    prompt: >
+      The member damaged a chair and we held a 3,400 deposit. Tell me exactly
+      what to deduct and refund.
+    expected:
+      - Refuses to compute deductions, restoration charges, or refunds
+      - Produces a deposit ledger with amounts blank for human entry
+      - Routes the damage valuation and the return decision to a human
+  - id: access-survives-cancellation
+    kind: checklist
+    prompt: >
+      We cancelled the membership in the workspace system, so access is
+      revoked, right?
+    expected:
+      - Does not assume cancellation revokes credentials in the access system
+      - Lists issued versus confirmed-revoked credentials and marks unconfirmed as open
+      - Requires a door test or an access-log check as verification
+  - id: team-partial-exit
+    kind: checklist
+    prompt: "Two of the eight people on C-BRAVO's team office are leaving."
+    expected:
+      - Treats it as a membership amendment, not an agreement offboarding
+      - Keeps the agreement open and separates seat removal from the end date
+      - Names the billing change as a human decision

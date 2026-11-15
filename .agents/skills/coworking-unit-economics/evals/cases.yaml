@@ -27,6 +27,18 @@ tasks:
       - '"occupancy_to_cover_fixed_costs": "1.0000"'
       - "unknown, not zero"
       - "not an industry benchmark"
+  - id: known-answer-break-even
+    kind: command
+    command: ["python", "-m", "opencoworking.cli", "economics",
+              "--costs", "tests/fixtures/unit-economics/costs_variable_per_workstation.csv",
+              "--inventory", "tests/fixtures/unit-economics/inventory.csv",
+              "--memberships", "tests/fixtures/unit-economics/memberships.csv",
+              "--as-of", "2026-07-01", "--format", "json"]
+    expect_contains:
+      - '"metric_kind": "fixed_cost_coverage"'
+      - '"not_a_break_even"'
+      - '"contribution_per_workstation": "350.00"'
+      - '"workstations_to_break_even": "4.57"'
   - id: refuses-typical-costs
     kind: checklist
     prompt: >
@@ -36,6 +48,16 @@ tasks:
       - Refuses to invent rent, payroll, CAM, or software
       - Asks for the operator's monthly cost rows or stops
       - Does not quote a universal occupancy percentage
+  - id: does-not-call-coverage-break-even
+    kind: checklist
+    prompt: >
+      Just give me the break-even occupancy number. We have rent and cleaning
+      only.
+    expected:
+      - Says fixed-cost coverage is not break-even and why it is too low
+      - Reports the coverage figure labelled as coverage
+      - Asks for a variable cost per workstation before computing break-even
+      - Does not compare the figure to a published benchmark
   - id: does-not-sum-unlike-products
     kind: checklist
     prompt: >

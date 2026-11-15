@@ -72,7 +72,7 @@ skills:
     risk: r0
     modes: [manual, export]
     primary_user: owner / GM
-    problem: Operators feel 90% full while the bank disagrees - occupancy variants and their distortions are conflated.
+    problem: Operators can feel 90% full while the bank disagrees - occupancy variants and their distortions are conflated.
     inputs: Inventory and membership exports; as-of date.
     outputs: Office/workstation/financial occupancy with formulas, distortion flags, decision summary.
     dependencies: [coworking-data-dictionary]
@@ -192,14 +192,14 @@ skills:
     risk: r1
     modes: [manual, export]
     primary_user: community manager
-    problem: First-60-day churn traces to broken basics nobody owned - access, billing, introductions.
+    problem: The first month fails on basics nobody owned - access, billing, introductions - because no single person is accountable for them.
     inputs: Member, product, start date, responsible staff.
     outputs: Dated owner-assigned checklist with verifications; onboarding gap audits.
     dependencies: []
 
   - name: coworking-churn-risk-review
     category: community-retention
-    status: stable
+    status: beta
     version: "0.1.0"
     risk: r0
     modes: [manual, export]
@@ -271,7 +271,7 @@ skills:
 
   - name: coworking-mcp-builder
     category: integration-development
-    status: stable
+    status: beta
     version: "0.1.0"
     risk: r1
     modes: [manual]
@@ -288,10 +288,46 @@ skills:
     risk: r1
     modes: [manual]
     primary_user: contributor
-    problem: Without a disciplined adapter path every new platform request becomes "edit all skills".
+    problem: Without a disciplined adapter path every new platform request becomes "edit every skill that touches the entity".
     inputs: Target system, real export samples or current API docs.
     outputs: Mapping guide, optional converter with tests, honest compatibility label.
     dependencies: []
+
+  - name: coworking-member-offboarding
+    category: community-retention
+    status: experimental
+    version: "0.1.0"
+    risk: r1
+    modes: [manual, export]
+    primary_user: community manager / finance
+    problem: A departure spans agreement, billing, access, mail and deposit, and nobody owns the sequence; credentials outlive memberships and invoices arrive after the end date.
+    inputs: Member record; the agreement or the operator's own notice table; notice date and channel; deposit status; credential list; role map.
+    outputs: End-date arithmetic with the clause quoted; dated owner-assigned task table with verifications; access reconciliation; final-invoice and deposit worksheet with amounts blank; human-decision list.
+    dependencies: []
+
+  - name: coworking-mail-operations
+    category: virtual-office
+    status: beta
+    version: "0.1.0"
+    risk: r1
+    modes: [manual, export]
+    primary_user: front desk / community manager
+    problem: Mail is a daily queue with a published postal floor, run on a shelf and in memory, so items age past the operator's own window and departed clients' mail is handled by guesswork.
+    inputs: A mail_item table; the operator's own mail policy; client status and termination dates; owner roles.
+    outputs: Worklist ordered by lateness; aging buckets per item type; SLA flags only where declared; post-termination conflict report; usage counts; coverage block.
+    dependencies: [coworking-virtual-office-reconciliation]
+
+  - name: coworking-broker-channel-manager
+    category: sales
+    status: beta
+    version: "0.1.0"
+    risk: r1
+    modes: [manual, export]
+    primary_user: owner / sales manager
+    problem: Broker, marketplace and referral terms differ by fee basis, trigger, cap and tail, so percentages are not comparable and invoices cannot be checked without the operator's own agreement.
+    inputs: The operator's channel terms file; channel and lead table; as-of date and period; attribution rule.
+    outputs: Channel register with quoted rules; attribution reconciliation; commission ledger expected versus invoiced versus paid; tail-fee exposure; net-of-fee performance with a volume floor; disagreement list.
+    dependencies: [coworking-lead-source-normalizer]
 
   # --------------------------------------------------------------- planned
   # (Wave 2 audit note, 2026-07-18: coworking-meeting-room-utilization and
@@ -377,7 +413,7 @@ skills:
     risk: r0
     modes: [manual, export]
     primary_user: GM
-    problem: Meeting rooms and event spaces are priced and scheduled blind without booked-hours, revenue-per-hour, and member/nonmember mix analysis.
+    problem: Meeting rooms and event spaces are priced and scheduled blind without booked-hours, revenue-per-hour, and member versus nonmember mix analysis.
     inputs: Room bookings, room/event inventory, opening hours.
     outputs: Per-room booked hours, gross and per-hour revenue, member vs nonmember vs comped mix, utilization when bookable hours are declared, product-specific actions.
     evidence_needed: Booking-hours edge fixtures (overnight, multi-day); utilization formula tests.
@@ -559,19 +595,6 @@ skills:
     evidence_needed: Terms checklist vetted against common dispute causes; no legal-advice boundary.
     planned_evals: Completeness checklists; legal-boundary cases.
 
-  - name: coworking-broker-channel-manager
-    category: sales
-    status: planned
-    priority: p2
-    risk: r1
-    modes: [manual, export]
-    primary_user: sales manager
-    problem: Broker/aggregator leads have fees and rules that make their ROI and etiquette different from direct leads.
-    inputs: Broker agreements as stated, lead sources, deal outcomes.
-    outputs: Per-channel net-of-fee performance and relationship playbook.
-    evidence_needed: Fee-model taxonomy; confidentiality handling for agreement terms.
-    planned_evals: Net-of-fee known answers.
-
   - name: coworking-waitlist-manager
     category: sales
     status: planned
@@ -662,19 +685,6 @@ skills:
     outputs: Realistic monthly calendar tied to actual space happenings.
     evidence_needed: Cadence realism rules; no engagement-bait patterns.
     planned_evals: Plan realism checklists.
-
-  - name: coworking-mail-operations
-    category: virtual-office
-    status: planned
-    priority: p1
-    risk: r1
-    modes: [manual, export]
-    primary_user: front desk
-    problem: Mail handling for VO clients is an SLA business run on sticky notes.
-    inputs: Mail log, client service levels.
-    outputs: Daily worklist, SLA breach flags, unclaimed-mail aging.
-    evidence_needed: Mail-event schema addition; compliance-neutral language (no CMRA legal advice).
-    planned_evals: Worklist known answers.
 
   - name: coworking-vo-compliance-checklist
     category: virtual-office

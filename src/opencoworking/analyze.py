@@ -202,24 +202,36 @@ OPEN_STAGES = {"new", "contacted", "qualified", "tour_booked", "tour", "tour_com
 CLOSED_STAGES = {"won", "lost"}
 
 
-def pipeline_report(deals: Table, as_of: date, stale_days: int = 21) -> dict[str, object]:
-    """Pipeline hygiene: aging, missing next actions, ownership, duplicates."""
+def pipeline_report(deals: Table, as_of: date, stale_days: int = 21,
+                    open_stages: list[str] | None = None,
+                    overload_multiple: float = 2.0) -> dict[str, object]:
+    """Pipeline hygiene: aging, missing next actions, ownership, duplicates.
+
+    ``open_stages`` lets the operator supply their own CRM stage names; when
+    supplied, those names are never reported as invalid. ``overload_multiple``
+    is a repo default, not an industry rule.
+    """
+    open_set = {s.strip().lower() for s in (open_stages or OPEN_STAGES) if s.strip()}
+    closed_set = CLOSED_STAGES
+    stage_order = [s.strip().lower() for s in open_stages or []] or sorted(open_set)
     findings: dict[str, list[dict[str, object]]] = {
         "stale_deals": [], "missing_next_action": [], "overdue_next_action": [],
         "unassigned": [], "invalid_stage": [], "duplicate_open_deals": [],
+        "overloaded_owners": [], "multiple_simultaneous_requirements": [],
     }
     stage_counts: dict[str, int] = {}
     owner_open: dict[str, int] = {}
-    open_by_key: dict[tuple[str, str], list[str]] = {}
+    open_by_key: dict[tuple[str, str, str], list[str]] = {}
+    open_by_company_product: dict[tuple[str, str], list[dict[str, str]]] = {}
 
     for r in deals.rows:
         did = r.get("deal_id", "?")
         stage = r.get("stage", "").strip().lower()
         stage_counts[stage or "(blank)"] = stage_counts.get(stage or "(blank)", 0) + 1
-        if stage and stage not in OPEN_STAGES | CLOSED_STAGES:
+        if stage and stage not in open_set | closed_set:
             findings["invalid_stage"].append({"deal_id": did, "stage": stage})
             continue
-        if stage in CLOSED_STAGES:
+        if stage in closed_set:
             continue
         owner = r.get("owner", "").strip()
         if not owner:
@@ -239,18 +251,67 @@ def pipeline_report(deals: Table, as_of: date, stale_days: int = 21) -> dict[str
             findings["overdue_next_action"].append(
                 {"deal_id": did, "next_action": na, "due": nad.isoformat(),
                  "days_overdue": (as_of - nad).days})
-        key = (r.get("company_id", "").strip().lower(), r.get("product", "").strip().lower())
-        if all(key):
-            open_by_key.setdefault(key, []).append(did)
+        company = r.get("company_id", "").strip().lower()
+        product = r.get("product", "").strip().lower()
+        location = r.get("location_id", "").strip().lower()
+        if company and product:
+            open_by_key.setdefault((company, product, location), []).append(did)
+            open_by_company_product.setdefault((company, product), []).append(
+                {"deal_id": did, "location_id": location})
 
-    for (company, product), ids in open_by_key.items():
+    for (company, product, location), ids in open_by_key.items():
         if len(ids) > 1:
             findings["duplicate_open_deals"].append(
-                {"company_id": company, "product": product, "deal_ids": ids})
+                {"company_id": company, "product": product,
+                 "location_id": location or None, "deal_ids": ids})
+
+    for (company, product), rows in open_by_company_product.items():
+        locations = {row["location_id"] for row in rows}
+        if len(rows) > 1 and len(locations) > 1:
+            findings["multiple_simultaneous_requirements"].append({
+                "company_id": company, "product": product,
+                "deal_ids": [row["deal_id"] for row in rows],
+                "locations": sorted(loc for loc in locations if loc),
+                "note": "Same company and product in different locations. This can be "
+                        "a legitimate simultaneous requirement (expansion, second site), "
+                        "so it is reported for confirmation and is not counted as a "
+                        "duplicate."})
+
+    counts = sorted(owner_open.values())
+    median: float | None = None
+    if counts:
+        mid = len(counts) // 2
+        median = float(counts[mid]) if len(counts) % 2 else (counts[mid - 1] + counts[mid]) / 2
+    if median and median > 0:
+        for owner, n in sorted(owner_open.items()):
+            if n > overload_multiple * median:
+                findings["overloaded_owners"].append(
+                    {"owner": owner, "open_deals": n,
+                     "median_open_deals": median,
+                     "threshold_multiple": overload_multiple})
+
+    stage_snapshot: dict[str, object] = {
+        "order": stage_order,
+        "counts": {stage: stage_counts.get(stage, 0) for stage in stage_order},
+        "largest_step_drop": None,
+        "caveat": "Counts are each open deal's current stage, not a cohort moving "
+                  "through stages. A step is a snapshot difference, not a conversion "
+                  "rate, and a negative step means more deals sit in the later stage "
+                  "than the earlier one. Do not report these as conversion rates.",
+    }
+    largest: dict[str, object] | None = None
+    for earlier, later in zip(stage_order, stage_order[1:], strict=False):
+        lost = stage_counts.get(earlier, 0) - stage_counts.get(later, 0)
+        if largest is None or lost > int(str(largest["count_lost"])):
+            largest = {"from_stage": earlier, "to_stage": later, "count_lost": lost}
+    stage_snapshot["largest_step_drop"] = largest
 
     return {"as_of": as_of.isoformat(), "deal_count": len(deals.rows),
             "stage_counts": dict(sorted(stage_counts.items())),
             "open_deals_by_owner": dict(sorted(owner_open.items())),
+            "median_open_deals_per_owner": median,
+            "overload_threshold_multiple": overload_multiple,
+            "stage_snapshot": stage_snapshot,
             "stale_threshold_days": stale_days, "findings": findings}
 
 
@@ -380,7 +441,8 @@ def source_report(leads: Table) -> dict[str, object]:
 def leakage_report(as_of: date, leads: Table | None = None, deals: Table | None = None,
                    tours: Table | None = None, memberships: Table | None = None,
                    invoices: Table | None = None, inventory: Table | None = None,
-                   payments: Table | None = None) -> dict[str, object]:
+                   payments: Table | None = None,
+                   stale_days: int = 30, invoice_window_days: int = 45) -> dict[str, object]:
     """Cross-file revenue leakage audit. Each check runs only when its inputs
     exist; skipped checks are listed so absence of a finding is never mistaken
     for absence of a problem."""
@@ -399,14 +461,19 @@ def leakage_report(as_of: date, leads: Table | None = None, deals: Table | None 
         skipped.append("unfollowed_leads (needs leads)")
 
     if deals is not None:
-        stale = [r.get("deal_id", "?") for r in deals.rows
-                 if r.get("stage", "").strip().lower() in OPEN_STAGES
-                 and (d := parse_date(r.get("updated_at", ""))) is not None
-                 and (as_of - d).days >= 30]
-        if stale:
-            findings.append({"check": "stale_open_deals_30d", "count": len(stale),
-                             "ids": stale[:25],
-                             "detail": "Open deals untouched for 30+ days."})
+        stale_rows = [r for r in deals.rows
+                      if r.get("stage", "").strip().lower() in OPEN_STAGES
+                      and (d := parse_date(r.get("updated_at", ""))) is not None
+                      and (as_of - d).days >= stale_days]
+        if stale_rows:
+            stale_value = sum((_money(r.get("expected_value", "")) or ZERO
+                               for r in stale_rows), ZERO)
+            findings.append({"check": "stale_open_deals_30d", "count": len(stale_rows),
+                             "ids": [r.get("deal_id", "?") for r in stale_rows][:25],
+                             "unweighted_expected_value": str(stale_value),
+                             "detail": f"Open deals untouched for {stale_days}+ days. "
+                                       "The expected value is unweighted and is not a "
+                                       "forecast."})
     else:
         skipped.append("stale_open_deals_30d (needs deals)")
 
@@ -437,7 +504,7 @@ def leakage_report(as_of: date, leads: Table | None = None, deals: Table | None 
         skipped.append("won_deals_without_membership (needs deals + memberships)")
 
     if memberships is not None and invoices is not None:
-        window = as_of - timedelta(days=45)
+        window = as_of - timedelta(days=invoice_window_days)
         invoiced = {r.get("membership_id", "").strip() for r in invoices.rows
                     if (d := parse_date(r.get("issue_date", ""))) is not None and d >= window}
         unbilled = []
@@ -452,8 +519,8 @@ def leakage_report(as_of: date, leads: Table | None = None, deals: Table | None 
                     "monthly_rate": None if rate is None else str(rate)}
                 if freq and freq != "monthly":
                     item["note"] = (f"billing_frequency={freq}: a {freq} prepayment "
-                                    "outside the 45-day window may be correct - verify "
-                                    "before treating as leakage")
+                                    f"outside the {invoice_window_days}-day window may be "
+                                    "correct - verify before treating as leakage")
                 unbilled.append(item)
         if unbilled:
             at_risk = sum((Decimal(str(u["monthly_rate"])) for u in unbilled
@@ -462,7 +529,7 @@ def leakage_report(as_of: date, leads: Table | None = None, deals: Table | None 
                              "count": len(unbilled), "items": unbilled[:25],
                              "monthly_amount_at_risk": str(at_risk),
                              "detail": "Active, non-complimentary memberships with no invoice "
-                                       "issued in the last 45 days."})
+                                       f"issued in the last {invoice_window_days} days."})
     else:
         skipped.append("active_memberships_without_recent_invoice (needs memberships + invoices)")
 
@@ -508,7 +575,46 @@ def leakage_report(as_of: date, leads: Table | None = None, deals: Table | None 
     else:
         skipped.append("active_status_past_end_date (needs memberships)")
 
+    by_check = {str(f["check"]): f for f in findings}
+    unbilled_finding = by_check.get("active_memberships_without_recent_invoice", {})
+    stale_finding = by_check.get("stale_open_deals_30d", {})
+    oos_finding = by_check.get("out_of_service_inventory", {})
+    totals = {
+        "billing_at_risk": {
+            "monthly_amount": unbilled_finding.get("monthly_amount_at_risk", "0"),
+            "records": unbilled_finding.get("count", 0),
+            "period": f"active memberships with no invoice issued in the "
+                      f"{invoice_window_days} days before {as_of.isoformat()}",
+            "exclusions": ["memberships that are not active",
+                           "complimentary memberships"],
+            "never_summed_with": ["amount_outstanding on failed or overdue invoices "
+                                  "(a balance, not a monthly rate)",
+                                  "pipeline_at_risk", "idle_list_value"],
+        },
+        "pipeline_at_risk": {
+            "unweighted_pipeline_value": stale_finding.get("unweighted_expected_value", "0"),
+            "records": stale_finding.get("count", 0),
+            "period": f"open deals with no update for {stale_days}+ days as of "
+                      f"{as_of.isoformat()}",
+            "exclusions": ["closed deals", "deals with an unparseable updated_at",
+                           "any probability weighting"],
+            "never_summed_with": ["billing_at_risk", "idle_list_value"],
+        },
+        "idle_list_value": {
+            "monthly_list_value": oos_finding.get("monthly_list_value_blocked", "0"),
+            "records": oos_finding.get("count", 0),
+            "period": f"units marked out of service as of {as_of.isoformat()}",
+            "exclusions": ["units with no list price", "units that are not out of service"],
+            "never_summed_with": ["billing_at_risk", "pipeline_at_risk"],
+        },
+        "not_a_total": "The three figures are a monthly rate, an unweighted pipeline "
+                       "value and a monthly list value. They are different bases and are "
+                       "never added into one number.",
+    }
     return {"as_of": as_of.isoformat(), "findings": findings, "skipped_checks": skipped,
+            "totals": totals,
+            "stale_threshold_days": stale_days,
+            "invoice_window_days": invoice_window_days,
             "quantification_note": "Amounts are sums of the listed records only; no "
                                    "extrapolation is applied."}
 

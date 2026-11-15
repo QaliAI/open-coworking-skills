@@ -3,8 +3,9 @@
 # operator language, no skill names), 3 negatives (belong to another named
 # skill), 2 ambiguous (any of `acceptable` is fine), 2 collisions
 # (`acceptable` = correct set; `unacceptable` = activation failure).
-# 34 skills / 476 cases were LLM-judged. The three skills added 2026-10-19
-# have structural cases only. Do not describe the new cases as judge-passed.
+# 34 skills / 476 cases were LLM-judged. The skills added after that run
+# (2026-10-19 and 2026-11-15) have structural cases only. Do not describe the
+# newer cases as judge-passed. The suite now covers 40 skills / 560 cases.
 # Run: python scripts/run_trigger_evals.py  (see the script header for
 # what is executed deterministically vs LLM-graded).
 
@@ -1129,3 +1130,93 @@ skills:
       - prompt: "We are opening a second city next quarter. Build the presale playbook."
         acceptable: [coworking-operator-playbooks]
         unacceptable: [coworking-occupancy-forecast]
+
+  coworking-member-offboarding:
+    direct_positive:
+      - "Build the offboarding checklist for a member leaving on the 31st"
+      - "C-EAST gave notice - what has to happen before they leave?"
+      - "A member moved out and their badge still works. What did we miss?"
+      - "What do we do when a virtual-office client cancels?"
+    indirect_positive:
+      - "They handed in their notice by email last week and I don't know where to start"
+      - "We need to stop their billing and get the fob back"
+      - "The office is empty but I think we are still invoicing them"
+    negative:
+      - prompt: "Which members might cancel next quarter?"
+        expected: coworking-churn-risk-review
+      - prompt: "Can we downgrade this member to a virtual office instead of losing them?"
+        expected: coworking-cancellation-to-virtual-office
+      - prompt: "Reconcile the partner statement for our VO clients"
+        expected: coworking-virtual-office-reconciliation
+    ambiguous:
+      - prompt: "A member wants to leave early"
+        acceptable: [coworking-member-offboarding, coworking-renewal-preparation]
+      - prompt: "Their contract is ending and they are not renewing"
+        acceptable: [coworking-member-offboarding, coworking-renewal-preparation]
+    collision:
+      - prompt: "Two of the eight people on this team office are leaving"
+        acceptable: [coworking-member-offboarding]
+        unacceptable: [coworking-churn-risk-review]
+      - prompt: "The member gave notice and their deposit needs to come back"
+        acceptable: [coworking-member-offboarding]
+        unacceptable: [coworking-collections-prioritizer]
+
+  coworking-mail-operations:
+    direct_positive:
+      - "What mail needs action at the front desk today?"
+      - "Which items are past our 60-day collection window?"
+      - "A client left last month and mail is still arriving"
+      - "Give me the unclaimed-mail aging report"
+    indirect_positive:
+      - "The shelf is full and I don't know what is old"
+      - "We have parcels nobody has picked up for weeks"
+      - "Someone needs to tell clients their letters arrived"
+    negative:
+      - prompt: "Reconcile what our VO partner billed us"
+        expected: coworking-virtual-office-reconciliation
+      - prompt: "Set up mail for a new member starting Monday"
+        expected: coworking-member-onboarding
+      - prompt: "Can this address be used for service of process?"
+        expected: coworking-vo-compliance-checklist
+    ambiguous:
+      - prompt: "Something is wrong with our virtual office mail"
+        acceptable: [coworking-mail-operations, coworking-virtual-office-reconciliation]
+      - prompt: "How should we handle mail for departed clients?"
+        acceptable: [coworking-mail-operations, coworking-member-offboarding]
+    collision:
+      - prompt: "Which VO clients are we not billing for mail handling?"
+        acceptable: [coworking-virtual-office-reconciliation]
+        unacceptable: [coworking-mail-operations]
+      - prompt: "Our mail log has items marked solved with no action recorded"
+        acceptable: [coworking-mail-operations]
+        unacceptable: [coworking-virtual-office-reconciliation]
+
+  coworking-broker-channel-manager:
+    direct_positive:
+      - "A broker invoiced 10% of first-year value but their agreement says two months' rent"
+      - "What does our broker channel cost us net of fees?"
+      - "Two brokers both claim the same lead - who gets paid?"
+      - "A marketplace says we owe a tail fee on a direct deal"
+    indirect_positive:
+      - "The commission invoice looks higher than what we agreed"
+      - "I do not know if this relocated member counts as new business for the broker"
+      - "Which channel actually earns its fee after commission?"
+    negative:
+      - prompt: "Standardize our lead source labels"
+        expected: coworking-lead-source-normalizer
+      - prompt: "We get inquiries but no tours - where is the funnel broken?"
+        expected: coworking-lead-to-tour-diagnostic
+      - prompt: "Are our discounts too deep?"
+        expected: coworking-discount-pricing-audit
+    ambiguous:
+      - prompt: "Is 10% a normal broker commission?"
+        acceptable: [coworking-broker-channel-manager]
+      - prompt: "Our broker leads are expensive"
+        acceptable: [coworking-broker-channel-manager, coworking-lead-to-tour-diagnostic]
+    collision:
+      - prompt: "Check this broker statement against our agreement"
+        acceptable: [coworking-broker-channel-manager]
+        unacceptable: [coworking-collections-prioritizer]
+      - prompt: "Which source produced the most tours?"
+        acceptable: [coworking-lead-to-tour-diagnostic]
+        unacceptable: [coworking-broker-channel-manager]

@@ -52,10 +52,17 @@ Leads and tours files (enables funnel conversion analysis), stale threshold
 
 ## Definitions
 
-Open stages: new, qualified, tour, proposal, negotiation. Closed: won, lost.
+Open stages: new, contacted, qualified, tour_booked, tour, tour_completed,
+proposal, negotiation. Closed: won, lost. **These are the repo defaults.**
+Your CRM's own stage names are supplied with `--open-stage` (repeat it) and
+are then never reported as invalid.
+
 **Stale**: open deal with no record update for ≥ threshold days (record
 touches, not human attention — automation can mask neglect; stated in
-output). **Duplicate open deals**: same company + same product, both open.
+output). **Duplicate open deals**: same company + same product in the same
+location, both open. **Simultaneous requirements**: same company and product
+in different locations — reported for confirmation, never counted as a
+duplicate.
 
 ## Workflow
 
@@ -64,11 +71,14 @@ output). **Duplicate open deals**: same company + same product, both open.
    unassigned → stale → duplicates → invalid stages.
 2. Every finding lists deal IDs, stage, owner, and days. No aggregate-only
    findings — the manager needs names.
-3. If leads/tours exist, run funnel and report stage-to-stage conversion
-   with the definitions attached; identify the single largest drop-off
-   stage by absolute count lost.
-4. Owner workload: open deals per owner; flag owners with >2× the median
-   (overload risk) and any unassigned pool.
+3. Run the funnel when leads/tours exist. The deals export carries each
+   deal's current stage, not its stage history, so the engine reports a
+   **stage snapshot** (counts in stage order and the largest step
+   difference), not cohort conversion. Label it that way; do not present
+   snapshot differences as conversion rates.
+4. Owner workload: open deals per owner, the median, and owners above the
+   configured multiple of it (default 2×; a repo default, not an industry
+   rule), plus any unassigned pool.
 5. Product and source cuts (when columns exist): win rate by product; lead
    volume vs win rate by source — call out high-volume/low-conversion and
    low-volume/high-conversion sources separately.
@@ -83,6 +93,8 @@ output). **Duplicate open deals**: same company + same product, both open.
   are hygiene findings, not conversion findings.
 - Duplicate deals: recommend merging ONLY as a human action with both IDs
   shown; never auto-pick a survivor.
+- Never report a stage snapshot as a conversion rate. Conversion needs
+  stage history or a cohort, and the canonical deals export has neither.
 
 ## Data-quality checks
 
@@ -91,8 +103,8 @@ row references before conclusions.
 
 ## Output contract
 
-Hygiene findings (row-level), funnel table with definitions (when inputs
-allow), workload table, cuts by product/source (when columns exist),
+Hygiene findings (row-level), stage snapshot with its caveat, workload
+table with the median, cuts by product/source (when columns exist),
 prioritized fixes. Pipeline value totals are always labeled unweighted.
 
 ## Evidence and confidence
@@ -102,8 +114,12 @@ the median. Nothing about "industry benchmarks" — no source, no claim.
 
 ## Edge cases
 
-- Same company, different products/locations open simultaneously: legitimate,
-  not duplicates — the duplicate rule keys on company+product.
+- Same company, same product, different locations open simultaneously:
+  a legitimate multi-site requirement. The engine separates it as
+  `multiple_simultaneous_requirements` and does not call it a duplicate.
+- Same company, same product, same location with two open deals: a real
+  duplicate candidate, but still ask before merging — a company can double
+  its requirement at one site.
 - Won deals without next actions are correct (closed); the missing-next-action
   rule applies to open deals only.
 - Re-opened deals (lost → open) inflate age; if created_at predates the

@@ -94,7 +94,7 @@ Ask for company and agreement identifiers when the finding needs them. Do not as
 
 ## Failure and escalation
 
-If the question is outside the eight playbooks, say so and name the closest skill or the planned skill that does not exist yet. Do not stretch a playbook to cover mail operations, access-credential audits, or broker commission math. Those remain planned.
+If the question is outside the eight playbooks, say so and name the closest skill or the planned skill that does not exist yet. Mail operations now has its own skill (`coworking-mail-operations`), broker commission math has `coworking-broker-channel-manager`, and a departure has `coworking-member-offboarding`. Access-credential audits remain planned. Do not stretch a playbook to cover them.
 
 ## Example
 

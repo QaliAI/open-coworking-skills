@@ -38,7 +38,7 @@ report shows them because each lives between two systems.
 - **Mode 1** — operator answers a checklist interview per check; findings
   rely on their answers and say so.
 - **Mode 2** — deterministic:
-  `opencoworking leakage --as-of YYYY-MM-DD [--leads f] [--deals f] [--tours f] [--memberships f] [--invoices f] [--inventory f] [--payments f]`
+  `opencoworking leakage --as-of YYYY-MM-DD [--leads f] [--deals f] [--tours f] [--memberships f] [--invoices f] [--inventory f] [--payments f] [--stale-days 30] [--invoice-window-days 45]`
   Any subset of files works; skipped checks are listed.
 - **Mode 3** — not supported.
 
@@ -59,10 +59,10 @@ The audit's checks, each with its exact rule (implemented in
 | Check | Rule | Needs |
 |---|---|---|
 | unfollowed_leads | status new AND no first_response_at | leads |
-| stale_open_deals_30d | open stage AND updated_at ≥30 days before as-of | deals |
+| stale_open_deals_30d | open stage AND updated_at at least the stale window (default 30 days) before as-of | deals |
 | completed_tours_without_next_action | status completed AND blank next_action | tours |
 | won_deals_without_membership | company has won deal, no active/pending membership | deals+memberships |
-| active_memberships_without_recent_invoice | active, not comped, no invoice issued in last 45 days | memberships+invoices |
+| active_memberships_without_recent_invoice | active, not comped, no invoice issued inside the invoice window (default 45 days) | memberships+invoices |
 | failed_or_overdue_invoices | status failed or overdue | invoices |
 | out_of_service_inventory | out_of_service true (with list value) | inventory |
 | active_status_past_end_date | status active AND end_date < as-of | memberships |
@@ -88,11 +88,25 @@ The audit's checks, each with its exact rule (implemented in
 
 ## Decision logic
 
-Quantify with three separate, never-summed totals: `billing_at_risk`
-(unbilled + failed/overdue), `pipeline_at_risk` (expected values of stale
-open deals, labeled as unweighted pipeline), `idle_list_value` (OOS). Mixing
-these into one "total leakage" number is forbidden — they have different
-probabilities of being real money.
+Quantify with three separate, never-summed totals, emitted by the command
+under `totals`:
+
+- `billing_at_risk.monthly_amount` — the summed monthly rate of active,
+  non-complimentary memberships with no recent invoice. Excludes
+  non-active and complimentary memberships.
+- `pipeline_at_risk.unweighted_pipeline_value` — the summed expected value
+  of stale open deals, with no probability weighting.
+- `idle_list_value.monthly_list_value` — the summed list price of units
+  marked out of service.
+
+Each carries its own period, exclusions and `never_summed_with` list, and
+`totals.not_a_total` states the rule in the output. The failed/overdue
+`amount_outstanding` is a balance, not a monthly rate, and is never added to
+`billing_at_risk`. Mixing these into one "total leakage" number is forbidden
+— they have different probabilities of being real money.
+
+The stale and invoice windows are repo defaults and are supplied with
+`--stale-days` and `--invoice-window-days`; print the values used.
 
 ## Data-quality checks
 
@@ -101,15 +115,16 @@ taints its checks with a caveat.
 
 ## Output contract
 
-Findings grouped by class with record IDs, per-class totals, skipped-check
-list, and a "verify before acting" annotation on every finding that has a
-known benign explanation.
+Findings grouped by class with record IDs, the three separate `totals`
+with their periods and exclusions, the skipped-check list, and a "verify
+before acting" annotation on every finding that has a known benign
+explanation. No grand total.
 
 ## Evidence and confidence
 
 Each amount is the sum of listed records only. Where a rule approximates
-(45-day invoice window vs actual billing cycles), the approximation is
-stated next to the finding.
+(the invoice window vs actual billing cycles), the window used is printed
+next to the finding.
 
 ## Edge cases
 

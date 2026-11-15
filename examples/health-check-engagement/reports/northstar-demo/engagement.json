@@ -176,6 +176,8 @@
     "pipeline.unassigned.count": "1",
     "pipeline.invalid_stage.count": "0",
     "pipeline.duplicate_open_deals.count": "1",
+    "pipeline.overloaded_owners.count": "0",
+    "pipeline.multiple_simultaneous_requirements.count": "0",
     "speed_to_lead.responded_leads": "19",
     "speed_to_lead.leads_without_response": "3",
     "speed_to_lead.median_minutes": "30",
@@ -219,7 +221,7 @@
     "inputs.file_count": "15",
     "inputs.mapped_roles": "companies,contacts,deals,inventory,invoices,leads,locations,members,memberships,payments,room_bookings,tours,virtual_office_partners",
     "findings.count": "22",
-    "metrics.count": "71"
+    "metrics.count": "73"
   },
   "findings": [
     {

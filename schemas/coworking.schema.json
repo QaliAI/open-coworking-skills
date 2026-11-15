@@ -200,7 +200,35 @@
         "end_at": { "type": "string" },
         "attendees": { "type": "string" },
         "amount": { "type": "string" },
-        "member_booking": { "$ref": "#/$defs/boolish" }
+        "member_booking": { "$ref": "#/$defs/boolish" },
+        "status": { "type": "string", "description": "Optional vendor status; cancelled and no_show bookings are excluded from booked hours when this column is present." },
+        "booking_source": { "type": "string", "description": "Optional channel: member_portal, admin, public_widget, app, other." },
+        "cancellation_reason": { "type": "string" },
+        "attended": { "$ref": "#/$defs/boolish" },
+        "cost": { "type": "string", "description": "Optional direct cost of this booking, used only for contribution margin when every honoured booking carries one." }
+      }
+    },
+    "mail_item": {
+      "type": "object",
+      "description": "One received mail item or parcel. Sender and contents are third-party data; never reproduce them in output that leaves the operator's system.",
+      "required": ["item_id", "company_id", "received_date", "item_type"],
+      "properties": {
+        "item_id": { "type": "string" },
+        "company_id": { "type": "string" },
+        "location_id": { "type": "string" },
+        "received_date": { "type": "string" },
+        "item_type": { "type": "string", "description": "letter | parcel | courier | other" },
+        "sender": { "type": "string" },
+        "photo_reference": { "type": "string" },
+        "status": { "type": "string", "description": "new | awaiting_instruction | in_progress | solved" },
+        "instruction": { "type": "string", "description": "scan | forward | shred | recycle | collect | other, as instructed by the client" },
+        "instruction_requested_date": { "type": "string" },
+        "action_taken": { "type": "string" },
+        "action_completed_date": { "type": "string" },
+        "staff_id": { "type": "string" },
+        "postage_cost": { "type": "string" },
+        "forwarding_address": { "type": "string" },
+        "disposition": { "type": "string" }
       }
     },
     "event": {
