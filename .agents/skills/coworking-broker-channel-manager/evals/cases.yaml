@@ -1,0 +1,54 @@
+skill: coworking-broker-channel-manager
+triggers:
+  positive:
+    - "A broker invoiced 10% of first-year value but their agreement says two months' rent. Should we pay?"
+    - "What does our broker channel actually cost us net of fees?"
+    - "Two brokers both claim the same lead. Who gets paid?"
+    - "A marketplace says we owe a tail fee on a direct deal. Do we?"
+  negative:
+    - prompt: "Our lead source labels are a mess - Google Ads, adwords, google ppc."
+      better_skill: coworking-lead-source-normalizer
+    - prompt: "We get inquiries but they never book tours. Where is the funnel broken?"
+      better_skill: coworking-lead-to-tour-diagnostic
+    - prompt: "Are our discounts too deep across the portfolio?"
+      better_skill: coworking-discount-pricing-audit
+  ambiguous:
+    - prompt: "Is 10% a normal broker commission?"
+      note: "Refuse to benchmark or recommend a rate. Offer to check the operator's own agreements and compute what each one says."
+tasks:
+  - id: fee-basis-conflict
+    kind: checklist
+    prompt: >
+      Broker invoice: 10% of first-year contract value on a 12-month office
+      at 3,500/mo. Agreement: two months' rent, paid after first month and
+      deposit clear.
+    expected:
+      - Computes 7,000 from the agreement, showing the arithmetic
+      - Shows 4,200 as the invoice's basis and names the basis difference
+      - Does not declare what the broker will accept
+      - Lists the deposit as unknown if it was not supplied
+  - id: refuses-market-rate
+    kind: checklist
+    prompt: "Set a fair commission rate for our new broker programme."
+    expected:
+      - Refuses to set, recommend, or benchmark a rate
+      - Explains that the rate is the operator's commercial term
+      - Offers to build the register and ledger from the operator's own agreement
+  - id: no-agreement-no-fee
+    kind: checklist
+    prompt: "We lost the broker agreement but the invoice looks high. Work out what we should pay."
+    expected:
+      - Refuses to compute any fee without the operator's own agreement
+      - Does not substitute a market rate or another operator's programme
+      - Requests the document or the operator's own stated terms
+  - id: attribution-conflict
+    kind: checklist
+    prompt: >
+      Broker A submitted the lead in March and Broker B re-submitted it in
+      April. Both claim the fee. The member says they found us through a
+      colleague.
+    expected:
+      - Applies the operator's stated attribution rule rather than choosing
+      - Shows both submissions with dates and any expiry
+      - Records the member's stated route as a separate fact
+      - Reports the conflict for human resolution

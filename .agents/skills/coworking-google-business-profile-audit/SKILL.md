@@ -61,9 +61,10 @@ Review export, photo inventory, website URLs, other-listing suspicions
 footer, and structured data. **Duplicate listing**: another live listing
 for the same business/address — merged or removed via Google's process,
 never fought with a competing listing. **Policy-safe**: no keyword
-stuffing in the business name (a suspension risk), no review gating
-(filtering who gets asked), no incentivized reviews, no fake Q&A
-astroturfing.
+stuffing in the business name (a policy violation that can put the listing
+at risk), no review gating (filtering who gets asked), no incentivized
+reviews, no fake Q&A astroturfing. Policy wording changes: check Google's
+current published policy before asserting a specific rule.
 
 ## Workflow
 
@@ -84,7 +85,8 @@ astroturfing.
    accessibility, parking) filled truthfully.
 5. **Photos**: coverage check — exterior (findability), interior common
    areas, an office, a meeting room, team; staleness (pre-renovation
-   photos); no stock photos (trust erosion + policy risk).
+   photos); no stock photos (they misrepresent the space — check the
+   current photo policy rather than assuming a rule).
 6. **Reviews**: response rate and tone (all reviews deserve responses;
    negative ones get factual, non-defensive replies — draft examples on
    request as R1 drafts); flag policy-violating reviews (spam, off-topic)
@@ -134,10 +136,10 @@ guessed.
 
 - Multi-location brands: one listing per real location; shared phone
   routing flagged (per-location numbers help attribution and trust).
-- VO/mailbox businesses: Google restricts listings for addresses without
-  staffed on-site service at that address — check current eligibility
-  rules and flag honestly if a VO-only address may not qualify;
-  misrepresenting staffing is a suspension path this audit won't assist.
+- VO/mailbox businesses: Google's published eligibility rules restrict
+  listings at addresses without staffed on-site service — check the current
+  rules and flag honestly if a VO-only address may not qualify. Never help
+  misrepresent staffing; this audit refuses that request.
 - Home-adjacent or shared-address businesses (member companies listing the
   operator's address): note review/listing confusion risk; the members'
   listings are theirs, not the operator's to manage.

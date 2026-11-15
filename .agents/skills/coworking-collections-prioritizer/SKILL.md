@@ -57,8 +57,9 @@ queue — see edge cases).
 
 **Queue order**: oldest first, then largest balance. **Aging bands**:
 0-15 / 16-30 / 31+ days overdue, each with a step matched to the
-relationship stage: verify-then-friendly-heads-up (0-15; card expiry is
-the modal cause), personal-contact-ask-don't-dun (16-30),
+relationship stage: verify-then-friendly-heads-up (0-15; a card problem is
+the usual cause the operator reports, not a measured frequency),
+personal-contact-ask-don't-dun (16-30),
 owner-conversation-with-written-plan (31+). **First-problem flag**:
 a good payer's first-ever issue gets a lead-with-helpfulness step.
 **Context flags**: renewal inside 60 days ("resolve billing BEFORE

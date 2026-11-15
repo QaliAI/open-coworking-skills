@@ -17,7 +17,8 @@ metadata:
 
 The skills in this repository stay vendor-neutral because adapters absorb
 each system's quirks. Without a disciplined adapter path, every new
-platform request becomes "edit all 24 skills" — the exact failure this
+platform request becomes "edit every skill that touches the entity" — the
+exact failure this
 architecture exists to prevent. This skill is the contributor workflow for
 adding a system at the right support level, honestly labeled.
 

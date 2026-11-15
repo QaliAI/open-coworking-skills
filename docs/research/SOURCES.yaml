@@ -360,3 +360,139 @@ sources:
     usage: studied
     attribution_required: no
     restrictions: Do not claim the repository is listed on agentskill.sh.
+
+  # --- Offboarding, mail operations, and broker channels (2026-11-15) -------
+  # Read while scoping the three skills added on 2026-11-15. Each entry below
+  # is a fact the skill uses, not an industry norm. Cross-checked against
+  # docs/audits/GAP_RESEARCH_2026.md, which recorded the same reads on
+  # 2026-10-20.
+
+  - name: OfficeRnD Flex offboarding guide
+    location: https://help.officernd.com/en/articles/324741-offboarding-from-officernd-flex
+    maintainer: OfficeRnD
+    date_accessed: "2026-10-20"
+    license: vendor documentation; facts cited, text not copied
+    knowledge_used: >-
+      Offboarding is at least three write actions, not one cancel: end dates
+      on active memberships, end dates on bookable resources, monthly plans
+      made unavailable ahead of the cancellation, and invoice generation and
+      charging switched off. The guide warns that failing to switch off
+      invoicing may charge the member.
+    usage: studied
+    attribution_required: no
+    restrictions: Describes one product's workflow, not an industry standard.
+
+  - name: OfficeRnD Flex cancel or pause a membership
+    location: https://help.officernd.com/en/articles/248558-flex-cancel-or-pause-a-membership
+    maintainer: OfficeRnD
+    date_accessed: "2026-10-20"
+    license: vendor documentation; facts cited, text not copied
+    knowledge_used: >-
+      Cancelling sets an end date; the membership becomes terminated on that
+      date and the member former unless another active membership or an
+      active company applies. There is no pause function. The deposit and
+      setup fee are re-invoiced on a new membership unless deselected.
+    usage: studied
+    attribution_required: no
+    restrictions: Product-specific behaviour.
+
+  - name: Coworks Verkada access-control integration guide
+    location: https://help.coworksapp.com/en/articles/13269396-how-to-use-the-verkada-access-control-integration
+    maintainer: Coworks
+    date_accessed: "2026-10-20"
+    license: vendor documentation; facts cited, text not copied
+    knowledge_used: >-
+      Cancelling a membership does not automatically revoke that member's
+      Verkada access; the member must be deactivated or access edited
+      manually, and bulk sync from plan allocations is a manual process.
+      This is the evidence for the offboarding rule that account state and
+      credential state are separate systems.
+    usage: studied
+    attribution_required: no
+    restrictions: One vendor's integration, not a universal claim.
+
+  - name: Regus global terms and conditions (March 2026)
+    location: https://assets.regus.com/terms-and-conditions/en-us-global-terms-and-conditions.pdf
+    maintainer: IWG / Regus
+    date_accessed: "2026-10-20"
+    license: contract terms; facts cited, text not copied
+    knowledge_used: >-
+      An operator's own agreement sets notice periods by term, a restoration
+      fee on departure or relocation, daily proration with a 30-day month, a
+      30% administration fee on non-standard services, deposit return within
+      30 days after the agreement ends and the account is settled, and a
+      mail clause stating that items received after termination are not held
+      or returned and may be disposed of. Used as an example of why the
+      operator's own clause, not a default, drives the end date.
+    usage: studied
+    attribution_required: no
+    restrictions: One operator's terms; never present as a market norm.
+
+  - name: USPS Domestic Mail Manual 508.1.8 (commercial mail receiving agency)
+    location: https://pe.usps.com/text/dmm300/508.htm
+    maintainer: United States Postal Service
+    date_accessed: "2026-10-20"
+    license: government publication; cited, not reproduced
+    knowledge_used: >-
+      An office business center providing single-point mail delivery is
+      treated as a CMRA for Postal Service purposes. A CMRA must remail for
+      at least six months after the agency relationship terminates; the
+      customer may opt out of forwarding but may not instruct disposal or
+      return-to-sender inside that window, and refusal of mail is prohibited
+      for the window. PS Form 1583 and quarterly certification requirements
+      are also stated. Incorporated by reference at 39 CFR 111.1.
+    usage: studied
+    attribution_required: no
+    restrictions: >-
+      This is a citation, not a legal determination. Never state that a
+      specific operator is a CMRA, never give legal advice, and never tell an
+      operator to dispose of, return, or refuse mail.
+
+  - name: WeWork broker terms and US regional rider
+    location: https://wek8s-hydra-referrals-bucket.s3.amazonaws.com/en-US/broker-terms.pdf
+    maintainer: WeWork
+    date_accessed: "2026-10-20"
+    license: contract terms; facts cited, text not copied
+    knowledge_used: >-
+      Submission mechanics, conditional acceptance, fee base exclusions,
+      clawback, a five-business-day dispute window with waiver, and
+      disqualification for false leads or common-control referrals. The
+      regional rider bands commission with a cap of the first three years
+      per transaction and pays month-to-month on one month's fee, first
+      month only, first deal in that market; relocation within the market
+      counts as a renewal. Used to show that fees are contractual and not
+      comparable as percentages.
+    usage: studied
+    attribution_required: no
+    restrictions: One counterparty's programme, not a market rate.
+
+  - name: Industrious broker terms
+    location: https://www.industriousoffice.com/broker-terms
+    maintainer: Industrious
+    date_accessed: "2026-10-20"
+    license: contract terms; facts cited, text not copied
+    knowledge_used: >-
+      The operator is the sole interface with the lead and retains control
+      of price, discount, collection and agreement execution; commission is
+      paid only if the broker was first to refer; a qualified lead expires
+      six months after acceptance; no commission for a lead previously
+      submitted by another broker or for an existing or past member.
+    usage: studied
+    attribution_required: no
+    restrictions: One counterparty's programme, not a market rate.
+
+  - name: LiquidSpace host terms
+    location: https://www.liquidspace.com/terms/host-terms
+    maintainer: LiquidSpace
+    date_accessed: "2026-10-20"
+    license: platform terms; facts cited, text not copied
+    knowledge_used: >-
+      A guest who messaged, inquired, toured, received a hot lead, or had a
+      monthly reservation terminate inside six months triggers a fee
+      obligation for up to twelve months on a resulting direct licence. The
+      hourly service charge differs for platform-originated and
+      host-originated guests. Used as the evidence for tail-fee exposure and
+      for refusing to treat a marketplace claim as a market fact.
+    usage: studied
+    attribution_required: no
+    restrictions: One platform's terms; the operator's own agreement governs.

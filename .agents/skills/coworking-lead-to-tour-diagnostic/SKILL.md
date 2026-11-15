@@ -89,8 +89,9 @@ own fix family:
    - contact/speed → routing, staffing hours, after-hours capture
    - qualification/ask → script and CRM discipline (are reps proposing a
      concrete time?), check leads sitting in "qualified" with no tour
-   - scheduling → count steps in the booking flow; long lags between book
-     and tour dates predict no-shows
+   - scheduling → count steps in the booking flow; check whether long lags
+     between booking and tour date are associated with no-shows in this
+     operator's own records before asserting it
    - show rate → reminder cadence, same-week booking policy
    - source quality → volume vs conversion per source; a high-volume
      low-tour source dilutes averages and hides healthy channels
@@ -129,8 +130,9 @@ labeled and paired with the evidence that would test them.
 
 - VO and day-pass inquiries often need no tour — exclude no-tour products
   from the tour funnel or the ask-rate looks falsely broken.
-- Seasonal baselines (January and September spike, December dies): compare
-  to same period last year when history exists, and say so.
+- Seasonal baselines: ask which months are seasonally weak in this market
+  (do not assume a calendar pattern), then compare to the same period last
+  year when history exists, and say so.
 - Broker-sourced leads may tour via the broker without a CRM tour record —
   ask before scoring that source as non-touring.
 

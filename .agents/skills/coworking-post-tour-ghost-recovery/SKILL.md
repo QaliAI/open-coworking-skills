@@ -14,7 +14,7 @@ metadata:
 
 ## Purpose and operator problem
 
-Tour ghosting is a top-three coworking sales leak: the visit went well, the
+A ghosted tour is money already spent on the visit: the tour went well, the
 follow-up went out, then silence. Most operators either give up after one
 "just checking in" or send six identical nudges that torch the relationship.
 The fix is a short sequence where every touch adds something new, urgency is

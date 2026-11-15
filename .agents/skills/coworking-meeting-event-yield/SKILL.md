@@ -15,10 +15,9 @@ metadata:
 
 ## Purpose and operator problem
 
-Rooms are the second revenue line most operators can't quantify: the
-boardroom "feels busy", the event loft "does well", and nobody knows
-the revenue per booked hour or how much of the busy is zero-charge
-member credits. Pricing and calendar policy get set blind. This skill
+Rooms are a revenue line most operators can't quantify: the boardroom
+"feels busy", the event loft "does well", and nobody knows the revenue per
+booked hour or how much of the busy is zero-charge member credits. Pricing and calendar policy get set blind. This skill
 computes the yield per room and separates the mixes that matter.
 
 ## When to use
