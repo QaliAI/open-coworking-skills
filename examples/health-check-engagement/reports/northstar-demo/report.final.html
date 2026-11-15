@@ -280,7 +280,7 @@ break-inside:avoid}
   
 </article></div></section>
 <section class="report-section" id="s4"><h2>4. Revenue leakage</h2><div class='finding'><div class='finding-head'><h3>Unfollowed leads</h3><div class='tags'><span class='count'>3 record(s)</span></div></div><p class='statement'>Leads still &#x27;new&#x27; with no recorded first response.</p><p class='records'><span class='lbl'>Records</span>L-1013, L-1017, L-1021</p></div>
-<div class='finding'><div class='finding-head'><h3>Stale open deals 30d</h3><div class='tags'><span class='count'>2 record(s)</span></div></div><p class='statement'>Open deals untouched for 30+ days.</p><p class='records'><span class='lbl'>Records</span>D-2002, D-2011</p></div>
+<div class='finding'><div class='finding-head'><h3>Stale open deals 30d</h3><div class='tags'><span class='count'>2 record(s)</span></div></div><p class='statement'>Open deals untouched for 30+ days. The expected value is unweighted and is not a forecast.</p><p class='records'><span class='lbl'>Records</span>D-2002, D-2011</p></div>
 <div class='finding'><div class='finding-head'><h3>Completed tours without next action</h3><div class='tags'><span class='count'>2 record(s)</span></div></div><p class='statement'>Completed tours with no recorded next step.</p><p class='records'><span class='lbl'>Records</span>T-3002, T-3003</p></div>
 <div class='finding'><div class='finding-head'><h3>Won deals without membership</h3><div class='tags'><span class='count'>1 record(s)</span></div></div><p class='statement'>Companies with a won deal but no active or pending membership; possible unstarted or unrecorded agreements.</p><p class='records'><span class='lbl'>Records</span>C-GHOSTWON</p></div>
 <div class='finding'><div class='finding-head'><h3>Active memberships without recent invoice</h3><div class='tags'><span class='count'>3 record(s)</span></div></div><p class='statement'>Active, non-complimentary memberships with no invoice issued in the last 45 days.</p><ul class="amounts"><li><strong>2,088.00</strong> per month, recurring rate at risk</li></ul><p class='records'><span class='lbl'>Records</span>M-011, M-016, M-017</p></div>
@@ -391,7 +391,7 @@ break-inside:avoid}
 <section class="report-section" id="s5"><h2>5. Sales pipeline</h2><h3>Stage mix (all deals in the export)</h3>
 <table class="grid"><thead><tr><th>Stage</th><th>Deals</th></tr></thead><tbody><tr><td>lost</td><td>2</td></tr><tr><td>negotiation</td><td>1</td></tr><tr><td>new</td><td>1</td></tr><tr><td>proposal</td><td>2</td></tr><tr><td>qualified</td><td>2</td></tr><tr><td>tour</td><td>2</td></tr><tr><td>won</td><td>2</td></tr></tbody></table>
 <h3>Hygiene rules and what they caught</h3>
-<table class="grid"><thead><tr><th>Rule</th><th>Open deals affected</th></tr></thead><tbody><tr><td>stale deals</td><td>2</td></tr><tr><td>missing next action</td><td>2</td></tr><tr><td>overdue next action</td><td>1</td></tr><tr><td>unassigned</td><td>1</td></tr><tr><td>invalid stage</td><td>0</td></tr><tr><td>duplicate open deals</td><td>1</td></tr></tbody></table>
+<table class="grid"><thead><tr><th>Rule</th><th>Open deals affected</th></tr></thead><tbody><tr><td>stale deals</td><td>2</td></tr><tr><td>missing next action</td><td>2</td></tr><tr><td>overdue next action</td><td>1</td></tr><tr><td>unassigned</td><td>1</td></tr><tr><td>invalid stage</td><td>0</td></tr><tr><td>duplicate open deals</td><td>1</td></tr><tr><td>overloaded owners</td><td>0</td></tr><tr><td>multiple simultaneous requirements</td><td>0</td></tr></tbody></table>
 <h3>Stale open deals (untouched 21 days or more)</h3>
 <table class="grid"><thead><tr><th>Deal</th><th>Stage</th><th>Owner</th><th>Days since update</th></tr></thead><tbody><tr><td>D-2002</td><td>qualified</td><td>(unowned)</td><td>52</td></tr><tr><td>D-2011</td><td>qualified</td><td>riley</td><td>42</td></tr></tbody></table>
 <h3>Open deals with no owner</h3>
@@ -429,7 +429,7 @@ break-inside:avoid}
       </div>
     </div>
   </header>
-  <p class="statement">Open deals untouched for 30+ days.</p>
+  <p class="statement">Open deals untouched for 30+ days. The expected value is unweighted and is not a forecast.</p>
   <dl class="contract">
     <dt>Data used</dt>
     <dd>deals.csv (12 rows); leads.csv (22 rows)</dd>

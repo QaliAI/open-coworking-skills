@@ -225,6 +225,12 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("pipeline", help="pipeline hygiene report from a deals export")
     p.add_argument("--deals", required=True)
     p.add_argument("--stale-days", type=int, default=21)
+    p.add_argument("--open-stage", action="append", dest="open_stage",
+                   help="operator CRM open-stage name; repeat for each stage. "
+                        "Supplied names are never reported as invalid.")
+    p.add_argument("--overload-median-multiple", type=float, default=2.0,
+                   help="repo default: flag an owner above this multiple of the median "
+                        "open-deal count")
     _add_common(p)
 
     p = sub.add_parser("funnel", help="lead-to-member funnel counts")
@@ -249,6 +255,10 @@ def main(argv: list[str] | None = None) -> int:
     for name in ("leads", "deals", "tours", "memberships", "invoices",
                  "inventory", "payments"):
         p.add_argument(f"--{name}", help=f"{name} export (optional)")
+    p.add_argument("--stale-days", type=int, default=30,
+                   help="repo default: open deals untouched for this many days")
+    p.add_argument("--invoice-window-days", type=int, default=45,
+                   help="repo default: look-back window for a recent invoice")
     _add_common(p)
 
     p = sub.add_parser("vo-reconcile", help="virtual-office partner reconciliation")
@@ -433,7 +443,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.command == "pipeline":
-        report = pipeline_report(_load(args.deals), as_of, args.stale_days)
+        report = pipeline_report(_load(args.deals), as_of, args.stale_days,
+                                 open_stages=args.open_stage,
+                                 overload_multiple=args.overload_median_multiple)
         _emit(report, args, findings_markdown(report, "Pipeline health"))
         return 0
 
@@ -457,7 +469,8 @@ def main(argv: list[str] | None = None) -> int:
         tables = {name: (_load(getattr(args, name)) if getattr(args, name) else None)
                   for name in ("leads", "deals", "tours", "memberships", "invoices",
                                "inventory", "payments")}
-        report = leakage_report(as_of, **tables)
+        report = leakage_report(as_of, stale_days=args.stale_days,
+                                invoice_window_days=args.invoice_window_days, **tables)
         _emit(report, args, findings_markdown(report, "Revenue leakage audit"))
         return 0
 

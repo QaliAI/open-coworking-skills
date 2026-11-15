@@ -1,0 +1,4 @@
+category,monthly_amount,kind,product
+rent,1600,fixed,office
+cleaning,200,variable,office
+consumables,50,variable_per_workstation,office
